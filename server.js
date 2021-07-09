@@ -5,7 +5,7 @@ const path = require('path');
 
 const app = express()
 app.use(express.json())
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 5040
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
     useNewUrlParser: true,
