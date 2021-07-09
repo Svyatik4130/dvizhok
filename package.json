@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "cd map_for_school && npm run build",
-    "install": "cd map_for_school && npm install",
-    "heroku-postbuild": "cd map_for_school && npm install && npm run build",
+    "build": "cd frontend && npm run build",
+    "install": "cd frontend && npm install",
+    "heroku-postbuild": "cd frontend && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd frontend && npm start",
     "dev": "concurrently -n 'server,react' -c 'yellow,blue' \"nodemon server.js\" \"npm run client\""
