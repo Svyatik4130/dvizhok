@@ -1,21 +1,12 @@
 import React from 'react'
+import FirstScreenMap from './components/MainPage/FirstScreenMap';
+import Navbar from './components/MainPage/Navbar';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Reactd
-        </a>
-      </header>
+      <Navbar />
+      <FirstScreenMap />
     </div>
   );
 }
