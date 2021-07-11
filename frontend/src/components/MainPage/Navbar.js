@@ -17,20 +17,20 @@ export default function Navbar() {
                             />
                         </div>
                         <div className="hidden xl:block">
-                            <div className="ml-10 text-purple-950 text-xl font-semibold flex items-baseline space-x-11">
+                            <div className="ml-10 text-purple-950 text-xl font-semibold flex items-baseline">
                                 <a style={{ marginRight: "0px" }} className="flex" href="#">Головна</a>
-                                <a className="flex" href="#works">Ідея</a>
-                                <a className="flex" href="#skills">Плани</a>
-                                <a className="flex" href="#skills">Проекти</a>
-                                <a className="flex" href="#skills">Команда</a>
-                                <a className="flex" href="#skills">White paper</a>
-                                <a className="flex" href="#skills">Блог</a>
-                                <a className="flex" href="#skills">Slack</a>
+                                <a className="flex mx-6" href="#works">Ідея</a>
+                                <a className="flex mx-6" href="#skills">Плани</a>
+                                <a className="flex mx-6" href="#skills">Проекти</a>
+                                <a className="flex mx-6" href="#skills">Команда</a>
+                                <a className="flex mx-6" href="#skills">White paper</a>
+                                <a className="flex mx-6" href="#skills">Блог</a>
+                                <a className="flex mx-6" href="#skills">Slack</a>
                             </div>
                         </div>
                     </div>
                     <div className="items-center hidden xl:block">
-                        <button className="px-12 py-2 my-4 text-xl rounded-3xl text-white bg-purple-950">Вхiд</button>
+                        <button className="px-12 py-2 my-4 text-xl rounded-2xl text-white bg-purple-950">Вхiд</button>
                     </div>
                     <div className="-mr-2 flex xl:hidden">
                         <button
