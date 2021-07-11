@@ -10,7 +10,7 @@ export default function FirstScreenMap() {
                         <p className="lg:text-5xl text-xl font-semibold">Спільними діями <br />
                             творіть країну майбутнього!</p>
                         <div className="text-center">
-                            <p className="10 text-xl inline-block text-left font-semibold">Підтримайте важливі зміни <br />
+                            <p className="lg:text-5xl text-xl inline-block text-left font-semibold">Підтримайте важливі зміни <br />
                                 станьте частиною великої справи!</p>
                         </div>
                         <div className="text-right">
