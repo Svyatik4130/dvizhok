@@ -4,15 +4,30 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, "Montserrat", BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, "Montserrat", BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #EBEBEB;
+  background-color: #ebebeb;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.roadmap-road_background {
+  background: linear-gradient(90deg, #48004b 1.91%, rgba(162, 93, 184, 0) 50%),
+    linear-gradient(270deg, #48004b 1.39%, rgba(162, 93, 184, 0) 50%), #a25db8;
+}
+.darker-image{
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
+  transition: all 1s;
+}
+.prpl-btns .control-next::before{
+  border-left: 12px solid #48004B !important;
+}
+.prpl-btns .control-prev::before{
+  border-right: 12px solid #48004B !important;
 }

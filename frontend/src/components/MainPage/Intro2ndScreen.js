@@ -4,10 +4,13 @@ export default function Intro2ndScreen() {
     return (
         <div>
             <div className="w-10/12 m-auto mt-8">
-                <p className="text-center lg:text-5xl text-purple-950 font-semibold">Двигун змін в країні</p>
+                <p className="text-center text-2xl lg:text-5xl text-purple-950 font-semibold">Двигун змін в країні</p>
                 <img src="images/bigLogo.png" alt="big_logo" className="lg:h-32 w-full lg:w-auto m-auto mt-6" />
-                <p className="text-center text-purple-950 text-3xl mt-6 font-medium">Децентралізована платформа масового <br />
+                <p className="text-center text-purple-950 hidden lg:block text-3xl mt-6 font-medium">Децентралізована платформа масового <br />
                     краудфандингу де зустрічаються ідеї, люди та ресурси<br />
+                    для зміни навколишнього світу на краще</p>
+                <p className="text-center text-purple-950 lg:hidden text-xl mt-6 font-medium">Децентралізована платформа масового 
+                    краудфандингу де зустрічаються ідеї, люди та ресурси
                     для зміни навколишнього світу на краще</p>
             </div>
             <div className="flex w-full lg:w-10/12 m-auto mt-12 items-center lg:flex-row flex-col">
