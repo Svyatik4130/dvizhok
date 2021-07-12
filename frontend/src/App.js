@@ -7,6 +7,7 @@ import ImplementedProjects from './components/MainPage/ImplementedProjects';
 import Intro2ndScreen from './components/MainPage/Intro2ndScreen';
 import Navbar from './components/MainPage/Navbar';
 import RoadMap from './components/MainPage/RoadMap';
+import Team from './components/MainPage/Team';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Goal />
       <RoadMap />
       <ImplementedProjects />
+      <Team />
     </div>
   );
 }
