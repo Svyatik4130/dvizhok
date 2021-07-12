@@ -5,7 +5,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 export default function ImplementedProjects() {
     return (
-        <div className="w-10/12 m-auto mt-5">
+        <div className="w-10/12 m-auto mt-8">
             <p className="text-center text-purple-950 font-bold text-5xl">Реалізовані проекти</p>
             <div className="w-full mt-8 flex">
                 <div className="w-5/12 pr-5">
