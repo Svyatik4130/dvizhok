@@ -2,14 +2,10 @@ import React from 'react'
 
 import ChartCard from '../Chart/ChartCard'
 import ChartLegend from '../Chart/ChartLegend'
-import { Doughnut, Line, Bar } from 'react-chartjs-2'
+import { Doughnut } from 'react-chartjs-2'
 import {
     doughnutOptions,
-    lineOptions,
-    barOptions,
     doughnutLegends,
-    lineLegends,
-    barLegends,
 } from '../utils/demo/chartsData'
 
 export default function Goal() {

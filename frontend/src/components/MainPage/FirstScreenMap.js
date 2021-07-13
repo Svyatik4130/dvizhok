@@ -25,7 +25,7 @@ export default function FirstScreenMap() {
                     </div>
                 </div>
                 <div className="bg-cover">
-                    <video onContextMenu={(e) => e.preventDefault()} src="images/1screen_short_cropped.mp4" preload="auto" autoplay="true" loop="true" muted="muted" className="-z-10 w-full h-screen object-cover"></video>
+                    <video onContextMenu={(e) => e.preventDefault()} src="images/1screen_short_cropped.mp4" preload="auto" autoPlay={true} loop={true} muted="muted" className="-z-10 w-full h-screen object-cover"></video>
                 </div>
             </div>
         </div>

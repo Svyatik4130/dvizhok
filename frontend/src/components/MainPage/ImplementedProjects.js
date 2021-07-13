@@ -15,11 +15,11 @@ export default function ImplementedProjects() {
                     </div>
                 </div>
                 <div className=" w-full order-1 lg:order-2 lg:w-7/12">
-                    <video src="images/1screen_short_cropped.mp4" preload="auto" controls="true" className=" w-full rounded-xl"></video>
+                    <video src="images/1screen_short_cropped.mp4" preload="auto" controls={true} className=" w-full rounded-xl"></video>
                 </div>
             </div>
 
-            <Carousel showStatus={false} className=" hidden lg:block prpl-btns mt-24">
+            <Carousel autoPlay={false} showThumbs={false} showStatus={false} className=" hidden lg:block prpl-btns mt-24">
                 <div className="w-full flex px-6 pb-12">
                     <div className="w-3/12 cursor-pointer px-4">
                         <div className="w-full relative bg-cover">
@@ -83,7 +83,7 @@ export default function ImplementedProjects() {
             </ Carousel>
 
             {/* for mobilde devices */}
-            <Carousel autoPlay={false} showStatus={false} className="lg:hidden prpl-btns mt-12">
+            <Carousel showThumbs={false} autoPlay={false} showStatus={false} className="lg:hidden prpl-btns mt-12">
                     <div className="w-11/12 m-auto cursor-pointer px-4 pb-9">
                         <div className="w-full relative bg-cover">
                             <img src="images/landing/implemented_projects/impl_proj_1.png" alt="impl_proj_1" className="rounded-lg w-full" />
