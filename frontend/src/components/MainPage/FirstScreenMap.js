@@ -1,7 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactPlayer from 'react-player'
 
 export default function FirstScreenMap() {
+
+    const play = () => {
+        document.getElementById('video').play();
+    }
+
+    useEffect(() => {
+        // document.getElementById('video').play();
+    }, [])
+
     return (
         <div style={{ paddingTop: "64px" }} className="w-full h-auto">
             <div className="w-full bg-purple-950">
@@ -20,12 +29,12 @@ export default function FirstScreenMap() {
                     </div>
 
                     <div className="flex flex-col lg:flex-row justify-between">
-                        <button className=" px-4 lg:px-12 py-4 lg:py-2 my-4 text-xl lg:text-3xl rounded-2xl font-semibold bg-white text-purple-950"> Долучитись </button>
+                        <button onClick={() => play()} className=" px-4 lg:px-12 py-4 lg:py-2 my-4 text-xl lg:text-3xl rounded-2xl font-semibold bg-white text-purple-950"> Долучитись </button>
                         <button className=" px-4 lg:px-12 py-4 lg:py-2 my-4 text-xl lg:text-3xl rounded-2xl font-semibold bg-white text-purple-950"> Додати проект  </button>
                     </div>
                 </div>
                 <div className="bg-cover">
-                    <video onContextMenu={(e) => e.preventDefault()} src="images/1screen_short_cropped.mp4" preload="auto" autoPlay={true} loop={true} muted="muted" className="-z-10 w-full h-screen object-cover"></video>
+                    <video id="video" onContextMenu={(e) => e.preventDefault()} src="images/1screen_short_cropped.mp4" preload="auto" playsinline={true} autoPlay={true} loop={true} muted="muted" className="-z-10 w-full h-screen object-cover"></video>
                 </div>
             </div>
         </div>

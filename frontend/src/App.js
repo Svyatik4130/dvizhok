@@ -2,6 +2,7 @@ import React from 'react'
 import ChooseUrself from './components/MainPage/ChooseUrself';
 import Contact from './components/MainPage/Contact';
 import FirstScreenMap from './components/MainPage/FirstScreenMap';
+import Footer from './components/MainPage/Footer';
 import Goal from './components/MainPage/Goal';
 import HowTo from './components/MainPage/HowTo';
 import ImplementedProjects from './components/MainPage/ImplementedProjects';
@@ -25,6 +26,7 @@ function App() {
       <Team />
       <Map />
       <Contact />
+      <Footer />
     </div>
   );
 }
