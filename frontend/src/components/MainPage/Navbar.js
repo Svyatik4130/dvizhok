@@ -19,13 +19,13 @@ export default function Navbar() {
                         <div className="hidden xl:block">
                             <div className="ml-10 text-purple-950 text-xl font-semibold flex items-baseline">
                                 <a style={{ marginRight: "0px" }} className="flex" href="#">Головна</a>
-                                <a className="flex mx-6" href="#works">Ідея</a>
-                                <a className="flex mx-6" href="#skills">Плани</a>
-                                <a className="flex mx-6" href="#skills">Проекти</a>
-                                <a className="flex mx-6" href="#skills">Команда</a>
-                                <a className="flex mx-6" href="#skills">White paper</a>
-                                <a className="flex mx-6" href="#skills">Блог</a>
-                                <a className="flex mx-6" href="#skills">Slack</a>
+                                <a className="flex mx-6" href="#idea">Ідея</a>
+                                <a className="flex mx-6" href="#plans">Плани</a>
+                                <a className="flex mx-6" href="#projects">Проекти</a>
+                                <a className="flex mx-6" href="#team">Команда</a>
+                                <a className="flex mx-6" href="#white_paper">White paper</a>
+                                <a className="flex mx-6" href="#blog">Блог</a>
+                                <a className="flex mx-6" href="#slack">Slack</a>
                             </div>
                         </div>
                     </div>

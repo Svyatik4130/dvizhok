@@ -9,7 +9,7 @@ export default function Intro2ndScreen() {
                 <p className="text-center text-purple-950 hidden lg:block text-3xl mt-6 font-medium">Децентралізована платформа масового <br />
                     краудфандингу де зустрічаються ідеї, люди та ресурси<br />
                     для зміни навколишнього світу на краще</p>
-                <p className="text-center text-purple-950 lg:hidden text-xl mt-6 font-medium">Децентралізована платформа масового 
+                <p className="text-center text-purple-950 lg:hidden text-xl mt-6 font-medium">Децентралізована платформа масового
                     краудфандингу де зустрічаються ідеї, люди та ресурси
                     для зміни навколишнього світу на краще</p>
             </div>
