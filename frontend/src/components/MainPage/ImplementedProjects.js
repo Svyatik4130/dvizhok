@@ -7,11 +7,19 @@ export default function ImplementedProjects() {
     const [SelectedProj, setSelectedProj] = useState({
         title: "СТАРОНАВОДНИЦЬКА БАШТА",
         desc: "Ми гуртуємо людей, які не чекають дива, а самі творять дива. Творцям Омріяної Країни ми даємо мережеві можливості для спілкування, обміну досвідом, взаємної пдтримки та cпівпраці.",
-        image_src: ""
+        video_src: ""
     })
+    const [lastSelected, setlastSelected] = useState()
 
     const selectProj = (e) => {
-        
+        if(lastSelected){
+            console.log(lastSelected)
+            lastSelected.style.top = "0px"
+        }
+        let target = e.target.parentElement
+        console.log(target)
+        target.style.top = "-15px"
+        setlastSelected(target)
     }
 
     return (
@@ -31,16 +39,16 @@ export default function ImplementedProjects() {
             </div>
 
             <Carousel autoPlay={false} showThumbs={false} showStatus={false} className=" hidden lg:block prpl-btns mt-24">
-                <div className="w-full flex px-6 pb-12">
-                    <div className="w-3/12 cursor-pointer px-4">
-                        <div className="w-full relative bg-cover">
+                <div className="w-full pt-5 flex px-6 pb-12">
+                    <div onClick={selectProj} className="w-3/12 cursor-pointer px-4">
+                        <div className="w-full top-0 transition-all relative bg-cover">
                             <img src="images/landing/implemented_projects/impl_proj_1.png" alt="impl_proj_1" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                             <p className="absolute font-bold text-lg bottom-3 text-white left-0 right-0 z-40 ml-auto mr-auto text-center">Старонаводницька Башта</p>
                         </div>
                     </div>
                     <div onClick={selectProj} className="w-3/12 cursor-pointer px-4">
-                        <div className="w-full relative bg-cover">
+                        <div className="w-full top-0 transition-all relative bg-cover">
                             <img src="images/landing/implemented_projects/impl_proj_2.png" alt="impl_proj_2" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                             <p className="absolute font-bold text-lg bottom-3 text-white left-0 right-0 z-40 ml-auto mr-auto text-center">Старонаводницька Башта</p>
