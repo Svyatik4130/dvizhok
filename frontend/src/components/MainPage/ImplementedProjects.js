@@ -1,9 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 export default function ImplementedProjects() {
+    const [SelectedProj, setSelectedProj] = useState({
+        title: "СТАРОНАВОДНИЦЬКА БАШТА",
+        desc: "Ми гуртуємо людей, які не чекають дива, а самі творять дива. Творцям Омріяної Країни ми даємо мережеві можливості для спілкування, обміну досвідом, взаємної пдтримки та cпівпраці.",
+        image_src: ""
+    })
+
+    const selectProj = (e) => {
+        
+    }
+
     return (
         <div className="w-10/12 m-auto mt-8">
             <div id="projects" className='w-full mb-16 h-0.5'></div>
@@ -11,8 +21,8 @@ export default function ImplementedProjects() {
             <div className="w-full mt-8 flex flex-col lg:flex-row">
                 <div className="w-full order-2 lg:order-1 lg:w-5/12 pt-3 lg:pt-0 lg:pr-5">
                     <div className="bg-white rounded-3xl px-8 py-6">
-                        <p className="text-center font-bold text-xl md:text-2xl text-purple-950">СТАРОНАВОДНИЦЬКА БАШТА</p>
-                        <p className="text-center font-medium md:text-lg mt-4 lg:tracking-wider">Ми гуртуємо людей, які не чекають дива, а самі творять дива. Творцям Омріяної Країни ми даємо мережеві можливості для спілкування, обміну досвідом, взаємної пдтримки та cпівпраці.</p>
+                        <p className="text-center font-bold text-xl md:text-2xl text-purple-950">{SelectedProj.title}</p>
+                        <p className="text-center font-medium md:text-lg mt-4 lg:tracking-wider">{SelectedProj.desc}</p>
                     </div>
                 </div>
                 <div className=" w-full order-1 lg:order-2 lg:w-7/12">
@@ -29,7 +39,7 @@ export default function ImplementedProjects() {
                             <p className="absolute font-bold text-lg bottom-3 text-white left-0 right-0 z-40 ml-auto mr-auto text-center">Старонаводницька Башта</p>
                         </div>
                     </div>
-                    <div className="w-3/12 px-4">
+                    <div onClick={selectProj} className="w-3/12 cursor-pointer px-4">
                         <div className="w-full relative bg-cover">
                             <img src="images/landing/implemented_projects/impl_proj_2.png" alt="impl_proj_2" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
