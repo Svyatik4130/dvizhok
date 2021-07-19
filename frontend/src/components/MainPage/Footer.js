@@ -13,9 +13,9 @@ export default function Footer() {
                 <div className=" lg:mt-0 mt-3 w-full lg:w-5/12 flex font-medium text-lg">
                     <div className="w-4/12 flex flex-col">
                         <a href="#" className="underline">Головна</a>
-                        <a href="#" className="underline">Ідея</a>
-                        <a href="#" className="underline">Плани</a>
-                        <a href="#" className="underline">Проекти</a>
+                        <a href="#idea" className="underline">Ідея</a>
+                        <a href="#plans" className="underline">Плани</a>
+                        <a href="#projects" className="underline">Проекти</a>
                     </div>
                     <div className="w-4/12 flex flex-col">
                         <a href="#" className="underline">Проекти</a>
