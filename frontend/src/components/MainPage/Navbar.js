@@ -10,11 +10,11 @@ export default function Navbar() {
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
                         <div className="flex-shrink-0">
-                            <img
+                            <a href="#"><img
                                 className="h-8"
                                 src="images/logo.png"
                                 alt="Workflow"
-                            />
+                            /></a>
                         </div>
                         <div className="hidden xl:block">
                             <div className="ml-10 text-purple-950 text-xl font-semibold flex items-baseline">

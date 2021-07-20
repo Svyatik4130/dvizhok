@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="w-full m-auto mt-14 text-white bg-purple-950">
             <div className="w-11/12 pt-7 m-auto flex flex-col lg:flex-row justify-between ">
                 <div className=" w-full lg:w-4/12">
-                    <img src="images/bigLogo_white.png" alt="DvichOK" className=" mb-5 w-6/12 " />
+                    <a href=""><img src="images/bigLogo_white.png" alt="DvichOK" className=" mb-5 w-6/12 " /></a>
                     <p className="font-medium text-lg">БФ “Омріяна Країна”,</p>
                     <p className="font-medium text-lg">ЄДРПОУ: 40300106, Адрес: 0103, м. Київ, </p>
                     <p className="font-medium text-lg">вул. Предславинська, 39, 4 пов, оф. 428</p>

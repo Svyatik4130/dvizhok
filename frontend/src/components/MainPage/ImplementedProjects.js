@@ -144,25 +144,31 @@ export default function ImplementedProjects() {
                         <p className="absolute font-bold text-lg bottom-3 text-white left-0 right-0 z-40 ml-auto mr-auto text-center">Майстерня переробки пластику EcoREactive</p>
                     </div>
                 </div>
-                <div className="w-11/12 m-auto cursor-pointer px-4 pb-9">
-                    <div className="w-full relative bg-cover">
+                <div className="w-11/12 m-auto pt-5 cursor-pointer px-4 pb-9">
+                    <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
                         <img src="images/landing/implemented_projects/impl_proj_2.png" alt="impl_proj_2" className="rounded-lg w-full" />
                         <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
-                        <p className="absolute font-bold text-lg bottom-9 text-white left-0 right-0 z-40 ml-auto mr-auto text-center">Старонаводницька Башта</p>
+                        {/* Enter real title of this project */}
+                        <h1 className="hidden project_title">Старонаводницька Башта</h1>
+                        <p className="absolute font-bold text-lg bottom-3 text-white left-0 right-0 z-40 ml-auto mr-auto text-center">Старонаводницька Башта</p>
                     </div>
                 </div>
-                <div className="w-11/12 m-auto cursor-pointer px-4 pb-9">
-                    <div className="w-full relative bg-cover">
+                <div className="w-11/12 m-auto pt-5 cursor-pointer px-4 pb-9">
+                    <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
                         <img src="images/landing/implemented_projects/impl_proj_3.png" alt="impl_proj_3" className="rounded-lg w-full" />
                         <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
-                        <p className="absolute font-bold text-lg bottom-9 text-white left-0 right-0 z-40 ml-auto mr-auto text-center">Старонаводницька Башта</p>
+                        {/* Enter real title of this project */}
+                        <h1 className="hidden project_title">EdCamp діє!</h1>
+                        <p className="absolute font-bold text-lg bottom-3 text-white left-0 right-0 z-40 ml-auto mr-auto text-center">EdCamp діє!</p>
                     </div>
                 </div>
-                <div className="w-11/12 m-auto cursor-pointer px-4 pb-9">
-                    <div className="w-full relative bg-cover">
+                <div className="w-11/12 m-auto pt-5 cursor-pointer px-4 pb-9">
+                    <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
                         <img src="images/landing/implemented_projects/impl_proj_4.png" alt="impl_proj_4" className="rounded-lg w-full" />
                         <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
-                        <p className="absolute font-bold text-lg bottom-9 text-white left-0 right-0 z-40 ml-auto mr-auto text-center">Старонаводницька Башта</p>
+                        {/* Enter real title of this project */}
+                        <h1 className="hidden project_title">Старонаводницька Башта</h1>
+                        <p className="absolute font-bold text-lg bottom-3 text-white left-0 right-0 z-40 ml-auto mr-auto text-center">Старонаводницька Башта</p>
                     </div>
                 </div>
             </ Carousel>
