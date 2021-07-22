@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="w-full m-auto mt-14 text-white bg-purple-950">
             <div className="w-11/12 pt-7 m-auto flex flex-col lg:flex-row justify-between ">
                 <div className=" w-full lg:w-4/12">
-                    <a href=""><img src="images/bigLogo_white.png" alt="DvichOK" className=" mb-5 w-6/12 " /></a>
+                    <a href=""><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/bigLogo_white.png" alt="DvichOK" className=" mb-5 w-6/12 " /></a>
                     <p className="font-medium text-lg">БФ “Омріяна Країна”,</p>
                     <p className="font-medium text-lg">ЄДРПОУ: 40300106, Адрес: 0103, м. Київ, </p>
                     <p className="font-medium text-lg">вул. Предславинська, 39, 4 пов, оф. 428</p>
@@ -42,13 +42,13 @@ export default function Footer() {
                 <div className="flex flex-row">
                     <div className="m-auto flex flex-row items-center">
                         <div>
-                            <img src="images/mini_logo_white.png" alt="Dvizhok" className=" block m-auto h-5 lg:h-8" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/mini_logo_white.png" alt="Dvizhok" className=" block m-auto h-5 lg:h-8" />
                         </div>
                         <p className="font-medium text-lg">в соціальних мережах: </p>
-                        <a href="#"><img src="images/landing/media/facebook.png" alt="dvizhok in facebook" className=" h-5 lg:h-9 ml-2.5" /></a>
-                        <a href="#"><img src="images/landing/media/instagram.png" alt="dvizhok in instagram" className=" h-5 lg:h-9 ml-2.5" /></a>
-                        <a href="#"><img src="images/landing/media/vk.png" alt="dvizhok in vk" className=" h-5 lg:h-9 ml-2.5" /></a>
-                        <a href="#"><img src="images/landing/media/youtube.png" alt="dvizhok in youtube" className=" h-5 lg:h-9 ml-2.5" /></a>
+                        <a href="#"><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/media/facebook.png" alt="dvizhok in facebook" className=" h-5 lg:h-9 ml-2.5" /></a>
+                        <a href="#"><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/media/instagram.png" alt="dvizhok in instagram" className=" h-5 lg:h-9 ml-2.5" /></a>
+                        <a href="#"><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/media/vk.png" alt="dvizhok in vk" className=" h-5 lg:h-9 ml-2.5" /></a>
+                        <a href="#"><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/media/youtube.png" alt="dvizhok in youtube" className=" h-5 lg:h-9 ml-2.5" /></a>
                     </div>
                 </div>
             </div>

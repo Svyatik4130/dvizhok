@@ -9,6 +9,8 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "autoprefixer": "^9.8.6",
+    "aws-amplify": "^4.2.0",
+    "aws-sdk": "^2.950.0",
     "axios": "^0.21.1",
     "chart.js": "^3.4.1",
     "google-map-react": "^2.1.10",
@@ -62,6 +64,9 @@
     "cacheAjaxRequests": true,
     "inlineCss": true,
     "http2PushManifest": true,
-    "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"]
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ]
   }
 }

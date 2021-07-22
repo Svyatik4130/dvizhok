@@ -8,7 +8,7 @@ export default function ImplementedProjects() {
     const [SelectedProj, setSelectedProj] = useState({
         title: "СТАРОНАВОДНИЦЬКА БАШТА",
         desc: "Ми гуртуємо людей, які не чекають дива, а самі творять дива. Творцям Омріяної Країни ми даємо мережеві можливості для спілкування, обміну досвідом, взаємної пдтримки та cпівпраці.",
-        video_src: "images/1screen_short_cropped.mp4"
+        video_src: "https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/1screen_short_cropped.mp4"
     })
     const [lastSelected, setlastSelected] = useState()
 
@@ -33,7 +33,7 @@ export default function ImplementedProjects() {
             setSelectedProj({
                 title: findArr.title,
                 desc: findArr.desc,
-                video_src: findArr.videosrc
+                video_src: `https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/${findArr.videosrc}`
             })
         }
     }
@@ -58,7 +58,7 @@ export default function ImplementedProjects() {
                 <div className="w-full pt-5 flex px-6 pb-12">
                     <div className="w-3/12 px-4">
                         <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                            <img src="images/landing/implemented_projects/impl_proj_1.png" alt="impl_proj_1" className="rounded-lg w-full" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_1.png" alt="impl_proj_1" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 transition-all rounded-lg darker-image z-30"></div>
                             {/* Enter real title of this project and add this to ./sources/descs.json */}
                             <h1 className="hidden project_title">Майстерня переробки пластику EcoREactive</h1>
@@ -67,7 +67,7 @@ export default function ImplementedProjects() {
                     </div>
                     <div className="w-3/12 px-4">
                         <div onClick={selectProj} className="cursor-pointer w-full -top-2 transition-all relative bg-cover">
-                            <img src="images/landing/implemented_projects/impl_proj_2.png" alt="impl_proj_2" className="rounded-lg w-full" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_2.png" alt="impl_proj_2" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 rounded-lg start-object z-30"></div>
                             {/* Enter real title of this project */}
                             <h1 className="hidden project_title">Старонаводницька Башта</h1>
@@ -76,7 +76,7 @@ export default function ImplementedProjects() {
                     </div>
                     <div className="w-3/12 px-4">
                         <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                            <img src="images/landing/implemented_projects/impl_proj_3.png" alt="impl_proj_3" className="rounded-lg w-full" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_3.png" alt="impl_proj_3" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                             {/* Enter real title of this project */}
                             <h1 className="hidden project_title">EdCamp діє!</h1>
@@ -85,7 +85,7 @@ export default function ImplementedProjects() {
                     </div>
                     <div className="w-3/12 px-4">
                         <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                            <img src="images/landing/implemented_projects/impl_proj_4.png" alt="impl_proj_4" className="rounded-lg w-full" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_4.png" alt="impl_proj_4" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                             {/* Enter real title of this project */}
                             <h1 className="hidden project_title">Старонаводницька Башта</h1>
@@ -96,7 +96,7 @@ export default function ImplementedProjects() {
                 <div className="w-full pt-5 flex px-6 pb-12">
                     <div className="w-3/12 px-4">
                         <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                            <img src="images/landing/implemented_projects/impl_proj_1.png" alt="impl_proj_1" className="rounded-lg w-full" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_1.png" alt="impl_proj_1" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                             {/* Enter real title of this project */}
                             <h1 className="hidden project_title">Майстерня переробки пластику EcoREactive</h1>
@@ -105,7 +105,7 @@ export default function ImplementedProjects() {
                     </div>
                     <div className="w-3/12 px-4">
                         <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                            <img src="images/landing/implemented_projects/impl_proj_2.png" alt="impl_proj_2" className="rounded-lg w-full" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_2.png" alt="impl_proj_2" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                             {/* Enter real title of this project */}
                             <h1 className="hidden project_title">Старонаводницька Башта</h1>
@@ -114,7 +114,7 @@ export default function ImplementedProjects() {
                     </div>
                     <div className="w-3/12 px-4">
                         <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                            <img src="images/landing/implemented_projects/impl_proj_3.png" alt="impl_proj_3" className="rounded-lg w-full" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_3.png" alt="impl_proj_3" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                             {/* Enter real title of this project */}
                             <h1 className="hidden project_title">EdCamp діє!</h1>
@@ -123,7 +123,7 @@ export default function ImplementedProjects() {
                     </div>
                     <div className="w-3/12 px-4">
                         <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                            <img src="images/landing/implemented_projects/impl_proj_4.png" alt="impl_proj_4" className="rounded-lg w-full" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_4.png" alt="impl_proj_4" className="rounded-lg w-full" />
                             <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                             {/* Enter real title of this project */}
                             <h1 className="hidden project_title">Старонаводницька Башта</h1>
@@ -137,7 +137,7 @@ export default function ImplementedProjects() {
             <Carousel showThumbs={false} autoPlay={false} showStatus={false} className="lg:hidden prpl-btns mt-12">
                 <div className="w-11/12 m-auto pt-5 cursor-pointer px-4 pb-9">
                     <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                        <img src="images/landing/implemented_projects/impl_proj_1.png" alt="impl_proj_1" className="rounded-lg w-full" />
+                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_1.png" alt="impl_proj_1" className="rounded-lg w-full" />
                         <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                         {/* Enter real title of this project */}
                         <h1 className="hidden project_title">Майстерня переробки пластику EcoREactive</h1>
@@ -146,7 +146,7 @@ export default function ImplementedProjects() {
                 </div>
                 <div className="w-11/12 m-auto pt-5 cursor-pointer px-4 pb-9">
                     <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                        <img src="images/landing/implemented_projects/impl_proj_2.png" alt="impl_proj_2" className="rounded-lg w-full" />
+                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_2.png" alt="impl_proj_2" className="rounded-lg w-full" />
                         <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                         {/* Enter real title of this project */}
                         <h1 className="hidden project_title">Старонаводницька Башта</h1>
@@ -155,7 +155,7 @@ export default function ImplementedProjects() {
                 </div>
                 <div className="w-11/12 m-auto pt-5 cursor-pointer px-4 pb-9">
                     <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                        <img src="images/landing/implemented_projects/impl_proj_3.png" alt="impl_proj_3" className="rounded-lg w-full" />
+                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_3.png" alt="impl_proj_3" className="rounded-lg w-full" />
                         <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                         {/* Enter real title of this project */}
                         <h1 className="hidden project_title">EdCamp діє!</h1>
@@ -164,7 +164,7 @@ export default function ImplementedProjects() {
                 </div>
                 <div className="w-11/12 m-auto pt-5 cursor-pointer px-4 pb-9">
                     <div onClick={selectProj} className="cursor-pointer w-full top-0 transition-all relative bg-cover">
-                        <img src="images/landing/implemented_projects/impl_proj_4.png" alt="impl_proj_4" className="rounded-lg w-full" />
+                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/implemented_projects/impl_proj_4.png" alt="impl_proj_4" className="rounded-lg w-full" />
                         <div className="w-full h-full absolute top-0 rounded-lg darker-image z-30"></div>
                         {/* Enter real title of this project */}
                         <h1 className="hidden project_title">Старонаводницька Башта</h1>

@@ -34,10 +34,10 @@ export default function FirstScreenMap() {
                     </div>
                 </div>
                 <div className="bg-cover">
-                    <video id="video" onContextMenu={(e) => e.preventDefault()} src="images/1screen_short_cropped.mp4" preload="auto" playsinline={true} autoPlay={true} loop={true} muted="muted" className="-z-10 w-full h-screen object-cover hidden md:block"></video>
+                    <video id="video" onContextMenu={(e) => e.preventDefault()} src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/1screen_short_cropped.mp4" preload="auto" playsinline={true} autoPlay={true} loop={true} muted="muted" className="-z-10 w-full h-screen object-cover hidden md:block"></video>
 
                     {/* gif for mob devices */}
-                    <img src="images/landing/bgvideo.gif" alt="dvizhok" className="-z-10 w-full h-screen object-cover md:hidden" />
+                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/bgvideo.gif" alt="dvizhok" className="-z-10 w-full h-screen object-cover md:hidden" />
                 </div>
                 <div id="idea" className='w-full mb-16 h-0.5'></div>
             </div>

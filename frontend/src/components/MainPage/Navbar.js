@@ -12,7 +12,7 @@ export default function Navbar() {
                         <div className="flex-shrink-0">
                             <a href="#"><img
                                 className="h-8"
-                                src="images/logo.png"
+                                src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/logo.png"
                                 alt="Workflow"
                             /></a>
                         </div>

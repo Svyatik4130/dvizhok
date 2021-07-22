@@ -15,7 +15,7 @@ export default function HowTo() {
                                     Тоді ми подумали – а що, якщо ми самі почнемо робити ті зміни, про які мріємо? І почнемо виділяти
                                     на важливі проекти по 100 гривень щомісяця? Гроші невеликі, але якщо нас буде багато, то… </p>
                             </div>
-                            <img src="images/landing/arrows/arrow1.png" alt="arrow1" className="ml-8 h-4/6" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/arrows/arrow1.png" alt="arrow1" className="ml-8 h-4/6" />
                         </div>
                         <div>
                             <div className="bg-white mt-32 rounded-3xl py-4 px-5">
@@ -31,11 +31,11 @@ export default function HowTo() {
                                 <p className="font-medium text-2xl">Щоб досягти масштабних змін спільними зусиллями, ми створили платформу «DvizhOK».</p>
                             </div>
                             <div className="mt-2">
-                                <img src="images/landing/arrows/arrow2.png" className="mr-9 ml-auto w-4/12" alt="arrow2" />
+                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/arrows/arrow2.png" className="mr-9 ml-auto w-4/12" alt="arrow2" />
                             </div>
                         </div>
                         <div className='relative flex'>
-                            <img src="images/landing/arrows/arrow4.png" alt="arrow3" className="h-4/6 absolute top-2/4" />
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/arrows/arrow4.png" alt="arrow3" className="h-4/6 absolute top-2/4" />
                             <div className=" bg-white rounded-3xl py-4 px-5 ml-40">
                                 <p>Лише 100 гривень щомісяця можуть змінити країну! Адже йтимуть вони не в бюджет і не в кишеню чиновника.<br />
                                     <br />
@@ -54,17 +54,17 @@ export default function HowTo() {
                         Тоді ми подумали – а що, якщо ми самі почнемо робити ті зміни, про які мріємо? І почнемо виділяти
                         на важливі проекти по 100 гривень щомісяця? Гроші невеликі, але якщо нас буде багато, то… </p>
                 </div>
-                <img src="images/landing/arrows/arrow1_mob.png" alt="arrow1_mob" className="w-10/12 md:w-4/12 m-auto my-3" />
+                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/arrows/arrow1_mob.png" alt="arrow1_mob" className="w-10/12 md:w-4/12 m-auto my-3" />
                 <div className="bg-white rounded-3xl py-4 px-5 font-medium text-lg w-/12">
                     <p className="font-medium text-lg">Якщо ж у вас вже є важливий проект, без якого ви не уявляєте Омріяну Країну,
                         то на платформі «DvizhOK» ви зможете знайти однодумців, команду й необхідні ресурси!</p>
                 </div>
-                <img src="images/landing/arrows/arrow2_mob.png" alt="arrow2_mob" className="w-10/12 md:w-4/12 m-auto my-3" />
+                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/arrows/arrow2_mob.png" alt="arrow2_mob" className="w-10/12 md:w-4/12 m-auto my-3" />
                 <div className="bg-white rounded-3xl py-4 px-5 font-medium text-lg w-/12">
                     <p className="font-semibold text-lg">Гуртом ми можемо гори зрушити!</p>
                     <p className="font-medium text-lg">Щоб досягти масштабних змін спільними зусиллями, ми створили платформу «DvizhOK».</p>
                 </div>
-                <img src="images/landing/arrows/arrow1_mob.png" alt="arrow1_mob" className="w-10/12 md:w-4/12 m-auto my-3" />
+                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/arrows/arrow1_mob.png" alt="arrow1_mob" className="w-10/12 md:w-4/12 m-auto my-3" />
                 <div className=" bg-white rounded-3xl py-4 px-5 text-lg font-medium">
                     <p>Лише 100 гривень щомісяця можуть змінити країну! Адже йтимуть вони не в бюджет і не в кишеню чиновника.<br />
                         <br />
