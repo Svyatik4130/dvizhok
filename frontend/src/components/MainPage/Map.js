@@ -3,7 +3,7 @@ import React from 'react'
 export default function Map() {
     return (
         <div className="md:w-10/12 w-11/12 m-auto pt-14">
-            <div className="flex items-center justify-center"><p className="text-center text-purple-950 font-bold text-4xl md:text-5xl">Творців</p><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/mini_logo.png" alt="ok_logo_mini" className=" h-10 md:h-14" /></div>
+            <div className="flex items-center justify-center"><p className="text-center text-purple-950 font-bold text-4xl md:text-5xl">География</p><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/mini_logo.png" alt="ok_logo_mini" className=" h-10 md:h-14" /></div>
 
             <div className="w-full flex flex-col mt-8 lg:mt-0 lg:flex-row">
                 <div className="lg:w-4/12 w-full lg:pr-4">
