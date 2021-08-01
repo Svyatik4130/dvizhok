@@ -31,7 +31,7 @@ export default function Goal() {
                     </div>
                     <div className=" w-11/12 m-auto md:w-4/12 px-0 md:py-0 pt-6 md:px-3">
                         <div className="bg-white rounded-xl md:rounded-3xl pt-8">
-                            <div className="flex items-center justify-center"><p className="text-center font-bold text-2xl">Творців</p><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/mini_logo.png" alt="ok_logo_mini" className="h-9" /></div>
+                            <div className="flex items-center justify-center"><p className="text-center font-bold text-2xl">Творців</p></div>
                             <ChartCard>
                                 <Doughnut {...doughnutOptions} />
                                 <ChartLegend legends={doughnutLegends} />

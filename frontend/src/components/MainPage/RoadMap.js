@@ -7,7 +7,7 @@ export default function RoadMap() {
         <div className="w-full bg-purple-950 mt-14">
             <div className="m-auto text-white w-full pt-7">
                 <p className="text-center text-3xl md:text-5xl tracking-wide font-bold">Дорожня карта</p>
-                <p className="text-center text-xl md:text-2xl tracking-wide mt-2 font-medium">Этапы создания и развития платформы DvizhOk</p>
+                <p className="text-center text-xl md:text-2xl tracking-wide mt-2 font-medium">Етапи створення і розвитку мережі DvizhOK</p>
             </div>
             <div className="w-full">
                 <Carousel showThumbs={false} showStatus={false} className="px-7 hidden lg:block mt-24">

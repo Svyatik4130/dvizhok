@@ -5,7 +5,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 export default function Team() {
     return (
         <div className="w-full bg-purple-950 mt-14 pt-6">
-            <p className="text-4xl mb:text-5xl text-center font-semibold text-white mb-5">Команда</p>
+            <p className="text-4xl md:text-5xl text-center font-semibold text-white mb-5">Команда</p>
 
             <Carousel showThumbs={false} showStatus={false} className="px-7 hidden lg:block mt-24">
                 <div className="px-5 w-11/12 flex flex-row m-auto pb-12">
