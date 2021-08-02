@@ -33,7 +33,7 @@ export default function Contact() {
     }
 
     return (
-        <div className="md:w-10/12 w-11/12 flex md:flex-row flex-col m-auto">
+        <div className="lg:w-10/12 w-11/12 flex lg:flex-row flex-col m-auto">
             <div className="lg:w-6/12 w-full flex-1 lg:pr-2">
                 <div className="bg-white rounded-3xl pt-5">
                     <p className="text-center text-purple-950 font-bold text-3xl">Контакти</p>
@@ -52,7 +52,7 @@ export default function Contact() {
                             {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
                             {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
                             <input value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Ім’я" className="w-full mt-4 mb-3 h-8 text-xl px-4 py-5 rounded-2xl border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
-                            <input value={phone} onChange={e => setPhone(e.target.value)} type="phone" placeholder="Телефон" className="w-full mb-3 h-8 text-xl px-4 py-5 rounded-2xl border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
+                            <input value={phone} onChange={e => setPhone(e.target.value)} type="tel" name='tel' pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Телефон" className="w-full mb-3 h-8 text-xl px-4 py-5 rounded-2xl border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                             <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="E-mail" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-2xl border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                             <textarea value={message} onChange={e => setMessage(e.target.value)} type="text" placeholder="Повідомлення" className="w-full resize-none h-36 text-xl px-4 py-3 rounded-2xl border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                         </div>

@@ -1,8 +1,25 @@
 import React, { useState } from 'react'
 import { Transition } from "@headlessui/react";
+import { useHistory } from "react-router-dom"
+import { useSelector, useDispatch } from 'react-redux'
+import { loggedUser } from '../../actions/UserActions'
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const history = useHistory()
+    const dispatch = useDispatch()
+    const userData = useSelector(state => state.userData)
+
+    const logout = () => {
+        if (userData) {
+            dispatch(loggedUser({
+                token: undefined,
+                user: undefined
+            }))
+            localStorage.setItem("auth-token", "")
+            history.push("/")
+        }
+    }
 
     return (
         <nav className="fixed w-full z-50 bg-white">
@@ -30,7 +47,15 @@ export default function Navbar() {
                         </div>
                     </div>
                     <div className="items-center hidden xl:block">
-                        <button className="px-12 py-2 my-4 text-xl rounded-2xl text-white bg-purple-950">Вхiд</button>
+                        {userData.user ? (
+                            <div>
+                                <h1 className=" font-semibold">Вітаю, {userData.user.name}</h1>
+                                <button onClick={logout} className="rounded-lg bg-red-600 text-white w-full">Вийти</button>
+                            </div>
+                        ) : (
+                            <button onClick={() => history.push('/signin')} className="px-12 py-2 my-4 text-xl rounded-2xl text-white bg-purple-950">Вхiд</button>
+                        )
+                        }
                     </div>
                     <div className="-mr-2 flex xl:hidden">
                         <button
@@ -119,6 +144,6 @@ export default function Navbar() {
                     </div>
                 )}
             </Transition>
-        </nav>
+        </nav >
     )
 }

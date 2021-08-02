@@ -16,7 +16,8 @@ mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
     console.log("MONGODB CONNECTED")
 })
 
-app.use("/landing", require("./routes/landing_routes.js"))
+app.use("/users", require("./routes/user_routes"))
+app.use("/landing", require("./routes/landing_routes"))
 
 
 if (process.env.NODE_ENV === "production") {

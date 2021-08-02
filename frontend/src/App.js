@@ -1,32 +1,65 @@
-import React from 'react'
-import ChooseUrself from './components/MainPage/ChooseUrself';
-import Contact from './components/MainPage/Contact';
-import FirstScreenMap from './components/MainPage/FirstScreenMap';
-import Footer from './components/MainPage/Footer';
-import Goal from './components/MainPage/Goal';
-import HowTo from './components/MainPage/HowTo';
-import ImplementedProjects from './components/MainPage/ImplementedProjects';
-import Intro2ndScreen from './components/MainPage/Intro2ndScreen';
-import Map from './components/MainPage/Map';
-import Navbar from './components/MainPage/Navbar';
-import RoadMap from './components/MainPage/RoadMap';
-import Team from './components/MainPage/Team';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { Switch, Route, Redirect } from "react-router-dom";
+import SignIn from './components/auth/SignIn';
+import SignUp from './components/auth/SignUp';
+import Landing from './components/MainPage/Landing';
+import { useDispatch } from 'react-redux'
+import { loggedUser } from './actions/UserActions'
+import Loader from './components/Loaders/loading';
 
 function App() {
+  const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      let token = localStorage.getItem("auth-token");
+      if (token === null) {
+        localStorage.setItem("auth-token", "");
+        token = "";
+      }
+      console.log(token)
+      const tokenRes = await axios.post("/users/tokenIsValid", null, {
+        headers: { "x-auth-token": token },
+      })
+      if (tokenRes.data) {
+        console.log("hello")
+        const userRespond = await axios.get("/users/getme", {
+          headers: { "x-auth-token": token },
+        });
+        dispatch(
+          loggedUser({
+            token,
+            user: userRespond.data,
+          })
+        )
+      }
+      setIsLoading(false)
+    }
+    checkLoggedIn()
+  }, [])
+
+  if (isLoading) {
+    return <Loader />
+  }
+
   return (
     <div>
-      <Navbar />
-      <FirstScreenMap />
-      <Intro2ndScreen />
-      <HowTo />
-      <ChooseUrself />
-      <Goal />
-      <RoadMap />
-      <ImplementedProjects />
-      <Team />
-      <Map />
-      <Contact />
-      <Footer />
+      <Switch>
+        <Route exact path="/">
+          <Landing />
+        </Route>
+        <Route path="/dashboard">
+
+        </Route>
+        <Route path="/signin">
+          <SignIn />
+        </Route>
+        <Route path="/signup">
+          <SignUp />
+        </Route>
+      </Switch>
     </div>
   );
 }
