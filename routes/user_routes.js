@@ -9,24 +9,24 @@ router.post('/register', async (req, res) => {
         const { email, name, phone, password, passwordCheck } = req.body
 
         if (!email || !password || !passwordCheck) {
-            return res.status(400).json({ msg: 'Not all fields have been entered' })
+            return res.status(400).json({ msg: 'Не всі поля введені' })
         }
         if (password.length < 5) {
-            return res.status(400).json({ msg: "pass need to be at least 5 characters long" })
+            return res.status(400).json({ msg: "Пароль повинен містити не менше 5 символів" })
         }
         if (name.length < 1) {
-            return res.status(400).json({ msg: "enter your name please" })
+            return res.status(400).json({ msg: "Введіть своє ім'я, будь ласка" })
         }
         if (phone.length <= 9) {
-            return res.status(400).json({ msg: "Please, enter your phone" })
+            return res.status(400).json({ msg: "Телефон повинен мастити не менше 5 символів" })
         }
         if (passwordCheck !== password) {
-            return res.status(400).json({ msg: "enter the same password" });
+            return res.status(400).json({ msg: "Паролі не співпадають" });
         }
 
         const existingUserWithSuchEmail = await User.findOne({ "email.address": email })
         if (existingUserWithSuchEmail) {
-            return res.status(400).json({ msg: "an account with this email is already exists" })
+            return res.status(400).json({ msg: "Обліковий запис із цією електронною адресою вже існує" })
         }
 
         const salt = await bcrypt.genSalt()
@@ -78,16 +78,16 @@ router.post("/login", async (req, res) => {
         const { email, password } = req.body
 
         if (!email || !password) {
-            return res.status(400).json({ msg: "not all fields have been entered" })
+            return res.status(400).json({ msg: "Не всі поля введені" })
         }
         const userAcc = await User.findOne({ "email.address": email })
         if (!userAcc) {
-            return res.status(400).json({ msg: "No account with this email has been registered " })
+            return res.status(400).json({ msg: "Жодного облікового запису з цією електронною поштою не зареєстровано " })
         }
 
         const isMatch = await bcrypt.compare(password, userAcc.password)
         if (!isMatch) {
-            return res.status(400).json({ msg: "Invalid cerdentials" })
+            return res.status(400).json({ msg: "Недійсні облікові дані" })
         }
 
         const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
