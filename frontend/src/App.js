@@ -7,6 +7,7 @@ import Landing from './components/MainPage/Landing';
 import { useDispatch } from 'react-redux'
 import { loggedUser } from './actions/UserActions'
 import Loader from './components/Loaders/loading';
+import Dashboard from './components/Dashboard/Index';
 
 function App() {
   const dispatch = useDispatch()
@@ -51,7 +52,7 @@ function App() {
           <Landing />
         </Route>
         <Route path="/dashboard">
-
+          <Dashboard />
         </Route>
         <Route path="/signin">
           <SignIn />

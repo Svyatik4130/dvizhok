@@ -16,15 +16,3 @@ export const deleteUserRedux = (index) => {
         payload: index
     }
 }
-export const deletePendingUserRedux = (index) => {
-    return {
-        type: "DELETE_PENDING_USER",
-        payload: index
-    }
-}
-export const getAllPendingUsers = (allPendingUsers) => {
-    return {
-        type: "GET_PENDING_USERS",
-        payload: allPendingUsers
-    }
-}
