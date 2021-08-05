@@ -124,7 +124,7 @@ code {
 
 .active_desc_menu > .element_wrapper {
   background-color: #48004b;
-  left: 20px;
+  left: 10px;
   position: relative;
 }
 .active_desc_menu > .element_wrapper > .element_main_image {
@@ -156,4 +156,12 @@ code {
 }
 .active_desc_menu > .element_wrapper > .element_text {
   color: #fff;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

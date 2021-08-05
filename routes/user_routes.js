@@ -14,7 +14,7 @@ router.post('/register', async (req, res) => {
         if (password.length < 5) {
             return res.status(400).json({ msg: "Пароль повинен містити не менше 5 символів" })
         }
-        if (name.length < 1) {
+        if (name.length <= 1) {
             return res.status(400).json({ msg: "Введіть своє ім'я, будь ласка" })
         }
         if (phone.length <= 9) {
@@ -44,6 +44,100 @@ router.post('/register', async (req, res) => {
         const savedUser = await newUser.save()
 
         res.json(savedUser)
+    } catch (err) {
+        res.status(500).json(err.message)
+    }
+})
+router.post('/info_change', auth, async (req, res) => {
+    try {
+        const { name, email, userID } = req.body
+
+        if (req.user !== userID) {
+            return res.status(400).json({ msg: 'Ошибка' })
+        }
+        if (!email || !name) {
+            return res.status(400).json({ msg: 'Не всі поля введені' })
+        }
+        if (name.length <= 1) {
+            return res.status(400).json({ msg: "Введіть своє ім'я, будь ласка" })
+        }
+        const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if (!re.test(email)) {
+            return res.status(400).json({ msg: "E-mail введено некоректно" })
+        }
+        let userAcc = await User.findById(userID)
+        await User.updateOne({ _id: userID }, {
+            $set: {
+                "name": name,
+                "email": {
+                    address: email,
+                    visibility: userAcc.email.visibility
+                }
+            }
+        })
+        const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
+        const updatedUser = await User.findById(userID)
+
+        res.json({
+            token,
+            user: {
+                id: updatedUser._id,
+                role: updatedUser.roleId,
+                email: updatedUser.email.address,
+                name: updatedUser.name
+            }
+        })
+    } catch (err) {
+        res.status(500).json(err.message)
+    }
+})
+router.post('/pass_change', auth, async (req, res) => {
+    try {
+        const { curPass, newPass, repeateNewPass, userID } = req.body
+
+        if (req.user !== userID) {
+            return res.status(400).json({ msg: 'Ошибка' })
+        }
+
+        if (req.user !== userID) {
+            return res.status(400).json({ msg: 'Ошибка' })
+        }
+        if (!curPass || !newPass) {
+            return res.status(400).json({ msg: 'Не всі поля введені' })
+        }
+        if (newPass.length < 5) {
+            return res.status(400).json({ msg: "Пароль повинен містити не менше 5 символів" })
+        }
+        if (newPass !== repeateNewPass) {
+            return res.status(400).json({ msg: "Паролі не співпадають" });
+        }
+
+        const userAcc = await User.findById(req.user)
+        const isMatch = await bcrypt.compare(curPass, userAcc.password)
+        if (!isMatch) {
+            return res.status(400).json({ msg: "Поточний пароль не співпадає" })
+        }
+
+        const salt = await bcrypt.genSalt()
+        const passwordHash = await bcrypt.hash(newPass, salt)
+
+        await User.updateOne({ _id: userID }, {
+            $set: {
+                "password": passwordHash
+            }
+        })
+        const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
+        const updatedUser = await User.findById(userID)
+
+        res.json({
+            token,
+            user: {
+                id: updatedUser._id,
+                role: updatedUser.roleId,
+                email: updatedUser.email.address,
+                name: updatedUser.name
+            }
+        })
     } catch (err) {
         res.status(500).json(err.message)
     }

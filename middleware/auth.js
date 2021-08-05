@@ -12,7 +12,6 @@ const auth = async (req, res, next) => {
 
         if (token.length < 500) {
             const verified = jwt.verify(token, process.env.JWT_SECRET)
-            console.log(verified)
 
             if (!verified) {
                 return res.status(401).json({ msg: "Token authentification denied" })
@@ -25,12 +24,12 @@ const auth = async (req, res, next) => {
             if (!verified) {
                 return res.status(401).json({ msg: "Token authentification denied" })
             }
-
             const user = await User.findOne({ email: verified.email })
             req.user = user.id
             next()
         }
     } catch (err) {
+        console.log("error")
         res.status(500).json(err.message)
     }
 }

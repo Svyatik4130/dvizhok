@@ -1,16 +1,6 @@
-import React, { useEffect } from 'react'
-import ReactPlayer from 'react-player'
+import React from 'react'
 
 export default function FirstScreenMap() {
-
-    const play = () => {
-        document.getElementById('video').play();
-    }
-
-    useEffect(() => {
-        // document.getElementById('video').play();
-    }, [])
-
     return (
         <div style={{ paddingTop: "64px" }} className="w-full h-auto">
             <div className="w-full bg-purple-950">
@@ -29,7 +19,7 @@ export default function FirstScreenMap() {
                     </div>
 
                     <div className="flex flex-col lg:flex-row justify-between">
-                        <button onClick={() => play()} className=" px-4 lg:px-12 py-4 lg:py-2 my-4 text-xl lg:text-3xl rounded-2xl font-semibold bg-white text-purple-950"> Долучитись </button>
+                        <button className=" px-4 lg:px-12 py-4 lg:py-2 my-4 text-xl lg:text-3xl rounded-2xl font-semibold bg-white text-purple-950"> Долучитись </button>
                         <button className=" px-4 lg:px-12 py-4 lg:py-2 my-4 text-xl lg:text-3xl rounded-2xl font-semibold bg-white text-purple-950"> Додати проект  </button>
                     </div>
                 </div>
