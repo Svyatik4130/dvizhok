@@ -48,9 +48,16 @@ export default function Navbar() {
                     </div>
                     <div className="items-center hidden xl:block">
                         {userData.user ? (
-                            <div>
-                                <h1 className=" font-semibold">Вітаю, {userData.user.name}</h1>
-                                <button onClick={logout} className="rounded-lg bg-red-600 text-white w-full">Вийти</button>
+                            // <div>
+                            //     <h1 className=" font-semibold">Вітаю, {userData.user.name}</h1>
+                            //     <button onClick={logout} className="rounded-lg bg-red-600 text-white w-full">Вийти</button>
+                            // </div>
+                            <div className="flex justify-end pr-4">
+                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/+no_photo_user.png" alt="dvizhok_user" className="rounded-full w-14 border-2" />
+                                <div className="ml-2">
+                                    <p className="inline-block font-bold text-lg text-purple-850">{userData.user.name}</p>
+                                    <p onClick={() => {history.push("/dashboard")}} className=" bg-yellow-350 text-black font-medium px-2 cursor-pointer rounded-2xl">Особистий кабінет</p>
+                                </div>
                             </div>
                         ) : (
                             <button onClick={() => history.push('/signin')} className="px-12 py-2 my-4 text-xl rounded-2xl text-white bg-purple-950">Вхiд</button>

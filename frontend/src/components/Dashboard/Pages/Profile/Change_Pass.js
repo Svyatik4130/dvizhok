@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import axios from 'axios'
 import { loggedUser } from '../../../../actions/UserActions'
@@ -8,6 +8,7 @@ import SuccessNotice from '../../../misc/SuccessNotice'
 export default function Change_Pass() {
     const userData = useSelector(state => state.userData)
     const dispatch = useDispatch()
+    const [btnColor, setBtnColor] = useState("bg-gray-700 cursor-default")
 
     const [curPass, setCurPass] = useState('')
     const [newPass, setNewPass] = useState('')
@@ -39,6 +40,14 @@ export default function Change_Pass() {
         }
     }
 
+    useEffect(() => {
+        if (curPass !== "" && newPass !== "" && repeateNewPass !== "") {
+            setBtnColor("bg-purple-950 cursor-pointer")
+        } else {
+            setBtnColor("bg-gray-700 cursor-default")
+        }
+    }, [curPass, newPass, repeateNewPass])
+
     return (
         <div>
             <div className="w-10/12 mt-3">
@@ -62,7 +71,7 @@ export default function Change_Pass() {
                             <p className=" font-semibold text-lg">Підтвердження нового паролю</p>
                             <input value={repeateNewPass} onChange={e => setRepeateNewPass(e.target.value)} type="password" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                         </div>
-                        <button type="submit" className="font-meduim text-lg px-6 py-2 bg-purple-950 text-white rounded-xl">Зберегти зміни</button>
+                        <button type="submit" className={`font-meduim text-lg px-6 py-2 ${btnColor} text-white rounded-xl`}>Зберегти зміни</button>
                     </div>
                 </div>
             </form>

@@ -35,6 +35,7 @@ export default function Personal_Info() {
                 if (changeRes.status == 200) {
                     setError(undefined)
                     setSuccessMessage("Зміни були успішно внесені")
+                    setBtnColor("bg-gray-700 cursor-default")
                 }
             }
         } catch (err) {
