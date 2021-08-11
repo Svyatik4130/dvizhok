@@ -5,7 +5,7 @@ export default function DescTopMenu() {
     const userData = useSelector(state => state.userData)
 
     return (
-        <div className="w-8/9 fixed pt-5 flex items-center pl-5">
+        <div className="w-8/9 fixed pt-5 flex items-center pl-5 bg-blur">
             <input type="text" className="w-4/12 text-lg font-medium p-3 rounded-full outline-none" placeholder="Пошук людей чи проектів" />
             <div className="flex items-center ml-4 justify-center w-2/12">
                 <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/wallet.png" alt="dvizhok_wallte" className="w-9" />

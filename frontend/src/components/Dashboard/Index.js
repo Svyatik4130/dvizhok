@@ -5,6 +5,7 @@ import Loading from '../Loaders/loading';
 import DescTopMenu from './Navbars/DescTopMenu';
 import { useSelector } from 'react-redux'
 import ProfilePage from './Pages/Profile/ProfilePage';
+import Projects from './Pages/Projects/Projects';
 
 export default function Index() {
     const [IsLoading, setIsLoading] = useState(0)
@@ -45,7 +46,7 @@ export default function Index() {
                             <div>messages</div>
                         </Route>
                         <Route path="/dashboard/projects">
-                            <div>projects</div>
+                            <Projects />
                         </Route>
                         <Route path="/dashboard/calendar">
                             <div>calendar</div>
@@ -58,11 +59,11 @@ export default function Index() {
             </div>
 
             <div className="hidden">
-                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/main_active.png"  alt="lazy"/>
-                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/news_active.png"  alt="lazy"/>
-                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/message_active.png"  alt="lazy"/>
-                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/project_active.png"  alt="lazy"/>
-                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/calendar_active.png"  alt="lazy"/>
+                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/main_active.png" alt="lazy" />
+                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/news_active.png" alt="lazy" />
+                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/message_active.png" alt="lazy" />
+                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/project_active.png" alt="lazy" />
+                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/calendar_active.png" alt="lazy" />
             </div>
         </div>
     )

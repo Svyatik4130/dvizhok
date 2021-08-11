@@ -61,7 +61,7 @@ export default function Personal_Info() {
                 </div>
             </div>
             <form onSubmit={handleSubmit}>
-                <div className="flex p-5 pt-2">
+                <div className="flex p-5">
                     <div className="w-5/12 px-7">
                         <div>
                             <p className=" font-semibold text-lg">Iм’я</p>

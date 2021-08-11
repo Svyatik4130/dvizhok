@@ -16,9 +16,11 @@ mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
     console.log("MONGODB CONNECTED")
 })
 
-app.use("/users", require("./routes/user_routes"))
-app.use("/landing", require("./routes/landing_routes"))
+app.use("/users", require("./routes/userRouter"))
+app.use("/landing", require("./routes/landingRouter"))
+app.use("/project", require("./routes/projectRouter"))
 
+app.use(express.json()); // Used to parse JSON bodies
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static("frontend/build"))

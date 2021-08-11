@@ -165,3 +165,29 @@ code {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.bg-blur {
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  z-index: 100;
+}
+
+.img-preview{
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.img-preview img{
+  width: 23%;
+  height: 30%;
+  max-height: 300px;
+  margin: 9px;
+  border: 1px solid #a25db8;
+}
+.img-preview video{
+  width: 46%;
+  height: 30%;
+  max-height: 300px;
+  margin: 9px;
+  border: 1px solid #a25db8;
+}

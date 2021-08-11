@@ -24,10 +24,8 @@ export default function SignIn() {
         e.preventDefault()
         try {
             const newUser = { name, phone, email, password, passwordCheck }
-            console.log(newUser)
             await axios.post("/users/register", newUser)
             const loginRes = await axios.post("users/login", { email, password })
-            console.log(loginRes)
             dispatch(loggedUser({
                 token: loginRes.data.token,
                 user: loginRes.data.user
