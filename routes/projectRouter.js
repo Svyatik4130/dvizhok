@@ -19,7 +19,7 @@ const s3 = new aws.S3({
  */
 function checkFileType(file, cb) {
     // Allowed ext
-    const filetypes = /jpeg|jpg|mp4|mov|m4v|png|gif/;
+    const filetypes = /jpeg|jpg|mp4|mov|m4v|png/;
     // Check ext
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     // Check mime
@@ -103,5 +103,14 @@ router.post('/create-project', async (req, res) => {
     })
 }
 )
+
+router.get("/get-my-projects", auth, async (req, res) => {
+    const allMyProjects = await Project.find({projectleaderId: req.user})
+    res.json(allMyProjects)
+})
+router.get("/get-all-projects", async (req, res) => {
+    const allProjects = await Project.find({})
+    res.json(allProjects)
+})
 
 module.exports = router;

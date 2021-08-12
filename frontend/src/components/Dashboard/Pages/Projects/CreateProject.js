@@ -3,9 +3,11 @@ import axios from 'axios';
 import ErrorNotice from '../../../misc/ErrorNotice'
 import SuccessNotice from '../../../misc/SuccessNotice'
 import { useSelector } from 'react-redux'
+import { useHistory } from "react-router-dom"
 
 export default function CreateProject() {
     const userData = useSelector(state => state.userData)
+    const history = useHistory()
 
     const [Name, setName] = useState("")
     const [category, setCategory] = useState("")
@@ -76,12 +78,13 @@ export default function CreateProject() {
                         }
                     } else {
                         // Success with images and videos
-                        setSuccessMessage('File Uploaded')
+                        setSuccessMessage('Проект опублікован')
                         sethtmlImages([])
                         setBtnColor("bg-gray-700 cursor-default")
                         setselectedFiles(null)
 
                         setBtnColor("bg-gray-700 cursor-default")
+                        history.push("/dashboard/projects/myprojects")
                     }
                     setreqLoading(false)
                 } else {

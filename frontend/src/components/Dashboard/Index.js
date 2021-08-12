@@ -1,15 +1,40 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DescNavbar from './Navbars/DescNavbar'
 import { Switch, Route, Redirect } from "react-router-dom";
 import Loading from '../Loaders/loading';
 import DescTopMenu from './Navbars/DescTopMenu';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import ProfilePage from './Pages/Profile/ProfilePage';
 import Projects from './Pages/Projects/Projects';
+import axios from 'axios'
+import { addMyProjects } from '../../actions/ProjectActions'
+import Loader from '../Loaders/loading'
 
 export default function Index() {
     const [IsLoading, setIsLoading] = useState(0)
+    const [isDataReceived, setisDataReceived] = useState(false)
+    const dispatch = useDispatch()
     const userData = useSelector(state => state.userData)
+
+    useEffect(() => {
+        const gettingProjects = async () => {
+            try {
+                let token = localStorage.getItem("auth-token")
+                const myProjects = await axios.get("/project/get-my-projects", { headers: { "x-auth-token": token } })
+                dispatch(addMyProjects(myProjects.data))
+                console.log(myProjects.data)
+
+                setisDataReceived(true)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        gettingProjects()
+    }, [])
+
+    if (!isDataReceived) {
+        return <Loader />
+    }
 
     return (
         <div className="flex">

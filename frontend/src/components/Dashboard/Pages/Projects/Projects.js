@@ -1,6 +1,8 @@
 import React from 'react'
 import { Switch, Route, NavLink, Redirect } from "react-router-dom";
 import CreateProject from './CreateProject'
+import MyProjects from './MyProjects';
+import ProjectList from './ProjectList';
 
 export default function Projects() {
     return (
@@ -23,6 +25,9 @@ export default function Projects() {
                             + Створити проект
                         </NavLink>
                     </div>
+                    <div style={{ height: window.innerHeight - 160 }} className="w-full overflow-y-scroll rounded-xl p-4">
+                        <MyProjects />
+                    </div>
                 </Route>
                 <Route path="/dashboard/projects/projectslist">
                     {/* project menu */}
@@ -36,6 +41,9 @@ export default function Projects() {
                         <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2" to="/dashboard/projects/createproject">
                             + Створити проект
                         </NavLink>
+                    </div>
+                    <div style={{ height: window.innerHeight - 160 }} className="w-full overflow-y-scroll rounded-xl p-4">
+                        <ProjectList />
                     </div>
                 </Route>
                 <Route path="/dashboard/projects/">
