@@ -56,7 +56,7 @@ export default function Navbar() {
                                 <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/+no_photo_user.png" alt="dvizhok_user" className="rounded-full w-14 border-2" />
                                 <div className="ml-2">
                                     <p className="inline-block font-bold text-lg text-purple-850">{userData.user.name}</p>
-                                    <p onClick={() => {history.push("/dashboard")}} className=" bg-yellow-350 text-black font-medium px-2 cursor-pointer rounded-2xl">Особистий кабінет</p>
+                                    <p onClick={() => {history.push("/dashboard")}} className=" bg-yellow-350 hover:bg-yellow-400 transition-all text-black font-medium px-2 cursor-pointer rounded-2xl">Особистий кабінет</p>
                                 </div>
                             </div>
                         ) : (

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Carousel } from 'react-responsive-carousel';
 import ErrorNotice from '../../../misc/ErrorNotice';
 import axios from 'axios'
 import SimpleLoader from '../../../Loaders/SimpleLoader';
+import { useHistory } from 'react-router-dom'
 
 export default function ProjectList() {
     const [error, setError] = useState()
     const [AllProjects, setAllProjects] = useState([])
     const [isLoading, setisLoading] = useState(true)
+    const history = useHistory()
 
     useEffect(() => {
         const getAllProjects = async () => {
@@ -23,6 +24,10 @@ export default function ProjectList() {
         getAllProjects()
     }, [])
 
+    const sentToProjectPage = (id) => {
+        history.push(`/dashboard/projects/${id}`)
+    }
+
     if (isLoading) {
         return <SimpleLoader />
     }
@@ -33,36 +38,21 @@ export default function ProjectList() {
                 {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
             </div>
             <div className="w-full h-full flex">
-                <div className="w-9/12 flex flex-wrap overflow-y-scroll h-full">
+                <div className="w-9/12 flex flex-wrap overflow-y-scroll h-full border-2 border-purple-200 rounded-xl">
                     {AllProjects.map((project) => {
                         return (
                             <div className=" h-124 w-3/12 p-1">
-                                <div className="w-full h-full bg-white rounded-xl">
-                                    <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns">
-                                        {project.photosNvideos.map((source) => {
-                                            const ext = source.split('.')[source.split('.').length - 1]
-                                            console.log(ext)
-                                            if (ext == "jpeg" || ext == 'jpg' || ext == 'png') {
-                                                return (
-                                                    <div className="mb-8 rounded-t-xl h-36" style={{ backgroundImage: `url(${source})`, backgroundRepeat: 'no-repeat', backgroundSize: 'auto 144px', backgroundPosition: 'center' }}>
-                                                    </div>
-                                                )
-                                            } else {
-                                                return (
-                                                    <div className="pb-8">
-                                                        <video className="rounded-t-xl" controls>
-                                                            <source src={source} key={source}></source>
-                                                            Your browser does not support HTML5 video.
-                                                        </video>
-                                                    </div>
-                                                )
-                                            }
-                                        })}
-                                    </Carousel>
+                                <div className="w-full h-full bg-white rounded-xl relative">
+                                    <div onClick={() => sentToProjectPage(project._id)} className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
+                                        <div className="w-full text-center absolute bottom-0">
+                                            <div className="absolute w-full h-full bg-purple-950 opacity-50 top-0"></div>
+                                            <p className="font-medium z-10 relative text-white py-1">{project.category}</p>
+                                        </div>
+                                    </div>
 
                                     <div className="p-2">
-                                        <p className="font-semibold text-sm mb-1">{project.projectName}</p>
-                                        <p className="font-medium text-xs overflow-y-scroll">{project.description}</p>
+                                        <a onClick={() => sentToProjectPage(project._id)} className="font-semibold cursor-pointer underline text-sm mb-1">{project.projectName}</a>
+                                        <p className="font-medium text-xs overflow-y-scroll h-56">{project.description}</p>
                                     </div>
                                 </div>
                             </div>

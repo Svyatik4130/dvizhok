@@ -3,6 +3,7 @@ import { Switch, Route, NavLink, Redirect } from "react-router-dom";
 import CreateProject from './CreateProject'
 import MyProjects from './MyProjects';
 import ProjectList from './ProjectList';
+import ProjectPage from './ProjectPage';
 
 export default function Projects() {
     return (
@@ -46,6 +47,7 @@ export default function Projects() {
                         <ProjectList />
                     </div>
                 </Route>
+                <Route path="/dashboard/projects/:id" children={<ProjectPage />} />
                 <Route path="/dashboard/projects/">
                     <Redirect to="/dashboard/projects/projectslist" />
                 </Route>

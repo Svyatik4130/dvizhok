@@ -6,6 +6,7 @@ const projectSchema = new mongoose.Schema({
     description: { type: String, required: true },
     photosNvideos: { type: Array, required: true },
     category: { type: String, required: true },
+    logoUrl: { type: Array, required: true },
     projectName: { type: String, required: true }
 })
 

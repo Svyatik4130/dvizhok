@@ -46,7 +46,7 @@ const ProjectGalleryUploads = multer({
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     }
-}).array('galleryImage', 4);
+}).array('galleryImage', 5);
 
 
 
@@ -68,7 +68,7 @@ router.post('/prepublish-check', auth, async (req, res) => {
 
 router.post('/create-project', async (req, res) => {
     // saving images in s3
-    ProjectGalleryUploads(req, res, async(error) => {
+    ProjectGalleryUploads(req, res, async (error) => {
         if (error) {
             res.json({ msg: error });
         } else {
@@ -84,19 +84,22 @@ router.post('/create-project', async (req, res) => {
                     fileLocation = fileArray[i].location;
                     galleryImgLocationArray.push(fileLocation)
                 }
-                console.log(galleryImgLocationArray)
 
+                // last image in array is the logo
+                const logo = galleryImgLocationArray.splice(-1)
+
+                // save proj in mongodb
                 const newProj = new Project({
                     projectleaderName: req.body.userName,
                     projectleaderId: req.body.userId,
                     description: req.body.description,
                     photosNvideos: galleryImgLocationArray,
                     category: req.body.category,
+                    logoUrl: logo,
                     projectName: req.body.projName
                 })
 
                 const savedProject = await newProj.save()
-
                 res.json(savedProject);
             }
         }
@@ -105,12 +108,21 @@ router.post('/create-project', async (req, res) => {
 )
 
 router.get("/get-my-projects", auth, async (req, res) => {
-    const allMyProjects = await Project.find({projectleaderId: req.user})
+    const allMyProjects = await Project.find({ projectleaderId: req.user })
     res.json(allMyProjects)
 })
 router.get("/get-all-projects", async (req, res) => {
     const allProjects = await Project.find({})
     res.json(allProjects)
+})
+router.post("/get-exact-projects", async (req, res) => {
+    try {
+        const { id } = req.body
+        const exactProject = await Project.find({ _id: id })
+        res.json(exactProject)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 module.exports = router;

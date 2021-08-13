@@ -12,6 +12,7 @@ export default function CreateProject() {
     const [Name, setName] = useState("")
     const [category, setCategory] = useState("")
     const [selectedFiles, setselectedFiles] = useState("")
+    const [logoFile, setlogoFile] = useState("")
     const [shortDesc, setshortDesc] = useState("")
 
     const [isFormReady, setisFormReady] = useState("button")
@@ -19,6 +20,7 @@ export default function CreateProject() {
     const [successMessage, setSuccessMessage] = useState()
     const [btnColor, setBtnColor] = useState("bg-gray-700 cursor-default")
     const [htmlImages, sethtmlImages] = useState([])
+    const [logo, setLogo] = useState([])
     const [reqLoading, setreqLoading] = useState(false)
 
     const multipleFileChangedHandler = (event) => {
@@ -41,6 +43,8 @@ export default function CreateProject() {
                 }
                 data.append('galleryImage', selectedFiles[i]);
             }
+            console.log(logo)
+            data.append('galleryImage', logoFile);
             if (areNamesSuitable == false) {
                 setError("Назва файлів не повинна містити '/'")
                 setreqLoading(false)
@@ -79,12 +83,12 @@ export default function CreateProject() {
                     } else {
                         // Success with images and videos
                         setSuccessMessage('Проект опублікован')
-                        sethtmlImages([])
                         setBtnColor("bg-gray-700 cursor-default")
-                        setselectedFiles(null)
 
                         setBtnColor("bg-gray-700 cursor-default")
-                        history.push("/dashboard/projects/myprojects")
+                        setTimeout(() => {
+                            history.push("/dashboard/projects/myprojects")
+                        }, 1000);
                     }
                     setreqLoading(false)
                 } else {
@@ -132,10 +136,6 @@ export default function CreateProject() {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        if (category === "Виберіть категорію проекту") {
-            setError('Будь ласка, Виберіть категорію проекту');
-            return
-        }
         if (Name.length < 5) {
             setError("Назва проекту має містити принаймні 5 символів");
             return
@@ -143,8 +143,20 @@ export default function CreateProject() {
             setError("Назва проекту не може містити '/");
             return
         }
+        if (logoFile === '') {
+            setError('Будь ласка, завантажте лого');
+            return
+        }
+        if (category === "Виберіть категорію проекту") {
+            setError('Будь ласка, Виберіть категорію проекту');
+            return
+        }
         if (shortDesc.length < 25) {
             setError("Короткий опис має містити принаймні 25 символів");
+            return
+        }
+        if (selectedFiles.length > 4) {
+            setError("Максимальна кількість завантаженого відео і фото матеріалів - 4");
             return
         }
 
@@ -162,6 +174,8 @@ export default function CreateProject() {
             setBtnColor("bg-gray-700 cursor-default")
             setisFormReady("button")
         }
+        console.log(selectedFiles.length)
+
     }, [category, selectedFiles, Name, shortDesc])
 
 
@@ -196,6 +210,16 @@ export default function CreateProject() {
         }
         Array.from(e.target.files).map(file => URL.revokeObjectURL(file))
     }
+    function ProcessLogo(e) {
+        setLogo([])
+        if (e.target.files) {
+            const fileArr = Array.from(e.target.files).map((file) => {
+                return URL.createObjectURL(file)
+            })
+            setLogo((prevImages) => prevImages.concat(fileArr))
+        }
+        Array.from(e.target.files).map(file => URL.revokeObjectURL(file))
+    }
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -210,14 +234,40 @@ export default function CreateProject() {
                         </div>
                     </div>
                     <input value={Name} placeholder="Назва проекту" onChange={e => setName(e.target.value)} type="text" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
+
+                    <div className="flex mb-4 items-center">
+                        {/* logo-preview */}
+                        <div className="logo-preview mr-1.5">
+                            {renderPhotos(logo)}
+                        </div>
+                        <div className="relative">
+                            <label htmlFor="upload-logo" className="cursor-pointer font-medium text-lg">
+                                <div className='bg-yellow-350 hover:bg-yellow-400 transition-all rounded-lg inline-flex px-6 py-2'>
+                                    <p className="mr-auto">Завантажити лого</p>
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/upload.png" alt="upload" className="w-6 self-start inline-block ml-2 mr-auto" />
+                                </div>
+                            </label>
+                            <input className=" opacity-0 absolute -z-10" id="upload-logo" type="file" accept=".png, .jpg, .jpeg" onChange={(event) => { setlogoFile(event.target.files[0]); ProcessLogo(event) }} />
+                        </div>
+                    </div>
+
+                    <div class="relative inline-flex mb-4 ">
+                        <svg class="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 412 232"><path d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z" fill="#648299" fillRule="nonzero" /></svg>
+                        <select value={category} onChange={e => setCategory(e.currentTarget.value)} class="border-2 border-purple-950 rounded-xl text-gray-600 h-10 pl-5 pr-10 bg-white focus:outline-none appearance-none">
+                            <option>Виберіть категорію проекту</option>
+                            <option>Культура</option>
+                            <option>Екологія</option>
+                        </select>
+                    </div>
+
                     <div className="relative">
                         <label htmlFor="upload-photo" className="cursor-pointer font-medium text-lg">
-                            <div className='bg-yellow-350 rounded-lg inline-flex px-6 py-2'>
+                            <div className='bg-yellow-350 hover:bg-yellow-400 transition-all rounded-lg inline-flex px-6 py-2'>
                                 <p className="mr-auto">Завантажити відео чи фото</p>
                                 <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/upload.png" alt="upload" className="w-6 self-start inline-block ml-2 mr-auto" />
                             </div>
                         </label>
-                        <input className=" opacity-0 absolute -z-10" id="upload-photo" type="file" accept=".png, .jpg, .jpeg, .mov, .mp4, .m4v" multiple onChange={(event) => { multipleFileChangedHandler(event); ProcessFiles(event) }} />
+                        <input className=" opacity-0 absolute -z-10" id="upload-photo" multiple type="file" accept=".png, .jpg, .jpeg, .mov, .mp4, .m4v" onChange={(event) => { multipleFileChangedHandler(event); ProcessFiles(event) }} />
                         <p className="text-gray-500">*Максимальна кількість завантаженого відео і фото матеріалів - 4*</p>
                     </div>
 
@@ -226,14 +276,6 @@ export default function CreateProject() {
                         {renderPhotos(htmlImages)}
                     </div>
 
-                    <div class="relative inline-flex">
-                        <svg class="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 412 232"><path d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z" fill="#648299" fillRule="nonzero" /></svg>
-                        <select value={category} onChange={e => setCategory(e.currentTarget.value)} class="border-2 border-purple-950 rounded-xl text-gray-600 h-10 pl-5 pr-10 bg-white focus:outline-none appearance-none">
-                            <option>Виберіть категорію проекту</option>
-                            <option>Культура</option>
-                            <option>Екологія</option>
-                        </select>
-                    </div>
                     <div className="w-full">
                         <textarea value={shortDesc} onChange={e => setshortDesc(e.target.value)} placeholder="Короткий опис проекту" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950 mt-4" rows='5' ></textarea>
                     </div>
