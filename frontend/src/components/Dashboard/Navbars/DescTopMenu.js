@@ -21,37 +21,37 @@ export default function DescTopMenu() {
             </div>
             <div className="w-3/12">
                 <div className="flex justify-end pr-4">
-                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/+no_photo_user.png" alt="dvizhok_user" className="rounded-full w-14 border-2" />
-                    <div>
-                        <p className="inline-block font-bold text-lg text-purple-850">{userData.user.name}</p>
-                        {userData.user.role === 0 ? (
-                            <div className="flex gap-1 items-center">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-7" />
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-7" />
-                                <p className="text-lg ml-3 font-bold inline-block text-purple-850">ОКтивіст</p>
-                            </div>
-                        ) : userData.user.role === 1 ? (
-                            <div className="flex gap-1 items-center">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-7" />
-                                <p className="text-lg ml-3 font-bold inline-block text-purple-850">Творець</p>
-                            </div>
-                        ) : userData.user.role === 2 ? (
-                            <div className="flex gap-1 items-center">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
-                                <p className="text-lg ml-3 font-bold inline-block text-purple-850">Лідер</p>
-                            </div>
-                        ) : (
-                            null
-                        )
-                        }
+                    <div className="mb-1 w-14 h-14 mr-2 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
+                        <div>
+                            <p className="inline-block font-bold text-lg text-purple-850">{userData.user.name}</p>
+                            {userData.user.role === 0 ? (
+                                <div className="flex gap-1 items-center">
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-7" />
+                                    <p className="text-lg ml-3 font-bold inline-block text-purple-850">ОКтивіст</p>
+                                </div>
+                            ) : userData.user.role === 1 ? (
+                                <div className="flex gap-1 items-center">
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-7" />
+                                    <p className="text-lg ml-3 font-bold inline-block text-purple-850">Творець</p>
+                                </div>
+                            ) : userData.user.role === 2 ? (
+                                <div className="flex gap-1 items-center">
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <p className="text-lg ml-3 font-bold inline-block text-purple-850">Лідер</p>
+                                </div>
+                            ) : (
+                                null
+                            )
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    )
+            )
 }

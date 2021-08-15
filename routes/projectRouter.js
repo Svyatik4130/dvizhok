@@ -66,7 +66,7 @@ router.post('/prepublish-check', auth, async (req, res) => {
     }
 })
 
-router.post('/create-project', async (req, res) => {
+router.post('/create-project', (req, res) => {
     // saving images in s3
     ProjectGalleryUploads(req, res, async (error) => {
         if (error) {
@@ -104,8 +104,7 @@ router.post('/create-project', async (req, res) => {
             }
         }
     })
-}
-)
+})
 
 router.get("/get-my-projects", auth, async (req, res) => {
     const allMyProjects = await Project.find({ projectleaderId: req.user })

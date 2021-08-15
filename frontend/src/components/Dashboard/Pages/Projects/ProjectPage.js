@@ -36,10 +36,22 @@ export default function ProjectPage() {
         <div className="w-4/5 overflow-y-scroll pr-8">
             <div style={{ height: window.innerHeight - 96, marginTop: "96px" }} className="fixed p-4 rounded-l-3xl overflow-y-scroll bg-white top-0 right-0 h-full w-1/5">
                 <p className="text-2xl font-bold text-purple-950 text-center">Зібрано, грн</p>
-
-
-
+                <p className="text-2xl font-semibold mt-1">25 300</p>
+                <div className="flex justify-between items-center mt-3">
+                    <p className="text-sm font-medium text-purple-950 text-center">Ціль проекта</p>
+                    <p className="text-sm font-medium text-center">200 000 грн</p>
+                </div>
+                <div className="flex justify-between items-center mt-1">
+                    <p className="text-sm font-medium text-purple-950 text-center">Залишилось</p>
+                    <p className="text-sm font-medium text-center">215 днів</p>
+                </div>
+                <div className="flex justify-between items-center mt-1">
+                    <p className="text-sm font-medium text-purple-950 text-center">Проект запущений</p>
+                    <p className="text-sm font-medium text-center">23.04.2017</p>
+                </div>
+                <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
             </div>
+            
             <div className="bg-white rounded-3xl p-4">
                 <p className="text-2xl font-bold text-purple-950 text-center">{Project.projectName}</p>
                 <div className="font-medium text-lg w-6/12">

@@ -1,28 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import ErrorNotice from '../../../misc/ErrorNotice';
-import axios from 'axios'
 import SimpleLoader from '../../../Loaders/SimpleLoader';
 import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 export default function ProjectList() {
     const [error, setError] = useState()
-    const [AllProjects, setAllProjects] = useState([])
-    const [isLoading, setisLoading] = useState(true)
+    const allProjects = useSelector(state => state.allProjects)
+    const [isLoading, setisLoading] = useState(false)
     const history = useHistory()
 
-    useEffect(() => {
-        const getAllProjects = async () => {
-            try {
-                const getProjects = await axios.get('/project/get-all-projects')
-                setAllProjects(getProjects.data)
-
-                setisLoading(false)
-            } catch (error) {
-                error.response.data.msg && setError(error.response.data.msg)
-            }
-        }
-        getAllProjects()
-    }, [])
 
     const sentToProjectPage = (id) => {
         history.push(`/dashboard/projects/${id}`)
@@ -39,7 +26,7 @@ export default function ProjectList() {
             </div>
             <div className="w-full h-full flex">
                 <div className="w-9/12 flex flex-wrap overflow-y-scroll h-full border-2 border-purple-200 rounded-xl">
-                    {AllProjects.map((project) => {
+                    {allProjects.map((project) => {
                         return (
                             <div className=" h-124 w-3/12 p-1">
                                 <div className="w-full h-full bg-white rounded-xl relative">

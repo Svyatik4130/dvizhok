@@ -3,10 +3,14 @@ const User = require("../models/userModel")
 const bcrypt = require("bcryptjs")
 const auth = require("../middleware/auth")
 const jwt = require("jsonwebtoken")
+const path = require('path');
+const multerS3 = require('multer-s3');
+const multer = require('multer');
+const aws = require('aws-sdk');
 
 router.post('/register', async (req, res) => {
     try {
-        const { email, name, phone, password, passwordCheck } = req.body
+        const { email, name, phone, password, passwordCheck, logoUrl } = req.body
 
         if (!email || !password || !passwordCheck) {
             return res.status(400).json({ msg: 'Не всі поля введені' })
@@ -24,6 +28,11 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ msg: "Паролі не співпадають" });
         }
 
+        let logoUrlToDB = "https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/+no_photo_user.png"
+        if (logoUrl !== '') {
+            logoUrlToDB = logoUrl
+        }
+
         const existingUserWithSuchEmail = await User.findOne({ "email.address": email })
         if (existingUserWithSuchEmail) {
             return res.status(400).json({ msg: "Обліковий запис із цією електронною адресою вже існує" })
@@ -39,7 +48,8 @@ router.post('/register', async (req, res) => {
             password: passwordHash,
             roleId: 0,
             name,
-            phone
+            phone,
+            logoUrl: logoUrlToDB
         })
         const savedUser = await newUser.save()
 
@@ -48,6 +58,7 @@ router.post('/register', async (req, res) => {
         res.status(500).json(err.message)
     }
 })
+
 router.post('/info_change', auth, async (req, res) => {
     try {
         const { name, email, userID } = req.body
@@ -232,7 +243,100 @@ router.get("/getme", auth, async (req, res) => {
         id: user.id,
         role: user.roleId,
         email: user.email.address,
-        name: user.name
+        name: user.name,
+        avaUrl: user.logoUrl
+    })
+})
+
+const s3 = new aws.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    Bucket: 'dvizhok-hosted-content'
+});
+
+function checkFileType(file, cb) {
+    // Allowed ext
+    const filetypes = /jpeg|jpg|mp4|mov|m4v|png/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    // Check mime
+    const mimetype = filetypes.test(file.mimetype);
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb('Error: Images Only!');
+    }
+}
+
+const ProjectGalleryUploads = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'dvizhok-hosted-content',
+        acl: 'public-read',
+        key: function (req, file, cb) {
+            let FileName = path.basename(file.originalname, path.extname(file.originalname)) + '-' + Date.now() + path.extname(file.originalname)
+            cb(null, req.headers.location + FileName)
+        }
+    }),
+    limits: { fileSize: 20000000 }, // In bytes: 20000000 bytes = 20 MB
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    }
+}).array('avatar', 1);
+
+router.post('/prepublish-check', auth, async (req, res) => {
+    try {
+        const { userId } = req.body
+        if (userId !== req.user) {
+            return res.status(400).json({ msg: "Ошибка" })
+        }
+
+        res.status(201).json(req.user)
+    } catch (error) {
+        res.status(500).json({ msg: error.message })
+    }
+})
+
+router.post('/change-avatar', (req, res) => {
+    // saving images in s3
+    ProjectGalleryUploads(req, res, async (error) => {
+        if (error) {
+            res.json({ msg: error });
+        } else {
+            // If File not found
+            if (req.files === undefined) {
+                res.status(400).json({ msg: "Error: No File Selected" })
+            } else {
+                // If Success
+                let fileArray = req.files,
+                    fileLocation;
+                const galleryImgLocationArray = [];
+                for (let i = 0; i < fileArray.length; i++) {
+                    fileLocation = fileArray[i].location;
+                    galleryImgLocationArray.push(fileLocation)
+                }
+                
+                let userAcc = await User.findById(req.body.userId)
+                await User.updateOne({ _id: userAcc._id }, {
+                    $set: {
+                        "logoUrl": galleryImgLocationArray[0]
+                    }
+                })
+                const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
+                const updatedUser = await User.findById(userAcc._id)
+
+                res.json({
+                    token,
+                    user: {
+                        id: updatedUser._id,
+                        role: updatedUser.roleId,
+                        email: updatedUser.email.address,
+                        name: updatedUser.name,
+                        avaUrl: updatedUser.logoUrl
+                    }
+                })
+            }
+        }
     })
 })
 

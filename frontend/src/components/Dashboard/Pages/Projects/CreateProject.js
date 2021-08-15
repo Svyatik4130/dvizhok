@@ -43,7 +43,6 @@ export default function CreateProject() {
                 }
                 data.append('galleryImage', selectedFiles[i]);
             }
-            console.log(logo)
             data.append('galleryImage', logoFile);
             if (areNamesSuitable == false) {
                 setError("Назва файлів не повинна містити '/'")
@@ -60,7 +59,6 @@ export default function CreateProject() {
             const payload = { shortDesc, Name, category, userId: userData.user.id }
             try {
                 const prepublishRes = await axios.post("/project/prepublish-check", payload, { headers: { "x-auth-token": token } })
-                console.log(prepublishRes)
                 if (prepublishRes.status === 201) {
                     const publishRes = await axios.post('/project/create-project', data, {
                         headers: {
@@ -71,7 +69,6 @@ export default function CreateProject() {
                         }
                     })
                     // If file size is larger than expected.
-                    console.log(publishRes)
                     if (publishRes.data.msg) {
                         if (publishRes.data.msg.code === "LIMIT_FILE_SIZE") {
                             setError('Max size: 20MB')
@@ -92,13 +89,11 @@ export default function CreateProject() {
                     }
                     setreqLoading(false)
                 } else {
-                    console.log('hi')
                     setreqLoading(false)
                 }
                 setreqLoading(false)
             } catch (err) {
                 err.response.data.msg && setError(err.response.data.msg)
-                console.log(err)
                 if (err.response.data.msg) {
                     if (err.response.data.msg.code === "LIMIT_FILE_SIZE") {
                         setError('Max size: 20MB')
@@ -115,7 +110,7 @@ export default function CreateProject() {
             setError('Please upload file');
             setreqLoading(false)
         }
-    };
+    }
 
     // date format yyyy-mm-dd
     function formatDate(date) {
@@ -167,16 +162,14 @@ export default function CreateProject() {
 
     // responsive btn color
     useEffect(() => {
-        if (category !== "" && category !== "Виберіть категорію проекту" && Name !== "" && selectedFiles !== "" && shortDesc !== "") {
+        if (category !== "" && category !== "Виберіть категорію проекту" && Name !== "" && selectedFiles !== "" && shortDesc !== "" && logoFile !== "") {
             setBtnColor("bg-purple-950 cursor-pointer")
             setisFormReady("submit")
         } else {
             setBtnColor("bg-gray-700 cursor-default")
             setisFormReady("button")
         }
-        console.log(selectedFiles.length)
-
-    }, [category, selectedFiles, Name, shortDesc])
+    }, [category, selectedFiles, Name, shortDesc, logoFile])
 
 
     const renderPhotos = (source) => {
@@ -236,6 +229,7 @@ export default function CreateProject() {
                     <input value={Name} placeholder="Назва проекту" onChange={e => setName(e.target.value)} type="text" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
 
                     <div className="flex mb-4 items-center">
+
                         {/* logo-preview */}
                         <div className="logo-preview mr-1.5">
                             {renderPhotos(logo)}

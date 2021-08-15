@@ -4,3 +4,9 @@ export const addMyProjects = (projectsArr) => {
         payload: projectsArr
     }
 }
+export const addAllProjects = (projectsArr) => {
+    return {
+        type: "ADD_ALL_PROJECTS",
+        payload: projectsArr
+    }
+}

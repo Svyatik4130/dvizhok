@@ -22,7 +22,6 @@ export default function Index() {
                 let token = localStorage.getItem("auth-token")
                 const myProjects = await axios.get("/project/get-my-projects", { headers: { "x-auth-token": token } })
                 dispatch(addMyProjects(myProjects.data))
-                console.log(myProjects.data)
 
                 setisDataReceived(true)
             } catch (error) {
