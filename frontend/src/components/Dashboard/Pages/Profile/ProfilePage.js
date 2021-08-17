@@ -8,14 +8,14 @@ import Change_Pass from './Change_Pass';
 
 export default function ProfilePage() {
     return (
-        <div className="w-full pt-10 px-6" style={{ height: window.innerHeight - 100 }}>
+        <div className="w-full pt-0 lg:pt-10 lg:px-6 px-3" style={{ height: window.innerHeight - 100 }}>
             <Info />
-            <div className=" w-full" style={{ height: window.innerHeight - 300 }} >
-                <div className="w-7/12 flex rounded-t-xl font-medium text-lg" style={{ backgroundColor: "#DDDDDD" }}>
+            <div className="w-full" style={{ height: window.innerHeight - 300 }} >
+                <div className="lg:w-7/12 w-11/12 text-sm items-stretch flex rounded-t-xl font-medium lg:text-lg" style={{ backgroundColor: "#DDDDDD" }}>
                     <NavLink activeClassName="bg-white" to={"/dashboard/profile/personal_info"} className="w-3/12 text-center py-2 rounded-tl-xl border-r-2">
                         Особиста інфо
                     </NavLink>
-                    <NavLink activeClassName="bg-white" to={"/dashboard/profile/about_myself"} className="w-3/12 text-center py-2 border-r-2">
+                    <NavLink activeClassName="bg-white" to={"/dashboard/profile/about_myself"} className="w-3/12 py-2 text-center  border-r-2">
                         Про себе
                     </NavLink>
                     <NavLink activeClassName="bg-white" to={"/dashboard/profile/potential"} className="w-3/12 text-center py-2 border-r-2">

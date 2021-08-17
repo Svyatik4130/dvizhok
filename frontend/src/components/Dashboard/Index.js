@@ -9,6 +9,7 @@ import Projects from './Pages/Projects/Projects';
 import axios from 'axios'
 import { addMyProjects } from '../../actions/ProjectActions'
 import Loader from '../Loaders/loading'
+import MobileNavbar from './Navbars/MobileNavbar';
 
 export default function Index() {
     const [IsLoading, setIsLoading] = useState(0)
@@ -48,17 +49,22 @@ export default function Index() {
             }
 
 
-            <div onLoad={() => { setIsLoading(IsLoading + 1) }} className="w-1/9">
-                <DescNavbar />
+            <div onLoad={() => { setIsLoading(IsLoading + 1) }} className="lg:w-1/9 w-0">
+                <div className="hidden lg:block">
+                    <DescNavbar />
+                </div>
+                <div className="lg:hidden">
+                    <MobileNavbar />
+                </div>
             </div>
-            <div className="w-8/9">
+            <div className="lg:w-8/9 w-full">
                 {userData.user ? (
                     <DescTopMenu />
                 ) : (
                     null
                 )
                 }
-                <div className="pt-20">
+                <div className="lg:pt-20 pt-5">
                     <Switch>
                         <Route path="/dashboard/profile/">
                             <ProfilePage />

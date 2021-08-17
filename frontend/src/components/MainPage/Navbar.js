@@ -7,6 +7,7 @@ import { loggedUser } from '../../actions/UserActions'
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const history = useHistory()
+
     const dispatch = useDispatch()
     const userData = useSelector(state => state.userData)
 
@@ -53,10 +54,10 @@ export default function Navbar() {
                             //     <button onClick={logout} className="rounded-lg bg-red-600 text-white w-full">Вийти</button>
                             // </div>
                             <div className="flex justify-end pr-4">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/+no_photo_user.png" alt="dvizhok_user" className="rounded-full w-14 border-2" />
+                                <div className="w-14 h-14 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
                                 <div className="ml-2">
                                     <p className="inline-block font-bold text-lg text-purple-850">{userData.user.name}</p>
-                                    <p onClick={() => {history.push("/dashboard")}} className=" bg-yellow-350 hover:bg-yellow-400 transition-all text-black font-medium px-2 cursor-pointer rounded-2xl">Особистий кабінет</p>
+                                    <p onClick={() => { history.push("/dashboard") }} className=" bg-yellow-350 hover:bg-yellow-400 transition-all text-black font-medium px-2 cursor-pointer rounded-2xl">Особистий кабінет</p>
                                 </div>
                             </div>
                         ) : (

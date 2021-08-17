@@ -19,7 +19,7 @@ export default function MyProjects() {
                         <div className="w-full h-full relative opacity-50">
                             <div className="absolute center-content">
                                 <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="h-72 block m-auto" />
-                                <p className="font-medium text-center text-4xl text-purple-950">Ви ще не зробили жодного проекту. Станьте Творцем і створіть свій проект!</p>
+                                <p className="font-medium text-center text-4xl text-purple-950">Ви ще не створили жодного проекту. Станьте Творцем і створіть свій проект!</p>
                             </div>
                         </div>
                     ) : (

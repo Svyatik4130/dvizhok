@@ -127,7 +127,13 @@ code {
   left: 10px;
   position: relative;
 }
+.active_mob_menu > .element_wrapper {
+  background-color: #48004b;
+}
 .active_desc_menu > .element_wrapper > .element_main_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/main_active.png");
+}
+.active_mob_menu > .element_wrapper > .element_main_image {
   content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/main_active.png");
 }
 .active_desc_menu > .element_wrapper > .element_news_image {
@@ -154,7 +160,40 @@ code {
 .active_desc_menu > .element_wrapper > .element_faq_image {
   content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/faq_active.png");
 }
+.active_mob_menu > .element_wrapper > .element_main_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/main_active.png");
+}
+.active_mob_menu > .element_wrapper > .element_main_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/main_active.png");
+}
+.active_mob_menu > .element_wrapper > .element_news_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/news_active.png");
+}
+.active_mob_menu > .element_wrapper > .element_messages_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/message_active.png");
+}
+.active_mob_menu > .element_wrapper > .element_projects_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/project_active.png");
+}
+.active_mob_menu > .element_wrapper > .element_calendar_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/calendar_active.png");
+}
+.active_mob_menu > .element_wrapper > .element_report_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/report_active.png");
+}
+.active_mob_menu > .element_wrapper > .element_idea_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/report_active.png");
+}
+.active_mob_menu > .element_wrapper > .element_blog_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/blog_active.png");
+}
+.active_mob_menu > .element_wrapper > .element_faq_image {
+  content: url("https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/active/faq_active.png");
+}
 .active_desc_menu > .element_wrapper > .element_text {
+  color: #fff;
+}
+.active_mob_menu > .element_wrapper > .element_text {
   color: #fff;
 }
 
@@ -325,3 +364,5 @@ code {
   border-radius: 18px;
   border: 1px solid #cfcece;
 }
+
+/* keyframes fro mob devices */

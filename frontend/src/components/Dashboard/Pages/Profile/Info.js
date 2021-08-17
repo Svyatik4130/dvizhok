@@ -130,14 +130,16 @@ export default function Info() {
     }
 
     return (
-        <div className="flex w-full">
-            <div className="w-8/12 flex">
-                <div className="mb-1 w-44 h-44 mx-8 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}>
+        <div className="flex w-full lg:flex-row flex-col">
+            <p className="text-3xl text-purple-950 mb-2 font-bold lg:hidden block">{userData.user.name}</p>
+
+            <div className="lg:w-8/12 w-full flex">
+                <div className="mb-1 lg:w-44 lg:h-44 h-28 w-28 mx-8 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}>
                     <Popup
                         trigger={
                             <label htmlFor="upload-profPic" className="cursor-pointer font-medium text-lg">
-                                <div className="absolute bottom-0 w-full py-4 text-white bg-black-transparent rounded-b-full text-center cursor-pointer">
-                                    <p className="font-semibold text-sm">Змінити фото</p>
+                                <div className="absolute bottom-0 w-full lg:py-4 py-5 text-white bg-black-transparent rounded-b-full text-center cursor-pointer">
+                                    <p className="font-semibold lg:text-sm text-xs">Змінити фото</p>
                                 </div>
                             </label>
                         }
@@ -203,34 +205,34 @@ export default function Info() {
 
                 </div>
                 <div className="ml-4">
-                    <p className="text-5xl text-purple-950 font-bold">{userData.user.name}</p>
+                    <p className="lg:text-5xl text-3xl text-purple-950 font-bold hidden lg:block">{userData.user.name}</p>
                     <div className="mt-4">
                         {userData.user.role === 0 ? (
                             <div>
                                 <div className="flex gap-1 items-center">
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-12" />
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-12" />
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-12" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="lg:w-12 w-8" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="lg:w-12 w-8" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="lg:w-12 w-8" />
                                 </div>
-                                <p className="text-2xl font-semibold inline-block text-purple-850 mt-4">ОКтивіст</p>
+                                <p className="lg:text-2xl text-xl font-semibold inline-block text-purple-850 lg:mt-4 mt-1">ОКтивіст</p>
                             </div>
                         ) : userData.user.role === 1 ? (
                             <div>
                                 <div className="flex gap-1 items-center">
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-12" />
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-12" />
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-12" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="lg:w-12 w-8" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="lg:w-12 w-8" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="lg:w-12 w-8" />
                                 </div>
-                                <p className="text-2xl font-semibold inline-block text-purple-850 mt-4">Творець</p>
+                                <p className="lg:text-2xl text-xl font-semibold inline-block text-purple-850 lg:mt-4 mt-1">Творець</p>
                             </div>
                         ) : userData.user.role === 2 ? (
                             <div>
                                 <div className="flex gap-1 items-center">
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-12" />
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-12" />
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-12" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="lg:w-12 w-8" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="lg:w-12 w-8" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="lg:w-12 w-8" />
                                 </div>
-                                <p className="text-2xl font-semibold inline-block text-purple-850 mt-4">Лідер</p>
+                                <p className="lg:text-2xl text-xl font-semibold inline-block text-purple-850 lg:mt-4 mt-1">Лідер</p>
                             </div>
                         ) : (
                             null
@@ -239,9 +241,9 @@ export default function Info() {
                     </div>
                 </div>
             </div>
-            <div className="w-4/12">
+            <div className="lg:w-4/12 w-full lg:py-0 py-5">
                 <div className="m-auto text-center">
-                    <p className="text-purple-950 text-2xl mb-4 font-semibold">Ваш потенціал: 0 грн</p>
+                    <p className="text-purple-950 lg:text-2xl text-lg lg:mb-4 mb-2 font-semibold">Ваш потенціал: 0 грн</p>
                     {/* title has to be responsive */}
                     <a href="#" className="bg-yellow-350 font-semibold text-lg text-purple-950 rounded-full px-6 py-2">Стати Творцем</a>
                 </div>

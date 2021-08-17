@@ -49,7 +49,7 @@ router.post('/register', async (req, res) => {
             roleId: 0,
             name,
             phone,
-            logoUrl: logoUrlToDB
+            avatarUrl: logoUrlToDB
         })
         const savedUser = await newUser.save()
 
@@ -95,7 +95,8 @@ router.post('/info_change', auth, async (req, res) => {
                 id: updatedUser._id,
                 role: updatedUser.roleId,
                 email: updatedUser.email.address,
-                name: updatedUser.name
+                name: updatedUser.name,
+                avaUrl: updatedUser.avatarUrl
             }
         })
     } catch (err) {
@@ -146,7 +147,8 @@ router.post('/pass_change', auth, async (req, res) => {
                 id: updatedUser._id,
                 role: updatedUser.roleId,
                 email: updatedUser.email.address,
-                name: updatedUser.name
+                name: updatedUser.name,
+                avaUrl: updatedUser.avatarUrl
             }
         })
     } catch (err) {
@@ -202,7 +204,8 @@ router.post("/login", async (req, res) => {
                 id: userAcc._id,
                 role: userAcc.roleId,
                 email: userAcc.email.address,
-                name: userAcc.name
+                name: userAcc.name,
+                avaUrl: userAcc.avatarUrl
             }
         })
 
@@ -244,7 +247,7 @@ router.get("/getme", auth, async (req, res) => {
         role: user.roleId,
         email: user.email.address,
         name: user.name,
-        avaUrl: user.logoUrl
+        avaUrl: user.avatarUrl
     })
 })
 
@@ -319,7 +322,7 @@ router.post('/change-avatar', (req, res) => {
                 let userAcc = await User.findById(req.body.userId)
                 await User.updateOne({ _id: userAcc._id }, {
                     $set: {
-                        "logoUrl": galleryImgLocationArray[0]
+                        "avatarUrl": galleryImgLocationArray[0]
                     }
                 })
                 const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
@@ -332,7 +335,7 @@ router.post('/change-avatar', (req, res) => {
                         role: updatedUser.roleId,
                         email: updatedUser.email.address,
                         name: updatedUser.name,
-                        avaUrl: updatedUser.logoUrl
+                        avaUrl: updatedUser.avatarUrl
                     }
                 })
             }

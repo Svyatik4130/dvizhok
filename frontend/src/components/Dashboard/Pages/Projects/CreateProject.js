@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import ErrorNotice from '../../../misc/ErrorNotice'
 import SuccessNotice from '../../../misc/SuccessNotice'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom"
+import { addMyProjects, addAllProjects } from '../../../../actions/ProjectActions'
 
 export default function CreateProject() {
     const userData = useSelector(state => state.userData)
+    const myProjects = useSelector(state => state.myProjects)
+    const allProjects = useSelector(state => state.allProjects)
+    const dispatch = useDispatch()
     const history = useHistory()
 
     const [Name, setName] = useState("")
@@ -82,7 +86,13 @@ export default function CreateProject() {
                         setSuccessMessage('Проект опублікован')
                         setBtnColor("bg-gray-700 cursor-default")
 
-                        setBtnColor("bg-gray-700 cursor-default")
+                        // adding projects to redux
+                        myProjects.push(publishRes.data)
+                        dispatch(addMyProjects(myProjects))
+
+                        allProjects.push(publishRes.data)
+                        dispatch(addAllProjects(myProjects))
+
                         setTimeout(() => {
                             history.push("/dashboard/projects/myprojects")
                         }, 1000);
