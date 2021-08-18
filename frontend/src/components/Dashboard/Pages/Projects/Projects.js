@@ -10,7 +10,7 @@ export default function Projects() {
         <div className="lg:px-6 px-2 lg:pt-4 pt-0">
             <Switch>
                 <Route path="/dashboard/projects/createproject">
-                    <div style={{ height: window.innerHeight - 100 }} className="w-full overflow-y-scroll rounded-xl p-4 bg-white">
+                    <div style={{ height: window.innerHeight - 100 }} className="w-full lg:overflow-y-scroll overflow-hidden rounded-xl p-4 bg-white">
                         <CreateProject />
                     </div>
                 </Route>
