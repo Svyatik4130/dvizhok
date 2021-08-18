@@ -61,8 +61,8 @@ export default function Personal_Info() {
                 </div>
             </div>
             <form onSubmit={handleSubmit}>
-                <div className="flex p-5">
-                    <div className="w-5/12 px-7">
+                <div className="flex flex-col lg:flex-row p-5">
+                    <div className="lg:w-5/12 w-full lg:px-7 px-2">
                         <div>
                             <p className=" font-semibold text-lg">Iм’я</p>
                             <input value={name} onChange={e => setName(e.target.value)} type="text" placeholder={userData.user.name} className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
@@ -72,7 +72,7 @@ export default function Personal_Info() {
                             <input value={surname} onChange={e => setSurname(e.target.value)} type="text" placeholder="surname" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                         </div>
                     </div>
-                    <div className="w-5/12 px-7">
+                    <div className="lg:w-5/12 w-full lg:px-7 px-2">
                         <div>
                             <p className=" font-semibold text-lg">Країна</p>
                             <input value={country} onChange={e => setCountry(e.target.value)} type="text" placeholder="country" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />

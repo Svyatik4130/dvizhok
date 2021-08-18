@@ -24,11 +24,11 @@ export default function ProjectList() {
             <div className="px-12 m-auto">
                 {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
             </div>
-            <div className="w-full h-full flex">
-                <div className="w-9/12 flex flex-wrap overflow-y-scroll h-full border-2 border-purple-200 rounded-xl">
+            <div className="w-full h-full flex lg:flex-row flex-col ">
+                <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap overflow-y-scroll h-full border-2 border-purple-200 rounded-xl">
                     {allProjects.map((project) => {
                         return (
-                            <div className=" h-124 w-3/12 p-1">
+                            <div className=" h-124 lg:w-3/12 md:w-6/12 w-full md:p-1 p-2">
                                 <div className="w-full h-full bg-white rounded-xl relative">
                                     <div onClick={() => sentToProjectPage(project._id)} className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
                                         <div className="w-full text-center absolute bottom-0">
@@ -46,7 +46,7 @@ export default function ProjectList() {
                         )
                     })}
                 </div>
-                <div className="w-3/12 pl-7">
+                <div className="lg:w-3/12 w-full lg:pl-7 pl-0 pb-4 lg:pb-0 order-1 lg:order-2">
                     <input type="text" className="w-full text-lg font-medium p-3 px-4 rounded-full outline-none" placeholder="Пошук проектів" />
                 </div>
             </div>

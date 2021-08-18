@@ -58,7 +58,7 @@ export default function Change_Pass() {
             </div>
             <form onSubmit={handleSubmit}>
                 <div className="flex p-5">
-                    <div className="w-5/12 px-7">
+                    <div className="lg:w-5/12 w-full lg:px-7 px-2">
                         <div>
                             <p className=" font-semibold text-lg">Поточний пароль</p>
                             <input value={curPass} onChange={e => setCurPass(e.target.value)} type="password" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />

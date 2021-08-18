@@ -174,7 +174,7 @@ export default function MobileNavbar() {
                 {(ref) => (
                     <div className="xl:hidden" id="mobile-menu">
                         <div ref={ref} className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                            <div className="flex w-full justify-between">
+                            <div className="flex w-full justify-around">
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/profile"} className="transition-all z-50" activeClassName="active_mob_menu">
                                     <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
                                         <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/main.png" alt="lazy" className="element_main_image w-9 m-auto" />
@@ -195,7 +195,7 @@ export default function MobileNavbar() {
                                 </NavLink>
                             </div>
 
-                            <div className="flex w-full justify-between">
+                            <div className="flex w-full justify-around">
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/projects"} activeClassName="active_mob_menu">
                                     <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
                                         <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/projects.png" alt="lazy" className="element_projects_image w-9 m-auto" />
@@ -216,7 +216,7 @@ export default function MobileNavbar() {
                                 </NavLink>
                             </div>
 
-                            <div className="flex w-full justify-between">
+                            <div className="flex w-full justify-around">
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/idea"} activeClassName="active_mob_menu">
                                     <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
                                         <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/idea.png" alt="lazy" className="element_idea_image w-9 m-auto" />

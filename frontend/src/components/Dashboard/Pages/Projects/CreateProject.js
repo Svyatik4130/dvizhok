@@ -226,10 +226,10 @@ export default function CreateProject() {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <div className="w-5/12 mb-6 p-2">
+                <div className="lg:w-5/12 w-full mb-6 p-2">
                     <p className="font-bold text-3xl">Створити новий проект</p>
                 </div>
-                <div className="w-5/12 pl-9">
+                <div className="lg:w-5/12 w-full lg:pl-9 pl-0">
                     <div className="w-10/12 mt-3 m-auto">
                         <div className="px-2 m-auto">
                             {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
@@ -246,7 +246,7 @@ export default function CreateProject() {
                         </div>
                         <div className="relative">
                             <label htmlFor="upload-logo" className="cursor-pointer font-medium text-lg">
-                                <div className='bg-yellow-350 hover:bg-yellow-400 transition-all rounded-lg inline-flex px-6 py-2'>
+                                <div className='bg-yellow-350 hover:bg-yellow-400 transition-all rounded-lg inline-flex items-center px-6 py-2'>
                                     <p className="mr-auto">Завантажити лого</p>
                                     <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/upload.png" alt="upload" className="w-6 self-start inline-block ml-2 mr-auto" />
                                 </div>
@@ -284,7 +284,7 @@ export default function CreateProject() {
                         <textarea value={shortDesc} onChange={e => setshortDesc(e.target.value)} placeholder="Короткий опис проекту" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950 mt-4" rows='5' ></textarea>
                     </div>
                 </div>
-                <div className="flex mt-6 pl-9">
+                <div className="flex mt-6 lg:pl-9 pl-0">
                     <button id="submitbtn" className={`font-meduim text-lg px-6 py-2 ${btnColor} text-white rounded-xl`} type={isFormReady}>+ Створити проект</button>
                     {reqLoading ? (
                         <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-11" />

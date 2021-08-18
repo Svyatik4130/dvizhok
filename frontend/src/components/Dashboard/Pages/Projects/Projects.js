@@ -7,7 +7,7 @@ import ProjectPage from './ProjectPage';
 
 export default function Projects() {
     return (
-        <div className="px-6 pt-4">
+        <div className="lg:px-6 px-2 lg:pt-4 pt-0">
             <Switch>
                 <Route path="/dashboard/projects/createproject">
                     <div style={{ height: window.innerHeight - 100 }} className="w-full overflow-y-scroll rounded-xl p-4 bg-white">
@@ -15,7 +15,7 @@ export default function Projects() {
                     </div>
                 </Route>
                 <Route path="/dashboard/projects/myprojects">
-                    <div className="flex ml-6 mt-3 gap-2">
+                    <div className="flex flex-wrap lg:ml-6 ml-0 mt-3 gap-2">
                         <NavLink activeClassName="text-yellow-350" className="bg-purple-950 rounded-2xl px-6 text-white font-medium text-lg py-2" to="/dashboard/projects/myprojects">
                             Мої проекти
                         </NavLink>
@@ -32,7 +32,7 @@ export default function Projects() {
                 </Route>
                 <Route path="/dashboard/projects/projectslist">
                     {/* project menu */}
-                    <div className="flex ml-6 mt-3 gap-2">
+                    <div className="flex flex-wrap lg:ml-6 ml-0 mt-3 gap-2">
                         <NavLink activeClassName="text-yellow-350" className="bg-purple-950 rounded-2xl px-6 text-white font-medium text-lg py-2" to="/dashboard/projects/myprojects">
                             Мої проекти
                         </NavLink>
@@ -43,7 +43,7 @@ export default function Projects() {
                             + Створити проект
                         </NavLink>
                     </div>
-                    <div style={{ height: window.innerHeight - 160 }} className="w-full overflow-y-scroll rounded-xl p-4">
+                    <div style={{ height: window.innerHeight - 160 }} className="w-full overflow-y-scroll rounded-xl lg:p-4 p-2">
                         <ProjectList />
                     </div>
                 </Route>
