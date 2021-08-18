@@ -2,8 +2,9 @@ const express = require("express")
 const mongoose = require("mongoose")
 require("dotenv").config()
 const path = require('path');
-
+const passport = require("passport");
 const app = express()
+
 app.use(express.json())
 const PORT = process.env.PORT || 5040
 
@@ -12,7 +13,7 @@ mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
     useUnifiedTopology: true,
     useCreateIndex: true
 }, (err) => {
-    if (err) throw err; 
+    if (err) throw err;
     console.log("MONGODB CONNECTED")
 })
 
@@ -20,7 +21,10 @@ app.use("/users", require("./routes/userRouter"))
 app.use("/landing", require("./routes/landingRouter"))
 app.use("/project", require("./routes/projectRouter"))
 
-app.use(express.json()); // Used to parse JSON bodies
+// Passport middleware
+app.use(passport.initialize());
+// Passport config
+require("./config/passport")(passport);
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static("frontend/build"))

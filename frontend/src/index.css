@@ -322,7 +322,7 @@ code {
   background-size: contain;
   background-position: center;
 }
-.responsive-image-bgImgUrl-cover{
+.responsive-image-bgImgUrl-cover {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -341,7 +341,7 @@ code {
 .popup-overlay {
   background-color: rgba(0, 0, 0, 0.424);
 }
-.popup-content{
+.popup-content {
   width: 60%;
 }
 .modal > .actions {
@@ -365,4 +365,9 @@ code {
   border: 1px solid #cfcece;
 }
 
-/* keyframes fro mob devices */
+/* @media for mob devices */
+@media (max-width: 768px) {
+  .popup-content {
+    width: 90%;
+  }
+}

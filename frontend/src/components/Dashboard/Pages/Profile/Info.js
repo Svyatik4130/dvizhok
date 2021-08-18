@@ -183,7 +183,7 @@ export default function Info() {
 
 
                                 </div>
-                                <div className="w-full rounded-xl bg-gray-50 py-3 sm:px-6 sm:flex items-center sm:flex-row-reverse">
+                                <div className="w-full rounded-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
                                     {reqLoading ? (
                                         <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
                                     ) : (

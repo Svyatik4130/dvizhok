@@ -17,12 +17,11 @@ function App() {
   useEffect(() => {
     const PreLoadOpps = async () => {
       try {
-        let token = localStorage.getItem("auth-token");
+        let token = localStorage.getItem("auth-token")
         if (token === null) {
           localStorage.setItem("auth-token", "");
           token = "";
         }
-        // console.log(token)
         const tokenRes = await axios.post("/users/tokenIsValid", null, {
           headers: { "x-auth-token": token },
         })

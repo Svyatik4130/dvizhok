@@ -59,6 +59,40 @@ router.post('/register', async (req, res) => {
     }
 })
 
+router.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body
+
+        if (!email || !password) {
+            return res.status(400).json({ msg: "Не всі поля введені" })
+        }
+        const userAcc = await User.findOne({ "email.address": email })
+        if (!userAcc) {
+            return res.status(400).json({ msg: "Жодного облікового запису з цією електронною поштою не зареєстровано " })
+        }
+
+        const isMatch = await bcrypt.compare(password, userAcc.password)
+        if (!isMatch) {
+            return res.status(400).json({ msg: "Недійсні облікові дані" })
+        }
+
+        const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
+        res.json({
+            token,
+            user: {
+                id: userAcc._id,
+                role: userAcc.roleId,
+                email: userAcc.email.address,
+                name: userAcc.name,
+                avaUrl: userAcc.avatarUrl
+            }
+        })
+
+    } catch (err) {
+        res.status(500).json(err.message)
+    }
+})
+
 router.post('/info_change', auth, async (req, res) => {
     try {
         const { name, email, userID } = req.body
@@ -175,40 +209,6 @@ router.post('/googleUserAuth', async (req, res) => {
             const savedUser = await newUser.save()
             res.json(savedUser)
         }
-    } catch (err) {
-        res.status(500).json(err.message)
-    }
-})
-
-router.post("/login", async (req, res) => {
-    try {
-        const { email, password } = req.body
-
-        if (!email || !password) {
-            return res.status(400).json({ msg: "Не всі поля введені" })
-        }
-        const userAcc = await User.findOne({ "email.address": email })
-        if (!userAcc) {
-            return res.status(400).json({ msg: "Жодного облікового запису з цією електронною поштою не зареєстровано " })
-        }
-
-        const isMatch = await bcrypt.compare(password, userAcc.password)
-        if (!isMatch) {
-            return res.status(400).json({ msg: "Недійсні облікові дані" })
-        }
-
-        const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
-        res.json({
-            token,
-            user: {
-                id: userAcc._id,
-                role: userAcc.roleId,
-                email: userAcc.email.address,
-                name: userAcc.name,
-                avaUrl: userAcc.avatarUrl
-            }
-        })
-
     } catch (err) {
         res.status(500).json(err.message)
     }
