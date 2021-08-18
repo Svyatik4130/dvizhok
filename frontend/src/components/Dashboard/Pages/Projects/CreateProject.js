@@ -91,7 +91,7 @@ export default function CreateProject() {
                         dispatch(addMyProjects(myProjects))
 
                         allProjects.push(publishRes.data)
-                        dispatch(addAllProjects(myProjects))
+                        dispatch(addAllProjects(allProjects))
 
                         setTimeout(() => {
                             history.push("/dashboard/projects/myprojects")
