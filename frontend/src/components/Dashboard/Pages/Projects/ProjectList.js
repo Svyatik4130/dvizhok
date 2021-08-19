@@ -25,7 +25,7 @@ export default function ProjectList() {
                 {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
             </div>
             <div className="w-full h-full flex lg:flex-row flex-col ">
-                <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap overflow-y-scroll h-full border-2 border-purple-200 rounded-xl">
+                <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full border-2 border-purple-200 rounded-xl">
                     {allProjects.map((project) => {
                         return (
                             <div className=" h-124 lg:w-3/12 md:w-6/12 w-full md:p-1 p-2">

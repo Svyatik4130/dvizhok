@@ -54,7 +54,7 @@ export default function Personal_Info() {
 
     return (
         <div>
-            <div className="w-10/12 mt-3">
+            <div className="w-10/12 lg:mt-3">
                 <div className="px-14">
                     {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
                     {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}

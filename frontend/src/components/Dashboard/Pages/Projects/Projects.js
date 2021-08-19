@@ -26,7 +26,7 @@ export default function Projects() {
                             + Створити проект
                         </NavLink>
                     </div>
-                    <div style={{ height: window.innerHeight - 160 }} className="w-full overflow-y-scroll rounded-xl p-4">
+                    <div style={{ height: window.innerHeight - 160 }} className="w-full lg:overflow-y-scroll rounded-xl lg:p-4 p-2">
                         <MyProjects />
                     </div>
                 </Route>
@@ -43,7 +43,7 @@ export default function Projects() {
                             + Створити проект
                         </NavLink>
                     </div>
-                    <div style={{ height: window.innerHeight - 160 }} className="w-full overflow-y-scroll rounded-xl lg:p-4 p-2">
+                    <div style={{ height: window.innerHeight - 160 }} className="w-full lg:overflow-y-scroll rounded-xl lg:p-4 p-2">
                         <ProjectList />
                     </div>
                 </Route>

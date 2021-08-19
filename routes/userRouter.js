@@ -318,7 +318,7 @@ router.post('/change-avatar', (req, res) => {
                     fileLocation = fileArray[i].location;
                     galleryImgLocationArray.push(fileLocation)
                 }
-                
+
                 let userAcc = await User.findById(req.body.userId)
                 await User.updateOne({ _id: userAcc._id }, {
                     $set: {
@@ -341,6 +341,16 @@ router.post('/change-avatar', (req, res) => {
             }
         }
     })
+})
+
+router.post("/get-leader", async (req, res) => {
+    try {
+        const { id } = req.body
+        const Leader = await User.findOne({ _id: id })
+        res.json(Leader)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 module.exports = router

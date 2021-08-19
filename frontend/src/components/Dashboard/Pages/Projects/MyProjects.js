@@ -12,7 +12,7 @@ export default function MyProjects() {
 
     return (
         <div className="w-full h-full flex lg:flex-row flex-col">
-            <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap overflow-y-scroll h-full border-2 border-purple-200 rounded-xl">
+            <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full border-2 border-purple-200 rounded-xl">
                 {
                     myProjects[0] === undefined ? (
                         <div className="w-full h-full relative opacity-50">

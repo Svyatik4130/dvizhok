@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Info from './Info'
 import { Switch, Route, NavLink, Redirect } from "react-router-dom";
 import Personal_Info from './Personal_Info';
@@ -7,6 +7,14 @@ import Potential from './Potential';
 import Change_Pass from './Change_Pass';
 
 export default function ProfilePage() {
+    const [responsiveStyles, setresponsiveStyles] = useState({})
+
+    useEffect(() => {
+        if (window.screen.width >= 1024) {
+            setresponsiveStyles({ height: window.innerHeight - 350 })
+        }
+    }, [])
+
     return (
         <div className="w-full pt-0 lg:pt-10 lg:px-6 px-3" style={{ height: window.innerHeight - 100 }}>
             <Info />
@@ -27,22 +35,22 @@ export default function ProfilePage() {
                 </div>
                 <Switch>
                     <Route path="/dashboard/profile/personal_info">
-                        <div style={{ height: window.innerHeight - 350 }} className="w-full overflow-y-scroll rounded-b-xl rounded-tr-xl bg-white">
+                        <div style={responsiveStyles} className="w-full lg:overflow-y-scroll rounded-b-xl rounded-tr-xl bg-white">
                             <Personal_Info />
                         </div>
                     </Route>
                     <Route path="/dashboard/profile/about_myself">
-                        <div style={{ height: window.innerHeight - 350 }} className="w-full overflow-y-scroll rounded-b-xl rounded-tr-xl bg-white">
+                        <div style={responsiveStyles} className="w-full overflow-y-scroll rounded-b-xl rounded-tr-xl bg-white">
                             <About_Myself />
                         </div>
                     </Route>
                     <Route path="/dashboard/profile/potential">
-                        <div style={{ height: window.innerHeight - 350 }} className="w-full overflow-y-scroll rounded-b-xl rounded-tr-xl bg-white">
+                        <div style={responsiveStyles} className="w-full overflow-y-scroll rounded-b-xl rounded-tr-xl bg-white">
                             <Potential />
                         </div>
                     </Route>
                     <Route path="/dashboard/profile/change_pass">
-                        <div style={{ height: window.innerHeight - 350 }} className="w-full overflow-y-scroll rounded-b-xl rounded-tr-xl bg-white">
+                        <div style={responsiveStyles} className="w-full overflow-y-scroll rounded-b-xl rounded-tr-xl bg-white">
                             <Change_Pass />
                         </div>
                     </Route>
