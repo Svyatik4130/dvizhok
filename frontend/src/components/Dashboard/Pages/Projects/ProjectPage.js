@@ -153,7 +153,7 @@ export default function ProjectPage() {
                             })}
                         </Carousel>
                     </div>
-                    <div>
+                    <div className="break-words">
                         <strong className=" font-semibold text-xl">ІСТОРІЯ</strong><br />
                         {Project.description}
                     </div>
