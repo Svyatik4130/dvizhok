@@ -25,7 +25,7 @@ export default function ProjectList() {
                 {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
             </div>
             <div className="w-full h-full flex lg:flex-row flex-col ">
-                <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full border-2 border-purple-200 rounded-xl">
+                <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full lg:border-2 border-purple-200 rounded-xl">
                     {allProjects.map((project) => {
                         return (
                             <div className=" h-124 lg:w-3/12 md:w-6/12 w-full md:p-1 p-2">
@@ -38,8 +38,8 @@ export default function ProjectList() {
                                     </div>
 
                                     <div className="p-2">
-                                        <a onClick={() => sentToProjectPage(project._id)} className="font-semibold cursor-pointer underline text-sm mb-1">{project.projectName}</a>
-                                        <p className="font-medium text-xs overflow-y-scroll h-56">{project.description}</p>
+                                        <a onClick={() => sentToProjectPage(project._id)} className="font-semibold cursor-pointer underline text-sm mb-1 break-words">{project.projectName}</a>
+                                        <p className="font-medium text-xs overflow-y-scroll break-words h-56">{project.description}</p>
                                     </div>
                                 </div>
                             </div>

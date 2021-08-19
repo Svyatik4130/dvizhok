@@ -12,7 +12,7 @@ export default function MyProjects() {
 
     return (
         <div className="w-full h-full flex lg:flex-row flex-col">
-            <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full border-2 border-purple-200 rounded-xl">
+            <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full lg:border-2 border-purple-200 rounded-xl">
                 {
                     myProjects[0] === undefined ? (
                         <div className="w-full h-full relative opacity-50">
@@ -34,8 +34,8 @@ export default function MyProjects() {
                                         </div>
 
                                         <div className="p-2">
-                                            <a onClick={() => sentToProjectPage(project._id)} className="font-semibold cursor-pointer underline text-sm mb-1">{project.projectName}</a>
-                                            <p className="font-medium text-xs overflow-y-scroll h-56">{project.description}</p>
+                                            <a onClick={() => sentToProjectPage(project._id)} className="font-semibold cursor-pointer underline text-sm mb-1 break-words">{project.projectName}</a>
+                                            <p className="font-medium text-xs overflow-y-scroll break-words h-56">{project.description}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -50,38 +50,3 @@ export default function MyProjects() {
         </div>
     )
 }
-
-
-
-// return (
-//     <div className=" h-124 w-3/12 p-1">
-//         <div className="w-full h-full bg-white rounded-xl">
-//             <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns">
-//                 {project.photosNvideos.map((source) => {
-//                     const ext = source.split('.')[source.split('.').length - 1]
-//                     console.log(ext)
-//                     if (ext == "jpeg" || ext == 'jpg' || ext == 'png') {
-//                         return (
-//                             <div className="mb-8 rounded-t-xl h-36" style={{ backgroundImage: `url(${source})`, backgroundRepeat: 'no-repeat', backgroundSize: 'auto 144px', backgroundPosition: 'center' }}>
-//                             </div>
-//                         )
-//                     } else {
-//                         return (
-//                             <div className="pb-8">
-//                                 <video className="rounded-t-xl" controls>
-//                                     <source src={source} key={source}></source>
-//                                     Your browser does not support HTML5 video.
-//                                 </video>
-//                             </div>
-//                         )
-//                     }
-//                 })}
-//             </Carousel>
-
-//             <div className="p-2">
-//                 <p className="font-semibold text-sm mb-1">{project.projectName}</p>
-//                 <p className="font-medium text-xs overflow-y-scroll">{project.description}</p>
-//             </div>
-//         </div>
-//     </div>
-// )
