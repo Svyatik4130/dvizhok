@@ -37,63 +37,6 @@ export default function MobileNavbar() {
                         <div className="hidden xl:block">
                             <div className="ml-10 text-purple-950 text-xl font-semibold flex items-baseline">
 
-
-                                <NavLink to={"/dashboard/profile"} className="transition-all z-50" activeClassName="active_desc_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 mt-7 mb-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/main.png" alt="lazy" className="element_main_image w-9 m-auto" />
-                                        <p className="element_text text-center text-purple-950 font-medium">Головна</p>
-                                    </div>
-                                </NavLink>
-                                <NavLink to={"/dashboard/news"} activeClassName="active_desc_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/news.png" alt="lazy" className="element_news_image w-9 m-auto" />
-                                        <p className="element_text text-center text-purple-950 font-medium">Стрічка новин</p>
-                                    </div>
-                                </NavLink>
-                                <NavLink to={"/dashboard/messages"} activeClassName="active_desc_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/message.png" alt="lazy" className="element_messages_image w-9 m-auto" />
-                                        <p className="element_text text-center text-purple-950 break-words font-medium">Повідомлення</p>
-                                    </div>
-                                </NavLink>
-                                <NavLink to={"/dashboard/projects"} activeClassName="active_desc_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/projects.png" alt="lazy" className="element_projects_image w-9 m-auto" />
-                                        <p className="element_text text-center text-purple-950 font-medium">Проекти</p>
-                                    </div>
-                                </NavLink>
-                                <NavLink to={"/dashboard/calendar"} activeClassName="active_desc_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/calendar.png" alt="lazy" className="element_calendar_image w-9 m-auto" />
-                                        <p className="element_text text-center text-purple-950 font-medium">Календар подій</p>
-                                    </div>
-                                </NavLink>
-                                <NavLink to={"/dashboard/report"} activeClassName="active_desc_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/report.png" alt="lazy" className="element_report_image w-9 m-auto" />
-                                        <p className="element_text text-center text-purple-950 font-medium">Звітність</p>
-                                    </div>
-                                </NavLink>
-                                <NavLink to={"/dashboard/idea"} activeClassName="active_desc_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/idea.png" alt="lazy" className="element_idea_image w-9 m-auto" />
-                                        <p className="element_text text-center text-purple-950 font-medium">Ідея</p>
-                                    </div>
-                                </NavLink>
-                                <NavLink to={"/dashboard/blog"} activeClassName="active_desc_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/blog.png" alt="lazy" className="element_blog_image w-9 m-auto" />
-                                        <p className="element_text text-center text-purple-950 font-medium">Блог</p>
-                                    </div>
-                                </NavLink>
-                                <NavLink to={"/dashboard/faq"} activeClassName="active_desc_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/faq.png" alt="lazy" className="element_faq_image w-9 m-auto" />
-                                        <p className="element_text text-center text-purple-950 font-medium">FAQ</p>
-                                    </div>
-                                </NavLink>
-
-
                             </div>
                         </div>
                     </div>
@@ -174,22 +117,22 @@ export default function MobileNavbar() {
                 {(ref) => (
                     <div className="xl:hidden" id="mobile-menu">
                         <div ref={ref} className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                            <div className="flex w-full justify-around">
+                            <div className="flex w-full justify-between">
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/profile"} className="transition-all z-50" activeClassName="active_mob_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/main.png" alt="lazy" className="element_main_image w-9 m-auto" />
+                                    <div className="element_wrapper transition-all left-0 p-2  rounded-3xl">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/main.png" alt="lazy" className="element_main_image w-6 m-auto" />
                                         <p className="element_text text-center text-purple-950 font-medium">Головна</p>
                                     </div>
                                 </NavLink>
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/news"} activeClassName="active_mob_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/news.png" alt="lazy" className="element_news_image w-9 m-auto" />
+                                    <div className="element_wrapper transition-all left-0 p-2  rounded-3xl">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/news.png" alt="lazy" className="element_news_image w-6 m-auto" />
                                         <p className="element_text text-center text-purple-950 font-medium">Стрічка новин</p>
                                     </div>
                                 </NavLink>
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/messages"} activeClassName="active_mob_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/message.png" alt="lazy" className="element_messages_image w-9 m-auto" />
+                                    <div className="element_wrapper transition-all left-0 p-2  rounded-3xl">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/message.png" alt="lazy" className="element_messages_image w-6 m-auto" />
                                         <p className="element_text text-center text-purple-950 break-words font-medium">Повідомлення</p>
                                     </div>
                                 </NavLink>
@@ -197,20 +140,20 @@ export default function MobileNavbar() {
 
                             <div className="flex w-full justify-around">
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/projects"} activeClassName="active_mob_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/projects.png" alt="lazy" className="element_projects_image w-9 m-auto" />
+                                    <div className="element_wrapper transition-all left-0 p-2  rounded-3xl">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/projects.png" alt="lazy" className="element_projects_image w-6 m-auto" />
                                         <p className="element_text text-center text-purple-950 font-medium">Проекти</p>
                                     </div>
                                 </NavLink>
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/calendar"} activeClassName="active_mob_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/calendar.png" alt="lazy" className="element_calendar_image w-9 m-auto" />
+                                    <div className="element_wrapper transition-all left-0 p-2  rounded-3xl">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/calendar.png" alt="lazy" className="element_calendar_image w-6 m-auto" />
                                         <p className="element_text text-center text-purple-950 font-medium">Календар подій</p>
                                     </div>
                                 </NavLink>
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/report"} activeClassName="active_mob_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/report.png" alt="lazy" className="element_report_image w-9 m-auto" />
+                                    <div className="element_wrapper transition-all left-0 p-2  rounded-3xl">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/report.png" alt="lazy" className="element_report_image w-6 m-auto" />
                                         <p className="element_text text-center text-purple-950 font-medium">Звітність</p>
                                     </div>
                                 </NavLink>
@@ -218,20 +161,20 @@ export default function MobileNavbar() {
 
                             <div className="flex w-full justify-around">
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/idea"} activeClassName="active_mob_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/idea.png" alt="lazy" className="element_idea_image w-9 m-auto" />
+                                    <div className="element_wrapper transition-all left-0 p-2  rounded-3xl">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/idea.png" alt="lazy" className="element_idea_image w-6 m-auto" />
                                         <p className="element_text text-center text-purple-950 font-medium">Ідея</p>
                                     </div>
                                 </NavLink>
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/blog"} activeClassName="active_mob_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/blog.png" alt="lazy" className="element_blog_image w-9 m-auto" />
+                                    <div className="element_wrapper transition-all left-0 p-2  rounded-3xl">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/blog.png" alt="lazy" className="element_blog_image w-6 m-auto" />
                                         <p className="element_text text-center text-purple-950 font-medium">Блог</p>
                                     </div>
                                 </NavLink>
                                 <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/faq"} activeClassName="active_mob_menu">
-                                    <div className="element_wrapper transition-all left-0 p-2 my-2 rounded-3xl">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/faq.png" alt="lazy" className="element_faq_image w-9 m-auto" />
+                                    <div className="element_wrapper transition-all left-0 p-2  rounded-3xl">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/faq.png" alt="lazy" className="element_faq_image w-6 m-auto" />
                                         <p className="element_text text-center text-purple-950 font-medium">FAQ</p>
                                     </div>
                                 </NavLink>

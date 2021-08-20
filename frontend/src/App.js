@@ -47,7 +47,7 @@ function App() {
 
         // This is the visitor identifier:
         const visitorId = result.visitorId
-        console.log(result.components.audio.value)
+        console.log(result)
 
         setIsLoading(false)
       } catch (error) {
