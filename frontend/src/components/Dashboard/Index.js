@@ -10,6 +10,7 @@ import axios from 'axios'
 import { addMyProjects } from '../../actions/ProjectActions'
 import Loader from '../Loaders/loading'
 import MobileNavbar from './Navbars/MobileNavbar';
+import UserPage from './Pages/UserPage/UserPage';
 
 export default function Index() {
     const [IsLoading, setIsLoading] = useState(0)
@@ -68,6 +69,8 @@ export default function Index() {
                     <Switch>
                         <Route path="/dashboard/profile/">
                             <ProfilePage />
+                        </Route>
+                        <Route path="/dashboard/userpage/:id" children={<UserPage />}>
                         </Route>
                         <Route path="/dashboard/news">
                             <div>news</div>

@@ -10,9 +10,11 @@ import Loader from './components/Loaders/loading';
 import Dashboard from './components/Dashboard/Index';
 import { addAllProjects } from './actions/ProjectActions'
 
+import FingerprintJS from '@fingerprintjs/fingerprintjs'
 function App() {
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true);
+  const fpPromise = FingerprintJS.load()
 
   useEffect(() => {
     const PreLoadOpps = async () => {
@@ -39,6 +41,13 @@ function App() {
 
         const allProjects = await axios.get("/project/get-all-projects")
         dispatch(addAllProjects(allProjects.data))
+
+        const fp = await fpPromise
+        const result = await fp.get()
+
+        // This is the visitor identifier:
+        const visitorId = result.visitorId
+        console.log(result.components.audio.value)
 
         setIsLoading(false)
       } catch (error) {

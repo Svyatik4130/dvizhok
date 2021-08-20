@@ -353,4 +353,14 @@ router.post("/get-leader", async (req, res) => {
     }
 })
 
+router.post("/get-user", async (req, res) => {
+    try {
+        const { id } = req.body
+        const UserInfo = await User.findOne({ _id: id })
+        res.json(UserInfo)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 module.exports = router
