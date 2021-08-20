@@ -11,10 +11,12 @@ import Dashboard from './components/Dashboard/Index';
 import { addAllProjects } from './actions/ProjectActions'
 
 import FingerprintJS from '@fingerprintjs/fingerprintjs'
+import browserSignature from 'browser-signature';
 function App() {
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true);
   const fpPromise = FingerprintJS.load()
+  const signature = browserSignature();
 
   useEffect(() => {
     const PreLoadOpps = async () => {
@@ -47,7 +49,7 @@ function App() {
 
         // This is the visitor identifier:
         const visitorId = result.visitorId
-        console.log(result)
+        console.log("Current Browser Unique Signature: ", signature);
 
         setIsLoading(false)
       } catch (error) {
