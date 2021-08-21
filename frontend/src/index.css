@@ -31,6 +31,9 @@ code {
 .prpl-btns .control-prev::before {
   border-right: 12px solid #48004b !important;
 }
+.dot{
+  background: #48004b !important;
+}
 
 .wrapper {
   width: 200px;

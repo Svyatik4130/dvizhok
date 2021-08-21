@@ -28,7 +28,7 @@ export default function SignIn() {
         try {
             const newUser = { name, phone, email, password, passwordCheck, signature }
             await axios.post("/users/register", newUser)
-            const loginRes = await axios.post("users/login", { email, password })
+            const loginRes = await axios.post("users/login", { email, password, signature })
             dispatch(loggedUser({
                 token: loginRes.data.token,
                 user: loginRes.data.user
