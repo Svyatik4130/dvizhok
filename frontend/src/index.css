@@ -365,6 +365,10 @@ code {
   border: 1px solid #cfcece;
 }
 
+.custom-shadow {
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+}
+
 /* @media for mob devices */
 @media (max-width: 768px) {
   .popup-content {

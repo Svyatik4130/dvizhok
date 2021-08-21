@@ -7,6 +7,8 @@ import { useHistory } from "react-router-dom"
 import { loggedUser } from '../../actions/UserActions'
 import Loading from '../Loaders/loading'
 
+import { getSignature } from '../helpers/browser-key'
+
 export default function SignIn() {
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
@@ -19,11 +21,12 @@ export default function SignIn() {
 
     const dispatch = useDispatch()
     const history = useHistory()
+    const signature = getSignature()
 
     const signUp = async (e) => {
         e.preventDefault()
         try {
-            const newUser = { name, phone, email, password, passwordCheck }
+            const newUser = { name, phone, email, password, passwordCheck, signature }
             await axios.post("/users/register", newUser)
             const loginRes = await axios.post("users/login", { email, password })
             dispatch(loggedUser({

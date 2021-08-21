@@ -123,5 +123,14 @@ router.post("/get-exact-projects", async (req, res) => {
         console.log(error)
     }
 })
+router.post("/get-created-projects-by-user", async (req, res) => {
+    try {
+        const { id } = req.body
+        const CreatedProjects = await Project.find({ projectleaderId: id })
+        res.json(CreatedProjects)
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 module.exports = router;

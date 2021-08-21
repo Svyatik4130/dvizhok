@@ -61,7 +61,7 @@ router.post('/register', async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        const { email, password } = req.body
+        const { email, password, signature } = req.body
 
         if (!email || !password) {
             return res.status(400).json({ msg: "Не всі поля введені" })
@@ -76,7 +76,7 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ msg: "Недійсні облікові дані" })
         }
 
-        const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
+        const token = jwt.sign({ id: userAcc._id, key: signature }, process.env.JWT_SECRET)
         res.json({
             token,
             user: {
@@ -120,7 +120,7 @@ router.post('/info_change', auth, async (req, res) => {
                 }
             }
         })
-        const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
+        const token = jwt.sign({ id: userAcc._id, key: signature }, process.env.JWT_SECRET)
         const updatedUser = await User.findById(userID)
 
         res.json({
@@ -172,7 +172,7 @@ router.post('/pass_change', auth, async (req, res) => {
                 "password": passwordHash
             }
         })
-        const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
+        const token = jwt.sign({ id: userAcc._id, key: signature }, process.env.JWT_SECRET)
         const updatedUser = await User.findById(userID)
 
         res.json({
@@ -216,20 +216,19 @@ router.post('/googleUserAuth', async (req, res) => {
 
 router.post("/tokenIsValid", async (req, res) => {
     try {
+        const { signature } = req.body
         const token = req.header("x-auth-token")
-        // console.log(token)
         if (!token) return res.json(false)
 
         if (token.length < 500) {
             const verified = jwt.verify(token, process.env.JWT_SECRET)
-
             if (!verified) return res.json(false)
+            if (verified.key !== signature) return res.json(false)
             const user = await User.findById(verified.id)
             if (!user) return res.json(false)
             return res.json(true)
         } else {
-            const verified = jwt.decode(token)
-
+            const verified = jwt.decode(token, process.env.JWT_SECRET)
             if (!verified) return res.json(false)
             const user = await User.findOne({ email: verified.email })
             if (!user) return res.json(false)
@@ -325,7 +324,7 @@ router.post('/change-avatar', (req, res) => {
                         "avatarUrl": galleryImgLocationArray[0]
                     }
                 })
-                const token = jwt.sign({ id: userAcc._id }, process.env.JWT_SECRET)
+                const token = jwt.sign({ id: userAcc._id, key: signature }, process.env.JWT_SECRET)
                 const updatedUser = await User.findById(userAcc._id)
 
                 res.json({

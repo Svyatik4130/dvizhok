@@ -10,23 +10,23 @@ import Loader from './components/Loaders/loading';
 import Dashboard from './components/Dashboard/Index';
 import { addAllProjects } from './actions/ProjectActions'
 
-import FingerprintJS from '@fingerprintjs/fingerprintjs'
-import browserSignature from 'browser-signature';
+import { getSignature } from './components/helpers/browser-key'
+
 function App() {
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true);
-  const fpPromise = FingerprintJS.load()
-  const signature = browserSignature();
+  const signature = getSignature()
 
   useEffect(() => {
     const PreLoadOpps = async () => {
       try {
         let token = localStorage.getItem("auth-token")
         if (token === null) {
-          localStorage.setItem("auth-token", "");
-          token = "";
+          localStorage.setItem("auth-token", "")
+          token = ""
         }
-        const tokenRes = await axios.post("/users/tokenIsValid", null, {
+
+        const tokenRes = await axios.post("/users/tokenIsValid", { signature }, {
           headers: { "x-auth-token": token },
         })
         if (tokenRes.data) {
@@ -39,18 +39,10 @@ function App() {
               user: userRespond.data,
             })
           )
+
+          const allProjects = await axios.get("/project/get-all-projects")
+          dispatch(addAllProjects(allProjects.data))
         }
-
-        const allProjects = await axios.get("/project/get-all-projects")
-        dispatch(addAllProjects(allProjects.data))
-
-        const fp = await fpPromise
-        const result = await fp.get()
-
-        // This is the visitor identifier:
-        const visitorId = result.visitorId
-        console.log("Current Browser Unique Signature: ", signature);
-
         setIsLoading(false)
       } catch (error) {
         console.log(error)
