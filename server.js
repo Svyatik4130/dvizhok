@@ -20,6 +20,8 @@ mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
 app.use("/users", require("./routes/userRouter"))
 app.use("/landing", require("./routes/landingRouter"))
 app.use("/project", require("./routes/projectRouter"))
+app.use("/conversations", require("./routes/conversationRouter"))
+app.use("/messages", require("./routes/messageRouter"))
 
 // Passport middleware
 app.use(passport.initialize());

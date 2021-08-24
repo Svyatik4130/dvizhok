@@ -11,18 +11,21 @@ import { addMyProjects } from '../../actions/ProjectActions'
 import Loader from '../Loaders/loading'
 import MobileNavbar from './Navbars/MobileNavbar';
 import UserPage from './Pages/UserPage/UserPage';
+import { getSignature } from '../helpers/browser-key'
+import Messenger from './Pages/Messenger/Messenger';
 
 export default function Index() {
     const [IsLoading, setIsLoading] = useState(0)
     const [isDataReceived, setisDataReceived] = useState(false)
     const dispatch = useDispatch()
     const userData = useSelector(state => state.userData)
+    const signature = getSignature()
 
     useEffect(() => {
         const gettingProjects = async () => {
             try {
                 let token = localStorage.getItem("auth-token")
-                const myProjects = await axios.get("/project/get-my-projects", { headers: { "x-auth-token": token } })
+                const myProjects = await axios.get("/project/get-my-projects", { headers: { "x-auth-token": token, "secret": signature } })
                 dispatch(addMyProjects(myProjects.data))
 
                 setisDataReceived(true)
@@ -76,7 +79,7 @@ export default function Index() {
                             <div>news</div>
                         </Route>
                         <Route path="/dashboard/messages">
-                            <div>messages</div>
+                            <Messenger />
                         </Route>
                         <Route path="/dashboard/projects">
                             <Projects />

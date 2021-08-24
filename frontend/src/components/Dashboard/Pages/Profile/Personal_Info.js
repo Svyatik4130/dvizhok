@@ -4,6 +4,7 @@ import axios from 'axios'
 import { loggedUser } from '../../../../actions/UserActions'
 import ErrorNotice from '../../../misc/ErrorNotice'
 import SuccessNotice from '../../../misc/SuccessNotice'
+import { getSignature } from '../../../helpers/browser-key'
 
 export default function Personal_Info() {
     const userData = useSelector(state => state.userData)
@@ -18,14 +19,16 @@ export default function Personal_Info() {
     const [error, setError] = useState()
     const [successMessage, setSuccessMessage] = useState()
 
+    const signature = getSignature()
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
             if (name !== userData.user.name || email !== userData.user.email) {
                 const userID = userData.user.id
-                const payload = { name, email, userID }
+                const payload = { name, email, userID, signature }
                 let token = localStorage.getItem("auth-token")
-                const changeRes = await axios.post("/users/info_change", payload, { headers: { "x-auth-token": token }, })
+                const changeRes = await axios.post("/users/info_change", payload, { headers: { "x-auth-token": token, "secret": signature }, })
                 console.log(changeRes)
                 dispatch(loggedUser({
                     token: changeRes.data.token,

@@ -62,8 +62,9 @@ export default function ProjectPage() {
                 <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
                 <p className="font-medium text-lg text-gray-500 mt-3">Лідери проекту</p>
                 {/* leader profile */}
-                <div onClick={() => {history.push(`/dashboard/userpage/${ProjectLeader._id}/created-projects
-                `)}} className="flex cursor-pointer w-full">
+                <div onClick={() => {
+                    history.push(`/dashboard/userpage/${ProjectLeader._id}/created-projects`)
+                }} className="flex cursor-pointer w-full">
                     <div className="h-14 w-14 rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${ProjectLeader.avatarUrl})` }}></div>
                     <div className="ml-2">
                         <p className="font-semibold text-lg text-gray-700">{ProjectLeader.name}</p>
@@ -105,29 +106,29 @@ export default function ProjectPage() {
                     <p>Місце реалізації: <strong className=" uppercase">{Project.category}</strong></p>
                     <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
                 </div>
-                <p className="text-lg hidden lg:block font-medium mt-3 break-words">
-                    <div className="float-right w-6/12 -mt-28">
-                        <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns pl-3">
-                            {Project.photosNvideos.map((source) => {
-                                const ext = source.split('.')[source.split('.').length - 1]
-                                if (ext == "jpeg" || ext == 'jpg' || ext == 'png') {
-                                    return (
-                                        <div className="mb-9 mx-8 h-56 responsive-image-bgImgUrl" style={{ backgroundImage: `url(${source})` }}>
-                                        </div>
-                                    )
-                                } else {
-                                    return (
-                                        <div className="pb-9 px-8">
-                                            <video controls>
-                                                <source src={source} key={source}></source>
-                                                Your browser does not support HTML5 video.
-                                            </video>
-                                        </div>
-                                    )
-                                }
-                            })}
-                        </Carousel>
-                    </div>
+                <div className="float-right w-6/12 -mt-28">
+                    <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns pl-3">
+                        {Project.photosNvideos.map((source) => {
+                            const ext = source.split('.')[source.split('.').length - 1]
+                            if (ext == "jpeg" || ext == 'jpg' || ext == 'png') {
+                                return (
+                                    <div className="mb-9 mx-8 h-56 responsive-image-bgImgUrl" style={{ backgroundImage: `url(${source})` }}>
+                                    </div>
+                                )
+                            } else {
+                                return (
+                                    <div className="pb-9 px-8">
+                                        <video controls>
+                                            <source src={source} key={source}></source>
+                                            Your browser does not support HTML5 video.
+                                        </video>
+                                    </div>
+                                )
+                            }
+                        })}
+                    </Carousel>
+                </div>
+                <p className="hidden lg:block font-medium mt-3 w-full whitespace-normal break-words">
                     <strong className=" font-semibold text-2xl">ІСТОРІЯ</strong><br />
                     {Project.description}
                 </p>

@@ -71,7 +71,9 @@ export default function UserPage() {
                             )
                             }
                         </div>
-                        <p className="px-7 relative bottom-0 cursor-pointer bg-yellow-350 rounded-2xl font-semibold text-lg text-purple-950 hover:bg-yellow-400 transition-all py-2">Написати</p>
+                        <div className="inline-flex">
+                            <p className="px-7 relative bottom-0 cursor-pointer bg-yellow-350 rounded-2xl font-semibold text-lg text-purple-950 hover:bg-yellow-400 transition-all py-2">Написати</p>
+                        </div>
                     </div>
                 </div>
 

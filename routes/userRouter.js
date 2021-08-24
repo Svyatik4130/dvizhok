@@ -95,7 +95,7 @@ router.post("/login", async (req, res) => {
 
 router.post('/info_change', auth, async (req, res) => {
     try {
-        const { name, email, userID } = req.body
+        const { name, email, userID, signature } = req.body
 
         if (req.user !== userID) {
             return res.status(400).json({ msg: 'Ошибка' })
@@ -139,7 +139,7 @@ router.post('/info_change', auth, async (req, res) => {
 })
 router.post('/pass_change', auth, async (req, res) => {
     try {
-        const { curPass, newPass, repeateNewPass, userID } = req.body
+        const { curPass, newPass, repeateNewPass, userID, signature } = req.body
 
         if (req.user !== userID) {
             return res.status(400).json({ msg: 'Ошибка' })

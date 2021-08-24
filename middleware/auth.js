@@ -4,7 +4,7 @@ const User = require("../models/userModel")
 const auth = async (req, res, next) => {
     try {
         const token = req.header("x-auth-token")
-        // console.log('22', token)
+        const signature = req.header("secret")
         if (!token) {
             return res.status(401).json({ msg: "no authentication token, authorisation denied" })
         }
@@ -13,6 +13,9 @@ const auth = async (req, res, next) => {
             const verified = jwt.verify(token, process.env.JWT_SECRET)
 
             if (!verified) {
+                return res.status(401).json({ msg: "Token authentification denied" })
+            }
+            if (verified.key !== signature) {
                 return res.status(401).json({ msg: "Token authentification denied" })
             }
             req.user = verified.id

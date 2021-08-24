@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import Landing from './components/MainPage/Landing';
@@ -16,6 +16,7 @@ function App() {
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true);
   const signature = getSignature()
+  const history = useHistory()
 
   useEffect(() => {
     const PreLoadOpps = async () => {
@@ -31,7 +32,7 @@ function App() {
         })
         if (tokenRes.data) {
           const userRespond = await axios.get("/users/getme", {
-            headers: { "x-auth-token": token },
+            headers: { "x-auth-token": token, "secret": signature },
           });
           dispatch(
             loggedUser({
@@ -42,6 +43,10 @@ function App() {
 
           const allProjects = await axios.get("/project/get-all-projects")
           dispatch(addAllProjects(allProjects.data))
+        } else {
+          localStorage.setItem("auth-token", "")
+          token = ""
+          history.push('/')
         }
         setIsLoading(false)
       } catch (error) {

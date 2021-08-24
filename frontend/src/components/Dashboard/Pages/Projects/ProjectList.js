@@ -25,12 +25,12 @@ export default function ProjectList() {
                 {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
             </div>
             <div className="w-full h-full flex lg:flex-row flex-col ">
-                <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full lg:border-2 border-purple-200 rounded-xl">
+                <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full lg:border-2 border-gray-300 rounded-xl">
                     {allProjects.map((project) => {
                         return (
-                            <div className=" h-124 lg:w-3/12 md:w-6/12 w-full md:p-1 p-2">
+                            <div className="h-124 lg:w-3/12 md:w-6/12 w-full md:p-1 p-2">
                                 <div className="w-full h-full bg-white rounded-xl relative">
-                                    <div onClick={() => sentToProjectPage(project._id)} className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
+                                    <div onClick={() => sentToProjectPage(project._id)} className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
                                         <div className="w-full text-center absolute bottom-0">
                                             <div className="absolute w-full h-full bg-purple-950 opacity-50 top-0"></div>
                                             <p className="font-medium z-10 relative text-white py-1">{project.category}</p>
@@ -38,7 +38,7 @@ export default function ProjectList() {
                                     </div>
 
                                     <div className="p-2">
-                                        <a onClick={() => sentToProjectPage(project._id)} className="font-semibold cursor-pointer underline text-sm mb-1 break-words">{project.projectName}</a>
+                                        <a onClick={() => sentToProjectPage(project._id)} className="font-semibold projectName-text cursor-pointer underline text-sm mb-1 break-words">{project.projectName}</a>
                                         <p className="font-medium text-xs overflow-y-scroll break-words h-56">{project.description}</p>
                                     </div>
                                 </div>

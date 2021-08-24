@@ -31,7 +31,7 @@ code {
 .prpl-btns .control-prev::before {
   border-right: 12px solid #48004b !important;
 }
-.dot{
+.dot {
   background: #48004b !important;
 }
 
@@ -370,6 +370,16 @@ code {
 
 .custom-shadow {
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+}
+.projectName-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+.active-conversation > div {
+  background-color: #fff !important;
 }
 
 /* @media for mob devices */

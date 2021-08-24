@@ -4,6 +4,7 @@ import axios from 'axios'
 import { loggedUser } from '../../../../actions/UserActions'
 import ErrorNotice from '../../../misc/ErrorNotice'
 import SuccessNotice from '../../../misc/SuccessNotice'
+import { getSignature } from '../../../helpers/browser-key'
 
 export default function Change_Pass() {
     const userData = useSelector(state => state.userData)
@@ -17,13 +18,15 @@ export default function Change_Pass() {
     const [error, setError] = useState()
     const [successMessage, setSuccessMessage] = useState()
 
+    const signature = getSignature()
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
             const userID = userData.user.id
-            const payload = { curPass, newPass, repeateNewPass, userID }
+            const payload = { curPass, newPass, repeateNewPass, userID, signature }
             let token = localStorage.getItem("auth-token")
-            const changePassRes = await axios.post("/users/pass_change", payload, { headers: { "x-auth-token": token }, })
+            const changePassRes = await axios.post("/users/pass_change", payload, { headers: { "x-auth-token": token, "secret": signature }, })
             console.log(changePassRes)
             dispatch(loggedUser({
                 token: changePassRes.data.token,
