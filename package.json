@@ -5,13 +5,13 @@
   "main": "server.js",
   "scripts": {
     "build": "cd frontend && npm run build",
-    "start": "node socket/index.js & node server.js",
+    "start": "node server.js",
     "heroku-postbuild": "cd frontend && npm install && npm run build && cd ../socket && npm install",
     "install": "cd frontend && npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd frontend && npm start",
     "socket": "cd socket && nodemon index.js",
-    "dev": "concurrently -n 'server,react,socket' -c 'yellow,blue,green' \"nodemon server.js\" \"npm run client\" \"npm run socket\""
+    "dev": "concurrently -n 'server,react' -c 'yellow,blue,green' \"nodemon server.js\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -43,6 +43,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "path": "^0.12.7",
+    "socket.io": "^4.1.3",
     "url": "^0.10.3"
   }
 }
