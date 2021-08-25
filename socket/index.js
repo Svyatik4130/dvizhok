@@ -1,6 +1,6 @@
 const io = require("socket.io")(8900, {
     cors: {
-        origin: "https://dvizhok.herokuapp.com",
+        origin: "http://dvizhok.herokuapp.com",
     },
 });
 
