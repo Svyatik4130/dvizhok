@@ -1,9 +1,9 @@
 const io = require("socket.io")(8900, {
     cors: {
-        origin: "http://dvizhok.herokuapp.com",
+        origins: ["*"],
     },
 });
-
+console.log("socket io started")
 let users = [];
 
 const addUser = (userId, socketId) => {
