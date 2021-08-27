@@ -18,6 +18,9 @@ export default function Panel() {
     const socket = useRef();
     const scrollRef = useRef();
 
+    const [btnColor, setbtnColor] = useState("bg-gray-500 cursor-default")
+    const [btnFunction, setbtnFunction] = useState("button")
+
     useEffect(() => {
         const getCurrConv = async () => {
             try {
@@ -70,34 +73,46 @@ export default function Panel() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const message = {
-            sender: user.id,
-            text: newMessage,
-            conversationId: currentChat._id,
-        };
+        if (btnFunction === 'submit') {
+            const message = {
+                sender: user.id,
+                text: newMessage,
+                conversationId: currentChat._id,
+            };
 
-        const receiverId = currentChat.members.find(
-            (member) => member !== user.id
-        );
+            const receiverId = currentChat.members.find(
+                (member) => member !== user.id
+            );
 
-        socket.current.emit("sendMessage", {
-            senderId: user.id,
-            receiverId,
-            text: newMessage,
-        });
+            socket.current.emit("sendMessage", {
+                senderId: user.id,
+                receiverId,
+                text: newMessage,
+            });
 
-        try {
-            const res = await axios.post("/messages/add", message);
-            setMessages([...messages, res.data]);
-            setNewMessage("");
-        } catch (err) {
-            console.log(err);
+            try {
+                const res = await axios.post("/messages/add", message);
+                setMessages([...messages, res.data]);
+                setNewMessage("");
+            } catch (err) {
+                console.log(err);
+            }
         }
-    };
+    }
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, newMessage]);
+
+    useEffect(() => {
+        if (newMessage.length > 0 && newMessage.replace(/\s/g, '').length) {
+            setbtnColor("bg-purple-950 hover:bg-purple-850 hover:bg-opacity-80")
+            setbtnFunction("submit")
+        } else {
+            setbtnColor("bg-gray-500 cursor-default")
+            setbtnFunction("button")
+        }
+    }, [newMessage])
 
     if (currentChat == null) {
         return <SimpleLoader />
@@ -121,7 +136,7 @@ export default function Panel() {
                                 <div className="absolute w-full flex items-center py-1 bottom-0">
                                     <input onChange={(e) => setNewMessage(e.target.value)} value={newMessage} type="text" className="rounded-full bg-gray-200 px-4 py-2 w-10/12 outline-none" placeholder="Введіть повідомлення..." />
                                     <div className="w-2/12 flex-1 px-2">
-                                        <button type="submit" className="w-full bg-purple-950 h-full rounded-3xl py-2 flex justify-center">
+                                        <button type={btnFunction} className={`w-full h-full ${btnColor} transition-all rounded-3xl py-2 flex justify-center`}>
                                             <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/send_icon.png" alt="send_icon" className="h-6" />
                                         </button>
                                     </div>

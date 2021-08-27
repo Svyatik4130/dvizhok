@@ -362,4 +362,13 @@ router.post("/get-user", async (req, res) => {
     }
 })
 
+router.get("/get-all-users", async (req, res) => {
+    try {
+        const Users = await User.find({})
+        res.json(Users)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 module.exports = router

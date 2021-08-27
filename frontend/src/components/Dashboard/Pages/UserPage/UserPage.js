@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import SimpleLoader from '../../../Loaders/SimpleLoader';
-import { Switch, Route, NavLink, useParams } from "react-router-dom";
+import { Switch, Route, NavLink, useParams, useHistory } from "react-router-dom";
 import CreatedProjectsByUser from './CreatedProjectsByUser';
+import { useSelector } from 'react-redux';
 
 export default function UserPage() {
     let { id } = useParams()
     const [UserInfo, setUserInfo] = useState()
+    const userData = useSelector(state => state.userData)
     const [isLoading, setisLoading] = useState(true)
+    const history = useHistory()
 
     useEffect(() => {
         const receivingExactUser = async () => {
@@ -22,6 +25,20 @@ export default function UserPage() {
         }
         receivingExactUser()
     }, [])
+
+    const CreateConversation = async () => {
+        try {
+            const payload = {
+                senderId: userData.user.id,
+                receiverId: id
+            }
+            const res = await axios.post("/conversations/add", payload)
+            const conv_id = res.data._id
+            history.push(`/dashboard/messages/${conv_id}`)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     if (isLoading) {
         return (
@@ -71,9 +88,13 @@ export default function UserPage() {
                             )
                             }
                         </div>
-                        <div className="inline-flex">
-                            <p className="px-7 relative bottom-0 cursor-pointer bg-yellow-350 rounded-2xl font-semibold text-lg text-purple-950 hover:bg-yellow-400 transition-all py-2">Написати</p>
-                        </div>
+                        {userData.user.id !== id ? (
+                            <div className="inline-flex">
+                                <p onClick={() => CreateConversation()} className="px-7 relative bottom-0 cursor-pointer bg-yellow-350 rounded-2xl font-semibold text-lg text-purple-950 hover:bg-yellow-400 transition-all py-2">Написати</p>
+                            </div>
+                        ) : (
+                            null
+                        )}
                     </div>
                 </div>
 

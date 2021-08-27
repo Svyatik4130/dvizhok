@@ -64,8 +64,8 @@ export default function ProjectPage() {
                 {/* leader profile */}
                 <div onClick={() => {
                     history.push(`/dashboard/userpage/${ProjectLeader._id}/created-projects`)
-                }} className="flex cursor-pointer w-full">
-                    <div className="h-14 w-14 rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${ProjectLeader.avatarUrl})` }}></div>
+                }} className="flex cursor-pointer w-full hover:shadow-inner p-2 shadow-none hover:bg-gray-100 rounded-3xl transition-all">
+                    <div className="h-14  w-14 rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${ProjectLeader.avatarUrl})` }}></div>
                     <div className="ml-2">
                         <p className="font-semibold text-lg text-gray-700">{ProjectLeader.name}</p>
                         <div className="flex">

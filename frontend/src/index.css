@@ -382,6 +382,14 @@ code {
   background-color: #fff !important;
 }
 
+.pretty-shadow{
+  @apply hover:shadow-inner shadow-none hover:bg-gray-100 transition-all;
+}
+.pretty-shadow-noBg{
+  @apply hover:shadow-inner shadow-none transition-all;
+}
+
+
 /* @media for mob devices */
 @media (max-width: 768px) {
   .popup-content {

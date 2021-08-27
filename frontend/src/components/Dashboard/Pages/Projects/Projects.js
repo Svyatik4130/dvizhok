@@ -16,13 +16,13 @@ export default function Projects() {
                 </Route>
                 <Route path="/dashboard/projects/myprojects">
                     <div className="flex flex-wrap lg:ml-6 ml-0 mt-3 gap-2">
-                        <NavLink activeClassName="text-yellow-350" className="bg-purple-950 rounded-2xl px-6 text-white font-medium text-lg py-2" to="/dashboard/projects/myprojects">
+                        <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl px-6 text-white font-medium text-lg py-2" to="/dashboard/projects/myprojects">
                             Мої проекти
                         </NavLink>
-                        <NavLink activeClassName="text-yellow-350" className="bg-purple-950 rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/projects/projectslist">
+                        <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/projects/projectslist">
                             Всі проекти
                         </NavLink>
-                        <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2" to="/dashboard/projects/createproject">
+                        <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2 hover:bg-yellow-300 pretty-shadow-noBg" to="/dashboard/projects/createproject">
                             + Створити проект
                         </NavLink>
                     </div>
@@ -33,13 +33,13 @@ export default function Projects() {
                 <Route path="/dashboard/projects/projectslist">
                     {/* project menu */}
                     <div className="flex flex-wrap lg:ml-6 ml-0 mt-3 gap-2">
-                        <NavLink activeClassName="text-yellow-350" className="bg-purple-950 rounded-2xl px-6 text-white font-medium text-lg py-2" to="/dashboard/projects/myprojects">
+                        <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl px-6 text-white font-medium text-lg py-2" to="/dashboard/projects/myprojects">
                             Мої проекти
                         </NavLink>
-                        <NavLink activeClassName="text-yellow-350" className="bg-purple-950 rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/projects/projectslist">
+                        <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/projects/projectslist">
                             Всі проекти
                         </NavLink>
-                        <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2" to="/dashboard/projects/createproject">
+                        <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2 hover:bg-yellow-300 pretty-shadow-noBg" to="/dashboard/projects/createproject">
                             + Створити проект
                         </NavLink>
                     </div>

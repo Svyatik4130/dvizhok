@@ -9,8 +9,13 @@ router.post("/add", async (req, res) => {
     });
 
     try {
-        const savedConversation = await newConversation.save();
-        res.status(200).json(savedConversation);
+        const isConversationUnique = await Conversation.findOne({ members: { $all: [req.body.senderId, req.body.receiverId] } })
+        if (isConversationUnique) {
+            res.status(200).json(isConversationUnique);
+        } else {
+            const savedConversation = await newConversation.save();
+            res.status(200).json(savedConversation);
+        }
     } catch (err) {
         res.status(500).json(err);
     }

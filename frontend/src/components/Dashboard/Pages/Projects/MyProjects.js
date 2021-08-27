@@ -26,7 +26,7 @@ export default function MyProjects() {
                             return (
                                 <div className=" h-124 lg:w-3/12 md:w-6/12 w-full md:p-1 p-2">
                                     <div className="w-full h-full bg-white rounded-xl relative">
-                                        <div onClick={() => sentToProjectPage(project._id)} className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
+                                        <div onClick={() => sentToProjectPage(project._id)} className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
                                             <div className="w-full text-center absolute bottom-0">
                                                 <div className="absolute w-full h-full bg-purple-950 opacity-50 top-0"></div>
                                                 <p className="font-medium z-10 relative text-white py-1">{project.category}</p>
