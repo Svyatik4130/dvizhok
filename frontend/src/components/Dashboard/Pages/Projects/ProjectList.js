@@ -1,19 +1,41 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ErrorNotice from '../../../misc/ErrorNotice';
 import SimpleLoader from '../../../Loaders/SimpleLoader';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Fuse from 'fuse.js'
 
 export default function ProjectList() {
     const [error, setError] = useState()
     const allProjects = useSelector(state => state.allProjects)
     const [isLoading, setisLoading] = useState(false)
     const history = useHistory()
+    const [searchText, setSearchText] = useState('')
+    const [inputStyle, setInputStyle] = useState("rounded-3xl bg-gray-100")
+    const [findedProjects, setFindedProjects] = useState(null)
 
 
     const sentToProjectPage = (id) => {
         history.push(`/dashboard/projects/${id}`)
     }
+
+    useEffect(() => {
+        const options = {
+            minMatchCharLength: 3,
+            keys: [
+                "projectName"
+            ]
+        }
+        const fuse = new Fuse(allProjects, options)
+        const findedItems = fuse.search(searchText)
+        setFindedProjects(findedItems)
+
+        if (findedItems.length > 0) {
+            setInputStyle("rounded-3xl bg-white")
+        } else {
+            setInputStyle("rounded-3xl bg-gray-100")
+        }
+    }, [searchText])
 
     if (isLoading) {
         return <SimpleLoader />
@@ -46,8 +68,28 @@ export default function ProjectList() {
                         )
                     })}
                 </div>
-                <div className="lg:w-3/12 w-full lg:pl-7 pl-0 pb-4 lg:pb-0 order-1 lg:order-2">
-                    <input type="text" className="w-full text-lg font-medium p-3 px-4 rounded-full outline-none" placeholder="Пошук проектів" />
+                <div className="lg:w-3/12 w-full lg:pl-3 pl-0 pb-4 lg:pb-0 order-1 lg:order-2">
+                    <div className="relative">
+                        <input value={searchText} onChange={e => setSearchText(e.target.value)} type="text" className={`${inputStyle} w-full transition-all text-lg relative z-20 font-medium p-3 px-4 rounded-full outline-none focus:bg-white`} placeholder="Пошук проектів" />
+                        {/* <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} transition-all relative z-20 px-3 py-2 w-full outline-none focus:bg-white`} placeholder="Пошук ваших чатів та користувачів" /> */}
+                        <div className="rounded-3xl drop-shadow-lg mt-1.5 max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-9 top-0 w-full bg-white">
+                            {findedProjects ? (
+                                findedProjects.map(({ item }) => {
+                                    return (
+                                        <div onClick={() => history.push(`/dashboard/projects/${item._id}`)} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
+                                            <div className="flex items-center min-w-0">
+                                                <div className="w-14 h-14 flex-shrink-0 rounded-xl relative responsive-image-bgImgUrl" style={{ backgroundImage: `url(${item.logoUrl[0]})` }}>
+                                                </div>
+                                                <div className="ml-2 truncate">
+                                                    <a className="font-semibold text-lg">{item.projectName}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            ) : (null)}
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

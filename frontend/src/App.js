@@ -43,7 +43,6 @@ function App() {
         } else {
           localStorage.setItem("auth-token", "")
           token = ""
-          history.push('/')
         }
 
         const allProjects = await axios.get("/project/get-all-projects")

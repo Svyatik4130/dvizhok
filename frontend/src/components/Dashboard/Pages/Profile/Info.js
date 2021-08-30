@@ -6,6 +6,7 @@ import ErrorNotice from '../../../misc/ErrorNotice';
 import axios from 'axios';
 import { useDispatch } from 'react-redux'
 import { loggedUser } from '../../../../actions/UserActions'
+import { getSignature } from '../../../helpers/browser-key'
 
 export default function Info() {
     const userData = useSelector(state => state.userData)
@@ -16,6 +17,7 @@ export default function Info() {
     const [reqLoading, setreqLoading] = useState(false)
 
     const dispatch = useDispatch()
+    const signature = getSignature()
 
     const renderPhotos = (source) => {
         return source.map((photo) => {
@@ -68,11 +70,12 @@ export default function Info() {
 
             data.append('avatar', photoFile);
             data.append('userId', userData.user.id);
+            data.append('secret', signature);
 
             let token = localStorage.getItem("auth-token")
-            const payload = { userId: userData.user.id }
+            const payload = { userId: userData.user.id, signature }
             try {
-                const prepublishRes = await axios.post("/users/prepublish-check", payload, { headers: { "x-auth-token": token } })
+                const prepublishRes = await axios.post("/users/prepublish-check", payload, { headers: { "x-auth-token": token, "secret": signature  } })
                 console.log(prepublishRes)
                 if (prepublishRes.status === 201) {
                     const ChangeRes = await axios.post('/users/change-avatar', data, {

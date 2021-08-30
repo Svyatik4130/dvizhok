@@ -43,14 +43,14 @@ export default function Conversation({ conversation }) {
     return (
         <NavLink activeClassName="active-conversation" to={`/dashboard/messages/${conversation._id}`} >
             <div className="flex w-full mt-3 justify-between cursor-pointer bg-gray-200 hover:bg-gray-100 transition-all p-2 rounded-xl">
-                <div className="flex">
-                    <div className="w-14 h-14 rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${user?.avatarUrl})` }}></div>
-                    <div className='ml-2'>
+                <div className="flex min-w-0">
+                    <div className="w-14 flex-shrink-0 h-14 rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${user?.avatarUrl})` }}></div>
+                    <div className='ml-2 truncate'>
                         <p className="font-semibold text-lg">{user ? (user?.name) : (<strong className="text-gray-500">Користувач не знайдений</strong>)}</p>
                         <p className="font-medium truncate text-gray-400">{lastMessage ? (lastMessage.text) : (null)}</p>
                     </div>
                 </div>
-                <p className="font-medium text-lgtext-gray-400 ml-auto">{lastMessage ? (lastMessage.createdAt.split('.')[0].slice(-8, -3)) : (null)}</p>
+                <p className="font-medium text-lg text-gray-400 ml-auto">{lastMessage ? (lastMessage.createdAt.split('.')[0].slice(-8, -3)) : (null)}</p>
             </div>
         </NavLink >
     )

@@ -68,6 +68,7 @@ export default function CreateProject() {
     }, [])
 
     useEffect(() => {
+        console.log(selections)
         const options = {
             minMatchCharLength: 2,
             keys: [
@@ -160,6 +161,8 @@ export default function CreateProject() {
             })
             onlyMembersIds.splice(-1)
 
+            console.log(selections)
+
             data.append('description', shortDesc)
             data.append('projName', Name)
             data.append('category', selections)
@@ -198,7 +201,7 @@ export default function CreateProject() {
                         if (publishRes.data.msg.code === "LIMIT_FILE_SIZE") {
                             setError('Max size: 20MB')
                         } else if (publishRes.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
-                            setError('Max 4 images allowed');
+                            setError('Max 4 images & videos allowed');
                         } else {
                             setError(publishRes.data.msg)
                         }
@@ -228,7 +231,7 @@ export default function CreateProject() {
                     if (err.response.data.msg.code === "LIMIT_FILE_SIZE") {
                         setError('Max size: 20MB')
                     } else if (err.response.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
-                        setError('Max 4 images allowed');
+                        setError('Max 4 images & videos allowed');
                     } else {
                         setError(err.response.data.msg)
                     }
@@ -237,7 +240,7 @@ export default function CreateProject() {
             }
         } else {
             // if file not selected throw error
-            setError('Please upload file');
+            setError('Будь ласка, завантажте хоча б один відео або фото файл');
             setreqLoading(false)
         }
     }
@@ -281,12 +284,8 @@ export default function CreateProject() {
         if (shortDesc.length < 25) {
             setError("'Короткий опис' має містити принаймні 25 символів");
             return
-        } else if (shortDesc.length > 200) {
+        } else if (shortDesc.length > 300) {
             setError(`'Короткий опис' має бути меншим за 300 символів. Зараз:${shortDesc.length}`);
-            return
-        }
-        if (selectedFiles.length > 4) {
-            setError("Максимальна кількість завантаженого відео і фото матеріалів - 4");
             return
         }
         if (fundsReqrd === "" && !isFundsInfinite) {
@@ -304,35 +303,35 @@ export default function CreateProject() {
         if (projectRelevance.length < 25) {
             setError("'Актуальність Проекту' має містити принаймні 25 символів");
             return
-        } else if (projectRelevance.length > 200) {
+        } else if (projectRelevance.length > 300) {
             setError(`'Актуальність Проекту' має бути меншим за 300 символів. Зараз:${projectRelevance.length}`);
             return
         }
         if (preHistory.length < 25) {
             setError("'Передісторія' має містити принаймні 25 символів");
             return
-        } else if (preHistory.length > 200) {
+        } else if (preHistory.length > 300) {
             setError(`'Передісторія' має бути меншим за 300 символів. Зараз:${preHistory.length}`);
             return
         }
         if (projectPlan.length < 25) {
             setError("'План реалізації Проекту' має містити принаймні 25 символів");
             return
-        } else if (projectPlan.length > 200) {
+        } else if (projectPlan.length > 300) {
             setError(`'План реалізації Проекту' має бути меншим за 300 символів. Зараз:${projectPlan.length}`);
             return
         }
         if (expectations.length < 25) {
             setError("'Очікування' має містити принаймні 25 символів");
             return
-        } else if (expectations.length > 200) {
+        } else if (expectations.length > 300) {
             setError(`'Очікування' має бути меншим за 300 символів. Зараз:${projectPlan.length}`);
             return
         }
         if (spendingPlans.length < 25) {
             setError("'Плани витрат' має містити принаймні 25 символів");
             return
-        } else if (spendingPlans.length > 200) {
+        } else if (spendingPlans.length > 300) {
             setError(`'Плани витрат' має бути меншим за 300 символів. Зараз:${projectPlan.length}`);
             return
         }
@@ -451,6 +450,7 @@ export default function CreateProject() {
                                     <label htmlFor="one" className="block" key={platform}>
                                         <input
                                             type="checkbox"
+                                            checked={selections.includes(platform)}
                                             name={platform}
                                             value={platform}
                                             onChange={handleChange}

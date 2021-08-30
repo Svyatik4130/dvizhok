@@ -324,7 +324,7 @@ router.post('/change-avatar', (req, res) => {
                         "avatarUrl": galleryImgLocationArray[0]
                     }
                 })
-                const token = jwt.sign({ id: userAcc._id, key: signature }, process.env.JWT_SECRET)
+                const token = jwt.sign({ id: userAcc._id, key: req.body.signature }, process.env.JWT_SECRET)
                 const updatedUser = await User.findById(userAcc._id)
 
                 res.json({

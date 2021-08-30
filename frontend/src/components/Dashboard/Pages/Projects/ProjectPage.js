@@ -128,9 +128,32 @@ export default function ProjectPage() {
                         })}
                     </Carousel>
                 </div>
-                <p className="hidden lg:block font-medium mt-3 w-full whitespace-normal break-words">
-                    <strong className=" font-semibold text-2xl">ІСТОРІЯ</strong><br />
-                    {Project.description}
+                <p className="hidden lg:block font-medium text-lg mt-3 w-full whitespace-normal break-words">
+                    <div className="mt-5">
+                        <strong className=" font-semibold text-2xl">Короткий опис</strong><br />
+                        {Project.description}
+                    </div>
+                    <div className="mt-5">
+                        <strong className=" font-semibold text-2xl">Актуальність Проекту</strong><br />
+                        {Project.projectRelevance}
+                    </div>
+                    <div className="mt-5">
+                        <strong className=" font-semibold text-2xl">Передісторія</strong><br />
+                        {Project.preHistory}
+                    </div>
+                    <div className="mt-5">
+                        <strong className=" font-semibold text-2xl">План реалізації Проекту</strong><br />
+                        {Project.projectPlan}
+                    </div>
+                    <div className="mt-5">
+                        <strong className=" font-semibold text-2xl">Очікування</strong><br />
+                        {Project.expectations}
+                    </div>
+                    <div className="mt-5">
+                        <strong className=" font-semibold text-2xl">Плани витрат</strong><br />
+                        {Project.spendingPlans}
+                    </div>
+
                 </p>
 
                 {/* responsive mob design */}
@@ -158,8 +181,18 @@ export default function ProjectPage() {
                         </Carousel>
                     </div>
                     <div className="break-words">
-                        <strong className=" font-semibold text-xl">ІСТОРІЯ</strong><br />
+                        <strong className=" font-semibold text-xl">Короткий опис</strong><br />
                         {Project.description}
+                        <strong className=" font-semibold text-xl">Актуальність Проекту</strong><br />
+                        {Project.projectRelevance}
+                        <strong className=" font-semibold text-xl">Передісторія</strong><br />
+                        {Project.preHistory}
+                        <strong className=" font-semibold text-xl">План реалізації Проекту</strong><br />
+                        {Project.projectPlan}
+                        <strong className=" font-semibold text-xl">Очікування</strong><br />
+                        {Project.expectations}
+                        <strong className=" font-semibold text-xl">Плани витрат</strong><br />
+                        {Project.spendingPlans}
                     </div>
                 </div>
             </div>

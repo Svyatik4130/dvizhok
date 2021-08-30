@@ -157,7 +157,7 @@ router.post('/create-project', (req, res) => {
                     projectleaderId: req.body.userId,
                     description: req.body.description,
                     photosNvideos: galleryImgLocationArray,
-                    category: req.body.selections,
+                    category: req.body.category,
                     logoUrl: logo,
                     projectName: req.body.projName,
                     filePDF: req.body.filePDF,

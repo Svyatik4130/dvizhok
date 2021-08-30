@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 export default function Message({ message, own }) {
     const [friend, setFriend] = useState("")
     const history = useHistory()
+    console.log(message.createdAt)
 
     useEffect(() => {
         if (!own) {
@@ -27,7 +28,6 @@ export default function Message({ message, own }) {
                     <div className="bg-purple-950 rounded-xl py-1 ml-auto mr-0 px-3 ">
                         <p className="font-medium text-lg text-white break-words max-w-md">{message.text}</p>
                         <p className="font-medium text-right text-xs text-gray-300">{message.createdAt.split('.')[0].slice(-8, -3)}</p>
-
                     </div>
                 </div>
             ) : (

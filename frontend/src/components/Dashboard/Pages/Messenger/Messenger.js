@@ -19,6 +19,7 @@ export default function Messenger() {
     const history = useHistory()
 
     useEffect(() => {
+        console.log(findedUsers)
         const getConversations = async () => {
             try {
                 const res = await axios.get("/conversations/" + userData.user.id)
@@ -85,11 +86,11 @@ export default function Messenger() {
     }
 
     return (
-        <div className="flex w-full pt-4 pl-2">
-            <div className="w-4/12 p-2 overflow-y-scroll">
+        <div className="flex w-full pt-4 pl-2 flex-row flex-wrap">
+            <div style={{ height: window.innerHeight - 105 }} className="w-4/12 p-2 overflow-y-scroll">
                 <div className="relative">
                     <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} transition-all relative z-20 px-3 py-2 w-full outline-none focus:bg-white`} placeholder="Пошук ваших чатів та користувачів" />
-                    <div className="rounded-3xl drop-shadow-lg max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-7 top-0 w-full bg-white">
+                    <div className="rounded-3xl mt-0.5 drop-shadow-lg max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-7 top-0 w-full bg-white">
                         {findedUsers.map(({ item }) => {
                             return (
                                 <div onClick={() => CreateConversation(item._id)} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
@@ -105,13 +106,11 @@ export default function Messenger() {
                         })}
                     </div>
                 </div>
-
                 {conversations.map((c) => (
                     <div key={c._id}>
                         <Conversation conversation={c} />
                     </div>
                 ))}
-
             </div>
             <Switch>
                 <Route path="/dashboard/messages/:id" children={<Panel />} />
