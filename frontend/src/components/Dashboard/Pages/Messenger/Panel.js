@@ -17,6 +17,7 @@ export default function Panel() {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const socket = useRef();
     const scrollRef = useRef();
+    const [friend, setFriend] = useState(null)
     const history = useHistory()
 
     const [btnColor, setbtnColor] = useState("bg-gray-500 cursor-default")
@@ -26,6 +27,11 @@ export default function Panel() {
         const getCurrConv = async () => {
             try {
                 const chatReq = await axios.get(`/conversations/find-by-id/${id}`)
+
+                const friendsId = chatReq.data.members.filter(member => member !== user._id)
+                console.log(friendsId)
+                const getUser = await axios.post("/users/get-user", { id: friendsId[0] })
+                setFriend(getUser.data)
 
                 if (!chatReq.data.members.includes(user.id)) {
                     history.push("/dashboard/messages")
@@ -45,8 +51,7 @@ export default function Panel() {
             const isoDate = new Date().toISOString()
             setArrivalMessage({
                 sender: data.senderId,
-                text: data.text,
-                createdAt: isoDate
+                text: data.text
             });
         });
     }, []);
@@ -95,8 +100,7 @@ export default function Panel() {
             socket.current.emit("sendMessage", {
                 senderId: user.id,
                 receiverId,
-                text: newMessage,
-                createdAt: isoDate
+                text: newMessage
             });
 
             try {
@@ -124,7 +128,7 @@ export default function Panel() {
         }
     }, [newMessage])
 
-    if (currentChat == null) {
+    if (friend == null || currentChat == null) {
         return <SimpleLoader />
     }
 
@@ -138,7 +142,7 @@ export default function Panel() {
                             <div className="overflow-y-scroll h-full" ref={scrollRef}>
                                 {messages.map((m) => (
                                     <div ref={scrollRef} key={m._id}>
-                                        <Message message={m} own={m.sender === user.id} />
+                                        <Message message={m} own={m.sender === user.id} friend={friend} />
                                     </div>
                                 ))}
                             </div>

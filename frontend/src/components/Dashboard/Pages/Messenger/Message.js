@@ -1,25 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
 
-export default function Message({ message, own }) {
-    const [friend, setFriend] = useState("")
+export default function Message({ message, own, friend }) {
     const history = useHistory()
-    console.log(message.createdAt)
-
-    useEffect(() => {
-        if (!own) {
-            const getFriendProf = async () => {
-                try {
-                    const getUser = await axios.post("/users/get-user", { id: message.sender })
-                    setFriend(getUser.data)
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-            getFriendProf()
-        }
-    }, [])
 
     return (
         <div>
@@ -37,7 +20,7 @@ export default function Message({ message, own }) {
                         <p className="font-medium text-sm">{friend.name}</p>
                         <div className="bg-gray-300 rounded-xl py-1 px-3">
                             <p className="font-medium text-lg break-words inline-block max-w-md">{message.text}</p>
-                            <p className="font-medium text-right text-xs text-gray-500">{message.createdAt.split('.')[0].slice(-8, -3)}</p>
+                            {/* <p className="font-medium text-right text-xs text-gray-500">{message?.createdAt.split('.')[0].slice(-8, -3)}</p> */}
                         </div>
                     </div>
                 </div>
