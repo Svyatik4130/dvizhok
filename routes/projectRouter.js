@@ -27,7 +27,29 @@ function checkFileType(file, cb) {
     if (mimetype && extname) {
         return cb(null, true);
     } else {
-        cb('Error: Images Only!');
+        cb('Error: Images & Videos Only!');
+    }
+}
+function checkPdfType(file, cb) {
+    // Allowed ext
+    const filetypes = /pdf/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    if (extname) {
+        return cb(null, true);
+    } else {
+        cb('Error: PDF Only!');
+    }
+}
+function checkXlsType(file, cb) {
+    // Allowed ext
+    const filetypes = /xls/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    if (extname) {
+        return cb(null, true);
+    } else {
+        cb('Error: PDF Only!');
     }
 }
 
@@ -48,14 +70,55 @@ const ProjectGalleryUploads = multer({
     }
 }).array('galleryImage', 5);
 
+const ProjectPDFUploads = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'dvizhok-hosted-content',
+        acl: 'public-read',
+        key: function (req, file, cb) {
+            let FileName = path.basename(file.originalname, path.extname(file.originalname)) + '-' + Date.now() + path.extname(file.originalname)
+            cb(null, req.headers.locationForPdf + FileName)
+        }
+    }),
+    limits: { fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
+    fileFilter: function (req, file, cb) {
+        checkPdfType(file, cb);
+    }
+}).array('filePDF', 1);
+
+const ProjectXLSUploads = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'dvizhok-hosted-content',
+        acl: 'public-read',
+        key: function (req, file, cb) {
+            let FileName = path.basename(file.originalname, path.extname(file.originalname)) + '-' + Date.now() + path.extname(file.originalname)
+            cb(null, req.headers.locationForXls + FileName)
+        }
+    }),
+    limits: { fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
+    fileFilter: function (req, file, cb) {
+        checkXlsType(file, cb);
+    }
+}).array('fileXLS', 1);
+
 
 
 router.post('/prepublish-check', auth, async (req, res) => {
     try {
-        const { category, userId } = req.body
-        if (category !== "Культура" && category !== "Екологія") {
+        const { selections, userId, } = req.body
+        console.log(req.body)
+        let areSelectionsCorrect = true
+        selections.forEach(selection => {
+            // add new categories here
+            if (selection !== "Культура" && selection !== "Екологія") {
+                areSelectionsCorrect = false
+            }
+        });
+        if (!areSelectionsCorrect) {
             return res.status(400).json({ msg: "Не треба так))))" })
         }
+        console.log(userId !== req.user)
         if (userId !== req.user) {
             return res.status(400).json({ msg: "Ошибка" })
         }
@@ -94,12 +157,26 @@ router.post('/create-project', (req, res) => {
                     projectleaderId: req.body.userId,
                     description: req.body.description,
                     photosNvideos: galleryImgLocationArray,
-                    category: req.body.category,
+                    category: req.body.selections,
                     logoUrl: logo,
-                    projectName: req.body.projName
+                    projectName: req.body.projName,
+                    filePDF: req.body.filePDF,
+                    fileXLS: req.body.fileXLS,
+                    spendingPlans: req.body.spendingPlans,
+                    expectations: req.body.expectations,
+                    projectPlan: req.body.projectPlan,
+                    preHistory: req.body.preHistory,
+                    projectRelevance: req.body.projectRelevance,
+                    teamMembers: req.body.teamMembers,
+                    isFundsInfinite: req.body.isFundsInfinite,
+                    isProjectInfinite: req.body.isProjectInfinite,
+                    fundsReqrd: req.body.fundsReqrd,
+                    finishDate: req.body.finishDate,
                 })
+                console.log(newProj)
 
                 const savedProject = await newProj.save()
+                console.log('1', savedProject)
                 res.json(savedProject);
             }
         }

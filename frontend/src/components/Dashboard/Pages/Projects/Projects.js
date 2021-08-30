@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 import { Switch, Route, NavLink, Redirect } from "react-router-dom";
 import CreateProject from './CreateProject'
 import MyProjects from './MyProjects';
@@ -6,6 +7,8 @@ import ProjectList from './ProjectList';
 import ProjectPage from './ProjectPage';
 
 export default function Projects() {
+    const userData = useSelector(state => state.userData)
+
     return (
         <div className="lg:px-6 px-2 lg:pt-4 pt-0">
             <Switch>
@@ -22,9 +25,11 @@ export default function Projects() {
                         <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/projects/projectslist">
                             Всі проекти
                         </NavLink>
-                        <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2 hover:bg-yellow-300 pretty-shadow-noBg" to="/dashboard/projects/createproject">
-                            + Створити проект
-                        </NavLink>
+                        {userData.user.role < 1 ? (null) : (
+                            <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2 hover:bg-yellow-300 pretty-shadow-noBg" to="/dashboard/projects/createproject">
+                                + Створити проект
+                            </NavLink>
+                        )}
                     </div>
                     <div style={{ height: window.innerHeight - 160 }} className="w-full lg:overflow-y-scroll rounded-xl lg:p-4 p-2">
                         <MyProjects />
@@ -39,9 +44,11 @@ export default function Projects() {
                         <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/projects/projectslist">
                             Всі проекти
                         </NavLink>
-                        <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2 hover:bg-yellow-300 pretty-shadow-noBg" to="/dashboard/projects/createproject">
-                            + Створити проект
-                        </NavLink>
+                        {userData.user.role < 1 ? (null) : (
+                            <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2 hover:bg-yellow-300 pretty-shadow-noBg" to="/dashboard/projects/createproject">
+                                + Створити проект
+                            </NavLink>
+                        )}
                     </div>
                     <div style={{ height: window.innerHeight - 160 }} className="w-full lg:overflow-y-scroll rounded-xl lg:p-4 p-2">
                         <ProjectList />

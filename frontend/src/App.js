@@ -40,14 +40,14 @@ function App() {
               user: userRespond.data,
             })
           )
-
-          const allProjects = await axios.get("/project/get-all-projects")
-          dispatch(addAllProjects(allProjects.data))
         } else {
           localStorage.setItem("auth-token", "")
           token = ""
           history.push('/')
         }
+
+        const allProjects = await axios.get("/project/get-all-projects")
+        dispatch(addAllProjects(allProjects.data))
         setIsLoading(false)
       } catch (error) {
         console.log(error)

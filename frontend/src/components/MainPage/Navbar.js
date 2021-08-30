@@ -148,6 +148,33 @@ export default function Navbar() {
                             <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
                                 Slack
                             </a>
+                            {userData.user ? (
+                                // <div>
+                                //     <h1 className=" font-semibold">Вітаю, {userData.user.name}</h1>
+                                //     <button onClick={logout} className="rounded-lg bg-red-600 text-white w-full">Вийти</button>
+                                // </div>
+                                <div className="flex pr-4 items-center">
+                                    <div className="w-14 h-14 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
+                                    <div className="ml-2 w-10/12">
+                                        <p className=" w-full font-bold text-lg text-purple-850">{userData.user.name}</p>
+                                        <div className="flex justify-between">
+                                            <p onClick={() => { history.push("/dashboard") }} className=" bg-yellow-350 hover:bg-yellow-400 transition-all whitespace-nowrap text-black font-medium px-2 cursor-pointer rounded-lg py-2">Особистий кабінет</p>
+                                            <button onClick={logout} className="rounded-lg py-2 bg-red-600 text-white w-full font-medium ml-2">Вийти</button>
+
+                                        </div>
+
+                                        {/* <div>
+                                            <h1 className=" font-semibold">Вітаю, {userData.user.name}</h1>
+                                        </div> */}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex justify-between">
+                                    <button onClick={() => history.push('/signin')} className="px-12 py-2 my-4 text-xl rounded-2xl text-white bg-purple-950">Вхiд</button>
+                                    <button onClick={() => history.push('/signup')} className="px-12 py-2 my-4 text-xl rounded-2xl text-white bg-purple-950">Реєстрація</button>
+                                </div>
+                            )
+                            }
                         </div>
                     </div>
                 )}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from 'react-redux'
 import { io } from "socket.io-client";
@@ -17,6 +17,7 @@ export default function Panel() {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const socket = useRef();
     const scrollRef = useRef();
+    const history = useHistory()
 
     const [btnColor, setbtnColor] = useState("bg-gray-500 cursor-default")
     const [btnFunction, setbtnFunction] = useState("button")
@@ -25,6 +26,11 @@ export default function Panel() {
         const getCurrConv = async () => {
             try {
                 const chatReq = await axios.get(`/conversations/find-by-id/${id}`)
+
+                if (!chatReq.data.members.includes(user.id)) {
+                    history.push("/dashboard/messages")
+                }
+
                 setCurrentChat(chatReq.data)
             } catch (error) {
                 console.log(error)

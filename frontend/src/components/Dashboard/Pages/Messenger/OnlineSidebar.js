@@ -35,7 +35,7 @@ export default function OnlineSidebar({ member, onlineUsers }) {
     if (isLoading) {
         return <SimpleLoader />
     }
-    if (member !== userData.user.id) {
+    if (member !== userData.user.id && friend !== null) {
         return (
             <div onClick={() => history.push(`/dashboard/userpage/${member}/created-projects`)} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
                 <div className="flex items-center">

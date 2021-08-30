@@ -15,7 +15,6 @@ export default function Messenger() {
     const [allUsers, setAllUsers] = useState([])
     const [findedUsers, setFindedUsers] = useState()
     const [inputStyle, setInputStyle] = useState("rounded-3xl bg-gray-100")
-    const [isFocused, setIsFocused] = useState(false)
 
     const history = useHistory()
 
@@ -70,7 +69,6 @@ export default function Messenger() {
             }
 
             setsearchText("")
-            setIsFocused(false)
 
             history.push(`/dashboard/messages/${conv_id}`)
         } catch (error) {

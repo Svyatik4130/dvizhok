@@ -5,6 +5,7 @@ import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom"
 import { loggedUser } from '../../actions/UserActions'
+import { addAllProjects } from '../../actions/ProjectActions'
 import Loading from '../Loaders/loading'
 
 import { getSignature } from '../helpers/browser-key'
@@ -33,7 +34,6 @@ export default function SignIn() {
                 token: loginRes.data.token,
                 user: loginRes.data.user
             }))
-
             localStorage.setItem("auth-token", loginRes.data.token)
             history.push('/dashboard')
         } catch (err) {
