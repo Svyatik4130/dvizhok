@@ -43,7 +43,6 @@ export default function Panel() {
         socket.current = io("/");
         socket.current.on("getMessage", (data) => {
             const isoDate = new Date().toISOString()
-            console.log(isoDate)
             setArrivalMessage({
                 sender: data.senderId,
                 text: data.text,
@@ -92,18 +91,19 @@ export default function Panel() {
                 (member) => member !== user.id
             );
 
+            const isoDate = new Date().toISOString()
+            socket.current.emit("sendMessage", {
+                senderId: user.id,
+                receiverId,
+                text: newMessage,
+                createdAt: isoDate
+            });
 
             try {
                 const res = await axios.post("/messages/add", message);
                 setMessages([...messages, res.data]);
                 setNewMessage("");
                 console.log(res.data.createdAt)
-                socket.current.emit("sendMessage", {
-                    senderId: user.id,
-                    receiverId,
-                    text: newMessage,
-                    createdAt: res.data.createdAt
-                });
             } catch (err) {
                 console.log(err);
             }
