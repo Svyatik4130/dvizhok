@@ -28,7 +28,7 @@ export default function Panel() {
             try {
                 const chatReq = await axios.get(`/conversations/find-by-id/${id}`)
 
-                const friendsId = chatReq.data.members.filter(member => member !== user._id)
+                const friendsId = chatReq.data.members.filter(member => member !== user.id)
                 console.log(friendsId)
                 const getUser = await axios.post("/users/get-user", { id: friendsId[0] })
                 setFriend(getUser.data)
