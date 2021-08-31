@@ -20,7 +20,7 @@ export default function Message({ message, own, friend }) {
                         <p className="font-medium text-sm">{friend.name}</p>
                         <div className="bg-gray-300 rounded-xl py-1 px-3">
                             <p className="font-medium text-lg break-words inline-block max-w-md">{message.text}</p>
-                            {/* <p className="font-medium text-right text-xs text-gray-500">{message?.createdAt.split('.')[0].slice(-8, -3)}</p> */}
+                            <p className="font-medium text-right text-xs text-gray-500">{message?.createdAt.split('.')[0].slice(-8, -3)}</p>
                         </div>
                     </div>
                 </div>

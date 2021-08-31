@@ -51,7 +51,8 @@ export default function Panel() {
             const isoDate = new Date().toISOString()
             setArrivalMessage({
                 sender: data.senderId,
-                text: data.text
+                text: data.text,
+                createdAt: data.createdAt
             });
         });
     }, []);
@@ -100,7 +101,8 @@ export default function Panel() {
             socket.current.emit("sendMessage", {
                 senderId: user.id,
                 receiverId,
-                text: newMessage
+                text: newMessage,
+                createdAt: isoDate
             });
 
             try {
