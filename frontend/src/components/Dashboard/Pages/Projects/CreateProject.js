@@ -144,9 +144,6 @@ export default function CreateProject() {
 
             for (let i = 0; i < 4; i++) {
                 // checking for "/"
-                if (selectedFiles[i].name.includes("/")) {
-                    areNamesSuitable = false
-                }
                 data.append('galleryImage', selectedFiles[i]);
             }
             data.append('galleryImage', logoFile);
@@ -274,7 +271,7 @@ export default function CreateProject() {
             setError("Назва проекту не може містити '/");
             return
         } else if (Name.length > 50) {
-            setError(`Назва проекту має бути меншим за 300 символів. Зараз:${Name.length}`);
+            setError(`Назва проекту має бути меншим за 50 символів. Зараз:${Name.length}`);
             return
         }
         if (selections === "") {
