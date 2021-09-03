@@ -289,6 +289,16 @@ export default function CreateProject() {
             setError("Будь ласка, введіть скільки необхідно коштів");
             return
         }
+        if (fundsReqrd.length > 15) {
+            setError("сума необхідних коштів занадто велика");
+            return
+        }
+        const dateNow1 = new Date()
+        const dateFinish = new Date(finishDate)
+        if(dateFinish.getTime() <= dateNow1.getTime()){
+            setError("Будь ласка, введіть правильну дату закінчення проекту");
+            return
+        }
         if (finishDate === "" && !isProjectInfinite) {
             setError("Будь ласка, введіть дату закінчення проекту");
             return
@@ -322,7 +332,7 @@ export default function CreateProject() {
             setError("'Очікування' має містити принаймні 25 символів");
             return
         } else if (expectations.length > 300) {
-            setError(`'Очікування' має бути меншим за 300 символів. Зараз:${projectPlan.length}`);
+            setError(`'Очікування' має бути меншим за 300 символів. Зараз:${expectations.length}`);
             return
         }
         if (spendingPlans.length < 25) {
@@ -340,7 +350,7 @@ export default function CreateProject() {
 
     const renderPhotos = (source) => {
         return source.map((photo, index) => {
-            if(index > 3) return null
+            if (index > 3) return null
             if (photo.includes("video")) {
                 const video = photo.slice(0, -5)
                 return (

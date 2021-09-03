@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import DescNavbar from './Navbars/DescNavbar'
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import Loading from '../Loaders/loading';
 import DescTopMenu from './Navbars/DescTopMenu';
 import { useSelector, useDispatch } from 'react-redux'
@@ -20,8 +20,13 @@ export default function Index() {
     const dispatch = useDispatch()
     const userData = useSelector(state => state.userData)
     const signature = getSignature()
+    const history = useHistory()
 
     useEffect(() => {
+        if (!userData.user) {
+            history.push("/signup/")
+        }
+
         const gettingProjects = async () => {
             try {
                 let token = localStorage.getItem("auth-token")

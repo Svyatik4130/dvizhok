@@ -6,6 +6,7 @@ import { io } from "socket.io-client";
 import Message from './Message';
 import OnlineSidebar from './OnlineSidebar';
 import SimpleLoader from '../../../Loaders/SimpleLoader';
+import ErrorNotice from '../../../misc/ErrorNotice'
 
 export default function Panel() {
     const { id } = useParams()
@@ -22,6 +23,7 @@ export default function Panel() {
 
     const [btnColor, setbtnColor] = useState("bg-gray-500 cursor-default")
     const [btnFunction, setbtnFunction] = useState("button")
+    const [error, setError] = useState()
 
     useEffect(() => {
         const getCurrConv = async () => {
@@ -29,7 +31,6 @@ export default function Panel() {
                 const chatReq = await axios.get(`/conversations/find-by-id/${id}`)
 
                 const friendsId = chatReq.data.members.filter(member => member !== user.id)
-                console.log(friendsId)
                 const getUser = await axios.post("/users/get-user", { id: friendsId[0] })
                 setFriend(getUser.data)
 
@@ -48,7 +49,6 @@ export default function Panel() {
     useEffect(() => {
         socket.current = io("/");
         socket.current.on("getMessage", (data) => {
-            const isoDate = new Date().toISOString()
             setArrivalMessage({
                 sender: data.senderId,
                 text: data.text,
@@ -86,6 +86,12 @@ export default function Panel() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("")
+        if (newMessage.length > 200) {
+            setError("Повідомлення повинно бути менше 200 символів")
+            return
+        }
+
         if (btnFunction === 'submit') {
             const message = {
                 sender: user.id,
@@ -118,7 +124,7 @@ export default function Panel() {
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages, newMessage]);
+    }, [messages, newMessage, error]);
 
     useEffect(() => {
         if (newMessage.length > 0 && newMessage.replace(/\s/g, '').length) {
@@ -147,6 +153,9 @@ export default function Panel() {
                                         <Message message={m} own={m.sender === user.id} friend={friend} />
                                     </div>
                                 ))}
+                                <div className="w-full mt-2">
+                                    {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
+                                </div>
                             </div>
                             <form onSubmit={handleSubmit}>
                                 <div className="absolute w-full flex items-center py-1 bottom-0">

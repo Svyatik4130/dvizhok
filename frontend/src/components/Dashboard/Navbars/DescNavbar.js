@@ -1,14 +1,32 @@
 import React from 'react'
 import { NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom"
+import { useSelector, useDispatch } from 'react-redux'
+import { loggedUser } from '../../../actions/UserActions'
 
 export default function DescNavbar() {
+    const history = useHistory()
+    const dispatch = useDispatch()
+    const userData = useSelector(state => state.userData)
+
+    const logout = () => {
+        if (userData) {
+            dispatch(loggedUser({
+                token: undefined,
+                user: undefined
+            }))
+            localStorage.setItem("auth-token", "")
+            history.push("/")
+        }
+    }
+
     return (
         <div className="hide-scrollbar h-screen overflow-y-scroll fixed w-1/9">
-            <div className="relative bg-white min-h-screen rounded-r-3xl w-11/12">
-                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/mini_logo.png" className=" w-16 m-auto pt-4" alt="dvizhok_logo" />
+            <div className="relative bg-white min-h-screen rounded-r-3xl w-11/12 flex flex-col justify-between">
 
                 {/* menu */}
                 <div>
+                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/mini_logo.png" className=" w-16 m-auto pt-4" alt="dvizhok_logo" />
                     <NavLink to={"/dashboard/profile"} className="transition-all z-50" activeClassName="active_desc_menu">
                         <div className="element_wrapper pretty-shadow-noBg transition-all left-0 p-2 mt-7 mb-2 rounded-3xl">
                             <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/main.png" alt="lazy" className="element_main_image w-9 m-auto" />
@@ -63,6 +81,9 @@ export default function DescNavbar() {
                             <p className="element_text text-center text-purple-950 font-medium">FAQ</p>
                         </div>
                     </NavLink>
+                </div>
+                <div onClick={logout} className="w-full mb-2 cursor-pointer text-center p-3">
+                    <p className="rounded-3xl bg-red-600 text-white hover:bg-red-500 w-full py-1">Вийти</p>
                 </div>
             </div>
         </div>

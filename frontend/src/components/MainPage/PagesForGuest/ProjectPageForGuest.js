@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from "react-router-dom";
 import axios from 'axios'
-import SimpleLoader from '../../../Loaders/SimpleLoader';
+import SimpleLoader from '../../Loaders/SimpleLoader';
 import { Carousel } from 'react-responsive-carousel';
 import { useHistory } from 'react-router-dom'
-import TeamMember from './TeamMember';
+import TeamMember from '../../Dashboard/Pages/Projects/TeamMember';
 
-export default function ProjectPage() {
+export default function ProjectPageForGuest() {
     let { id } = useParams()
     const [Project, setProject] = useState()
     const [ProjectLeader, setProjectLeader] = useState()
@@ -50,7 +50,7 @@ export default function ProjectPage() {
             }
 
             if (window.screen.width >= 1024) {
-                setStyleForFundDiv({ height: window.innerHeight - 96, marginTop: "96px" })
+                setStyleForFundDiv({ height: window.innerHeight - 80, marginTop: "80px" })
             }
         }
         receivingExactProject()
@@ -64,7 +64,7 @@ export default function ProjectPage() {
         )
     }
     return (
-        <div className="lg:w-4/5 overflow-y-scroll flex flex-col lg:pr-8 pr-0 w-full">
+        <div className="lg:w-4/5 overflow-y-scroll flex p-10 pt-20 flex-col lg:pr-8 pr-0 w-full">
             <div style={StyleForFundDiv} className="lg:fixed order-2 p-4 rounded-3xl mt-3 lg:mt-0 lg:rounded-r-3xl rounded-l-3xl overflow-y-scroll bg-white top-0 right-0 w-full lg:w-1/5">
                 <p className="text-2xl font-bold text-purple-950 text-center">Зібрано, грн</p>
                 <p className="text-2xl font-semibold mt-1">25 300</p>

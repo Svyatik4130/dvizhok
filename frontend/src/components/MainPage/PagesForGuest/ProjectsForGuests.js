@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import ErrorNotice from '../../../misc/ErrorNotice';
-import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Fuse from 'fuse.js'
+import { useHistory } from 'react-router-dom'
 
-export default function ProjectList() {
-    const [error, setError] = useState()
+export default function ProjectsForGuests() {
     const allProjects = useSelector(state => state.allProjects)
     const history = useHistory()
     const [searchText, setSearchText] = useState('')
     const [inputStyle, setInputStyle] = useState("rounded-3xl bg-gray-100")
     const [findedProjects, setFindedProjects] = useState(null)
 
-
     const sentToProjectPage = (id) => {
-        history.push(`/dashboard/projects/${id}`)
+        history.push(`/guest/projects/${id}`)
     }
 
     useEffect(() => {
@@ -36,10 +33,7 @@ export default function ProjectList() {
     }, [searchText])
 
     return (
-        <>
-            <div className="px-12 m-auto">
-                {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
-            </div>
+        <div className="p-10 pt-20">
             <div className="w-full h-full flex lg:flex-row flex-col ">
                 <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full lg:border-2 border-gray-300 rounded-xl">
                     {allProjects.map((project) => {
@@ -70,7 +64,7 @@ export default function ProjectList() {
                             {findedProjects ? (
                                 findedProjects.map(({ item }) => {
                                     return (
-                                        <div onClick={() => history.push(`/dashboard/projects/${item._id}`)} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
+                                        <div onClick={() => sentToProjectPage(item._id)} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
                                             <div className="flex items-center min-w-0">
                                                 <div className="w-14 h-14 flex-shrink-0 rounded-xl relative responsive-image-bgImgUrl" style={{ backgroundImage: `url(${item.logoUrl[0]})` }}>
                                                 </div>
@@ -86,6 +80,6 @@ export default function ProjectList() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }

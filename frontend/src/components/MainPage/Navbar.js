@@ -6,8 +6,8 @@ import { loggedUser } from '../../actions/UserActions'
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    
     const history = useHistory()
-
     const dispatch = useDispatch()
     const userData = useSelector(state => state.userData)
 
@@ -39,7 +39,7 @@ export default function Navbar() {
                                 <a style={{ marginRight: "0px" }} className="flex" href="#">Головна</a>
                                 <a className="flex mx-6" href="#idea">Ідея</a>
                                 <a className="flex mx-6" href="#plans">Плани</a>
-                                <a className="flex mx-6" href="#projects">Проекти</a>
+                                <a className="flex mx-6 cursor-pointer" onClick={() => history.push("/guest/projects/")}>Проекти</a>
                                 <a className="flex mx-6" href="#team">Команда</a>
                                 <a className="flex mx-6" href="#white_paper">White paper</a>
                                 <a className="flex mx-6" href="#blog">Блог</a>
@@ -133,7 +133,7 @@ export default function Navbar() {
                             <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
                                 Плани
                             </a>
-                            <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
+                            <a onClick={() => history.push("/guest/projects/")} className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
                                 Проекти
                             </a>
                             <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">

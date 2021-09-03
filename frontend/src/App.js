@@ -11,6 +11,7 @@ import Dashboard from './components/Dashboard/Index';
 import { addAllProjects } from './actions/ProjectActions'
 
 import { getSignature } from './components/helpers/browser-key'
+import GuestPages from './components/MainPage/PagesForGuest/GuestPages';
 
 function App() {
   const dispatch = useDispatch()
@@ -64,6 +65,9 @@ function App() {
       <Switch>
         <Route exact path="/">
           <Landing />
+        </Route>
+        <Route path="/guest">
+          <GuestPages />
         </Route>
         <Route path="/dashboard">
           <Dashboard />

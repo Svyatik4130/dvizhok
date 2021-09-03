@@ -19,7 +19,6 @@ export default function Messenger() {
     const history = useHistory()
 
     useEffect(() => {
-        console.log(findedUsers)
         const getConversations = async () => {
             try {
                 const res = await axios.get("/conversations/" + userData.user.id)
