@@ -62,7 +62,7 @@ export default function DescTopMenu() {
                 <div className="relative xl:w-8/12 w-7/12">
                     <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} w-full transition-all relative z-20 text-lg font-medium p-3 rounded-full outline-none focus:bg-white`} placeholder="Пошук людей чи проектів" />
                     {/* <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} transition-all relative z-20 px-3 py-2 w-full outline-none focus:bg-white`} placeholder="Пошук ваших чатів та користувачів" /> */}
-                    <div className="rounded-3xl mt-1.5 shadow-xl max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-9 top-0 w-full bg-white">
+                    <div className="rounded-3xl mt-1.5 shadow-xl max-h-138 p-2 overflow-y-scroll absolute h-auto transition-all pt-9 top-0 w-full bg-white">
                         {findedUsers?.length > 0 ? (<p className="text-xl font-bold pt-2">Користувачі:</p>) : (null)}
                         {findedUsers ? (
                             findedUsers.map(({ item }) => {
