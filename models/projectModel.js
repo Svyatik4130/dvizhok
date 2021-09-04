@@ -19,7 +19,8 @@ const projectSchema = new mongoose.Schema({
     isFundsInfinite: { type: Boolean, required: true },
     isProjectInfinite: { type: Boolean, required: true },
     fundsReqrd: { type: String, },
-    finishDate: { type: String, }
+    finishDate: { type: String, },
+    location: {type: Array}
 },
     { timestamps: true }
 )

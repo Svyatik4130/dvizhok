@@ -151,6 +151,7 @@ router.post('/create-project', (req, res) => {
                 // last image in array is the logo
                 const logo = galleryImgLocationArray.splice(-1)
 
+                let latNlng = req.body.Location.split(',').map(Number)
                 // save proj in mongodb
                 const newProj = new Project({
                     projectleaderName: req.body.userName,
@@ -158,6 +159,7 @@ router.post('/create-project', (req, res) => {
                     description: req.body.description,
                     photosNvideos: galleryImgLocationArray,
                     category: req.body.category,
+                    location: latNlng,
                     logoUrl: logo,
                     projectName: req.body.projName,
                     filePDF: req.body.filePDF,
@@ -173,7 +175,6 @@ router.post('/create-project', (req, res) => {
                     fundsReqrd: req.body.fundsReqrd,
                     finishDate: req.body.finishDate,
                 })
-                console.log(newProj)
 
                 const savedProject = await newProj.save()
                 console.log('1', savedProject)

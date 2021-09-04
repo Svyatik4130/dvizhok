@@ -7,7 +7,12 @@ import { useHistory } from "react-router-dom"
 import { addMyProjects, addAllProjects } from '../../../../actions/ProjectActions'
 import Fuse from 'fuse.js'
 import SimpleLoader from '../../../Loaders/SimpleLoader';
+import SearchBar from './SearchBar'
 import { getSignature } from '../../../helpers/browser-key'
+import {
+    useLoadScript
+} from "@react-google-maps/api";
+import "@reach/combobox/styles.css";
 
 export default function CreateProject() {
     const userData = useSelector(state => state.userData)
@@ -19,11 +24,10 @@ export default function CreateProject() {
     const [isLoading, setIsLoading] = useState(true)
 
     const [Name, setName] = useState("")
-    // const [category, setCategory] = useState("")
     const [selectedFiles, setselectedFiles] = useState("")
     const [logoFile, setlogoFile] = useState("")
     const [shortDesc, setshortDesc] = useState("")
-    const [Location, setLocation] = useState("")
+    const [Location, setLocation] = useState([])
     const [finishDate, setFinishDate] = useState("")
     const [fundsReqrd, setFundsReqrd] = useState("")
     const [isProjectInfinite, setIsProjectInfinite] = useState(false)
@@ -50,6 +54,12 @@ export default function CreateProject() {
     const [selections, setSelections] = useState("");
     const PLATFORMS = ["Культура", "Екологія"];
 
+    const [libraries] = useState(['places']);
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+        libraries,
+    });
+
     useEffect(() => {
         if (userData.user.role < 1) {
             history.push("/dashboard/projects/projectslist")
@@ -68,7 +78,7 @@ export default function CreateProject() {
     }, [])
 
     useEffect(() => {
-        console.log(selections)
+        console.log(Location)
         const options = {
             minMatchCharLength: 2,
             keys: [
@@ -158,11 +168,11 @@ export default function CreateProject() {
             })
             onlyMembersIds.splice(-1)
 
-            console.log(selections)
-
             data.append('description', shortDesc)
             data.append('projName', Name)
             data.append('category', selections)
+            console.log(Location)
+            data.append('Location', Location)
             data.append('userId', userData.user.id)
             data.append('userName', userData.user.name)
             data.append('filePDF', filePDF)
@@ -295,7 +305,7 @@ export default function CreateProject() {
         }
         const dateNow1 = new Date()
         const dateFinish = new Date(finishDate)
-        if(dateFinish.getTime() <= dateNow1.getTime()){
+        if (dateFinish.getTime() <= dateNow1.getTime()) {
             setError("Будь ласка, введіть правильну дату закінчення проекту");
             return
         }
@@ -391,6 +401,9 @@ export default function CreateProject() {
         Array.from(e.target.files).map(file => URL.revokeObjectURL(file))
     }
 
+    if (loadError) return "MapError";
+    if (!isLoaded) return "MapLoading...";
+
     if (isLoading) {
         return (
             <div className="pt-16">
@@ -425,15 +438,6 @@ export default function CreateProject() {
                     </div>
 
                     <input value={Name} placeholder="Назва проекту" onChange={e => setName(e.target.value)} type="text" className="w-full h-8 mt-4 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
-
-                    {/* <div class="relative inline-flex mt-4 ">
-                        <svg class="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 412 232"><path d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z" fill="#648299" fillRule="nonzero" /></svg>
-                        <select value={category} onChange={e => setCategory(e.currentTarget.value)} class="border-2 border-purple-950 rounded-xl text-gray-600 h-10 pl-5 pr-10 bg-white focus:outline-none appearance-none">
-                            <option>Виберіть категорію проекту</option>
-                            <option>Культура</option>
-                            <option>Екологія</option>
-                        </select>
-                    </div> */}
 
                     <div className="relative mt-4">
                         <div onClick={toggleExpanded}>
@@ -470,7 +474,7 @@ export default function CreateProject() {
                         )}
                     </div>
 
-                    <input value={Location} placeholder="Mісце розташування проекту" onChange={e => setLocation(e.target.value)} type="text" className="w-full h-8 mt-4 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
+                    <SearchBar setLocation={(text) => setLocation(text)} />
 
                     <div className="w-full mt-4">
                         <textarea value={shortDesc} onChange={e => setshortDesc(e.target.value)} placeholder="Короткий опис проекту" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
@@ -493,21 +497,21 @@ export default function CreateProject() {
 
                     <div className="flex items-center mt-4 space-x-1">
                         <p className="font-medium text-lg">Необхідно грошей</p>
-                        <input type="number" min="0" disabled={isFundsInfinite} value={fundsReqrd} onChange={e => { setFundsReqrd(e.target.value); console.log(finishDate) }} className="flex px-1 py-2 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
+                        <input type="number" min="0" disabled={isFundsInfinite} value={fundsReqrd} onChange={e => { setFundsReqrd(e.target.value) }} className="flex px-1 py-2 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                         <p className="font-medium text-lg">грн</p>
                     </div>
-                    <label class="flex items-center">
-                        <input type="checkbox" checked={isFundsInfinite} onClick={() => setIsFundsInfinite(!isFundsInfinite)} class="form-checkbox h-4 w-4" />
-                        <span class="ml-2 ">Необмежений збір</span>
+                    <label className="flex items-center">
+                        <input type="checkbox" checked={isFundsInfinite} onClick={() => setIsFundsInfinite(!isFundsInfinite)} className="form-checkbox h-4 w-4" />
+                        <span className="ml-2 ">Необмежений збір</span>
                     </label>
 
                     <div className="flex items-center mt-4 space-x-1">
                         <p className="font-medium text-lg">Дата завершення збору грошей</p>
                         <input type="date" disabled={isProjectInfinite} value={finishDate} onChange={e => { setFinishDate(e.target.value) }} className="flex px-1 py-2 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                     </div>
-                    <label class="flex items-center">
-                        <input type="checkbox" checked={isProjectInfinite} onClick={() => setIsProjectInfinite(!isProjectInfinite)} class="form-checkbox h-4 w-4" />
-                        <span class="ml-2 ">Постійний проект</span>
+                    <label className="flex items-center">
+                        <input type="checkbox" checked={isProjectInfinite} onClick={() => setIsProjectInfinite(!isProjectInfinite)} className="form-checkbox h-4 w-4" />
+                        <span className="ml-2 ">Постійний проект</span>
                     </label>
 
                     <div className="w-full mt-4 p-2">
@@ -620,4 +624,6 @@ export default function CreateProject() {
             </form >
         </div >
     )
+
+    
 }
