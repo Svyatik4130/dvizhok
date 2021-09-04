@@ -27,7 +27,7 @@ export default function CreateProject() {
     const [selectedFiles, setselectedFiles] = useState("")
     const [logoFile, setlogoFile] = useState("")
     const [shortDesc, setshortDesc] = useState("")
-    const [Location, setLocation] = useState([])
+    const [Location, setLocation] = useState()
     const [finishDate, setFinishDate] = useState("")
     const [fundsReqrd, setFundsReqrd] = useState("")
     const [isProjectInfinite, setIsProjectInfinite] = useState(false)
@@ -171,7 +171,6 @@ export default function CreateProject() {
             data.append('description', shortDesc)
             data.append('projName', Name)
             data.append('category', selections)
-            console.log(Location)
             data.append('Location', Location)
             data.append('userId', userData.user.id)
             data.append('userName', userData.user.name)
@@ -286,6 +285,10 @@ export default function CreateProject() {
         }
         if (selections === "") {
             setError('Будь ласка, виберіть категорію проекту');
+            return
+        }
+        if(!Location){
+            setError(`Введіть місце розташування проекту та виберіть його зі списку`);
             return
         }
         if (shortDesc.length < 25) {
