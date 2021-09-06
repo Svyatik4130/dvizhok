@@ -29,6 +29,14 @@ export default function CreatedProjectsByUser() {
 
     return (
         <div className="flex flex-wrap">
+            {CreatedProjects ? (
+                <div className="w-full opacity-50">
+                    <div className="">
+                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
+                        <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Користувач ще не створив жодного проекту</p>
+                    </div>
+                </div>
+            ) : (null)}
             {CreatedProjects.map((project) => {
                 return (
                     <div className=" h-124 lg:w-4/12 md:w-6/12 w-full md:p-1 p-2">

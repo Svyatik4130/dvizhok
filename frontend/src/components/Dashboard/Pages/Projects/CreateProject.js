@@ -78,7 +78,6 @@ export default function CreateProject() {
     }, [])
 
     useEffect(() => {
-        console.log(Location)
         const options = {
             minMatchCharLength: 2,
             keys: [
@@ -149,16 +148,24 @@ export default function CreateProject() {
 
         // If file selected
         if (selectedFiles) {
-            let areNamesSuitable = true
             const data = new FormData();
-
-            for (let i = 0; i < 4; i++) {
-                // checking for "/"
-                data.append('galleryImage', selectedFiles[i]);
+            let AreExtsSuitable = true
+            for (let i = 0; i < selectedFiles.length; i++) {
+                if (i < 4) {
+                    if ((/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
+                        data.append('galleryImage', selectedFiles[i]);
+                    } else {
+                        AreExtsSuitable = false
+                    }
+                }
             }
-            data.append('galleryImage', logoFile);
-            if (!areNamesSuitable) {
-                setError("Назва файлів не повинна містити '/'")
+            if ((/(jpe?g|png)$/i).test(logoFile.name.split('.').pop())) {
+                data.append('galleryImage', logoFile);
+            } else {
+                AreExtsSuitable = false
+            }
+            if (!AreExtsSuitable) {
+                setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .png, .mov, .mp4');
                 setreqLoading(false)
                 return
             }
@@ -167,7 +174,6 @@ export default function CreateProject() {
                 return member._id
             })
             onlyMembersIds.splice(-1)
-
             data.append('description', shortDesc)
             data.append('projName', Name)
             data.append('category', selections)
@@ -190,7 +196,7 @@ export default function CreateProject() {
             const payload = { selections, userId: userData.user.id, filePDF, fileXLS }
             try {
                 const prepublishRes = await axios.post("/project/prepublish-check", payload, { headers: { "x-auth-token": token, "secret": signature } })
-                console.log(prepublishRes.status)
+                // console.log(prepublishRes.status)
                 if (prepublishRes.status === 201) {
                     const publishRes = await axios.post('/project/create-project', data, {
                         headers: {
@@ -209,7 +215,8 @@ export default function CreateProject() {
                         } else if (publishRes.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
                             setError('Max 4 images & videos allowed');
                         } else {
-                            setError(publishRes.data.msg)
+                            console.log(publishRes.data)
+                            setError(publishRes.data.msg.code)
                         }
                     } else {
                         // Success with images and videos
@@ -232,7 +239,7 @@ export default function CreateProject() {
                 }
                 setreqLoading(false)
             } catch (err) {
-                err.response.data.msg && setError(err.response.data.msg)
+                setError(err.response.data)
                 if (err.response.data.msg) {
                     if (err.response.data.msg.code === "LIMIT_FILE_SIZE") {
                         setError('Max size: 20MB')
@@ -269,10 +276,6 @@ export default function CreateProject() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (logoFile === '') {
-            setError('Будь ласка, завантажте лого');
-            return
-        }
         if (Name.length < 5) {
             setError("Назва проекту має містити принаймні 5 символів");
             return
@@ -287,7 +290,7 @@ export default function CreateProject() {
             setError('Будь ласка, виберіть категорію проекту');
             return
         }
-        if(!Location){
+        if (!Location) {
             setError(`Введіть місце розташування проекту та виберіть його зі списку`);
             return
         }
@@ -323,36 +326,36 @@ export default function CreateProject() {
         if (projectRelevance.length < 25) {
             setError("'Актуальність Проекту' має містити принаймні 25 символів");
             return
-        } else if (projectRelevance.length > 300) {
-            setError(`'Актуальність Проекту' має бути меншим за 300 символів. Зараз:${projectRelevance.length}`);
+        } else if (projectRelevance.length > 2000) {
+            setError(`'Актуальність Проекту' має бути меншим за 2000 символів. Зараз:${projectRelevance.length}`);
             return
         }
         if (preHistory.length < 25) {
             setError("'Передісторія' має містити принаймні 25 символів");
             return
-        } else if (preHistory.length > 300) {
-            setError(`'Передісторія' має бути меншим за 300 символів. Зараз:${preHistory.length}`);
+        } else if (preHistory.length > 2000) {
+            setError(`'Передісторія' має бути меншим за 2000 символів. Зараз:${preHistory.length}`);
             return
         }
         if (projectPlan.length < 25) {
             setError("'План реалізації Проекту' має містити принаймні 25 символів");
             return
-        } else if (projectPlan.length > 300) {
-            setError(`'План реалізації Проекту' має бути меншим за 300 символів. Зараз:${projectPlan.length}`);
+        } else if (projectPlan.length > 2000) {
+            setError(`'План реалізації Проекту' має бути меншим за 2000 символів. Зараз:${projectPlan.length}`);
             return
         }
         if (expectations.length < 25) {
             setError("'Очікування' має містити принаймні 25 символів");
             return
-        } else if (expectations.length > 300) {
-            setError(`'Очікування' має бути меншим за 300 символів. Зараз:${expectations.length}`);
+        } else if (expectations.length > 2000) {
+            setError(`'Очікування' має бути меншим за 2000 символів. Зараз:${expectations.length}`);
             return
         }
         if (spendingPlans.length < 25) {
             setError("'Плани витрат' має містити принаймні 25 символів");
             return
-        } else if (spendingPlans.length > 300) {
-            setError(`'Плани витрат' має бути меншим за 300 символів. Зараз:${projectPlan.length}`);
+        } else if (spendingPlans.length > 2000) {
+            setError(`'Плани витрат' має бути меншим за 2000 символів. Зараз:${projectPlan.length}`);
             return
         }
 
@@ -367,10 +370,12 @@ export default function CreateProject() {
             if (photo.includes("video")) {
                 const video = photo.slice(0, -5)
                 return (
-                    <video controls>
-                        <source src={video} key={photo}></source>
-                        Your browser does not support HTML5 video.
-                    </video>
+                    <div key={index} >
+                        <video id={`video-element-${index}`} controls>
+                            <source src={video}></source>
+                            Your browser does not support HTML5 video.
+                        </video>
+                    </div>
                 )
             } else {
                 return (
@@ -405,7 +410,11 @@ export default function CreateProject() {
     }
 
     if (loadError) return "MapError";
-    if (!isLoaded) return "MapLoading...";
+    if (!isLoaded) return (
+        <div className="pt-16">
+            <SimpleLoader />
+        </div>
+    )
 
     if (isLoading) {
         return (
@@ -420,19 +429,18 @@ export default function CreateProject() {
             <form onSubmit={handleSubmit} className="flex lg:flex-row flex-col">
 
                 <div className="lg:w-6/12 w-full lg:pl-9 pl-0">
-                    <div className="w-full mb-6 p-2">
+                    <div className="w-full mb-4 p-2">
                         <p className="font-bold text-3xl">Створити новий проект</p>
                     </div>
 
                     <div className="flex mt-4 items-center">
-                        {/* logo-preview */}
                         <div className="logo-preview mr-1.5">
                             {renderPhotos(logo)}
                         </div>
                         <div className="relative">
                             <label htmlFor="upload-logo" className="cursor-pointer font-medium text-lg">
                                 <div className='bg-yellow-350 hover:bg-yellow-400 transition-all rounded-lg inline-flex items-center px-6 py-2'>
-                                    <p className="mr-auto">Завантажити лого</p>
+                                    <p className="mr-auto">Завантажити головне фото</p>
                                     <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/upload.png" alt="upload" className="w-6 self-start inline-block ml-2 mr-auto" />
                                 </div>
                             </label>
@@ -478,6 +486,7 @@ export default function CreateProject() {
                     </div>
 
                     <SearchBar setLocation={(text) => setLocation(text)} />
+                    <p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>
 
                     <div className="w-full mt-4">
                         <textarea value={shortDesc} onChange={e => setshortDesc(e.target.value)} placeholder="Короткий опис проекту" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
@@ -628,5 +637,5 @@ export default function CreateProject() {
         </div >
     )
 
-    
+
 }

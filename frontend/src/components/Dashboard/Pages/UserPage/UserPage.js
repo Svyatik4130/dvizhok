@@ -155,9 +155,7 @@ export default function UserPage() {
                 <div className="w-full bg-white rounded-b-xl p-2">
                     <Switch>
                         <Route path="/dashboard/userpage/:id/created-projects" children={<CreatedProjectsByUser />} />
-                        <Route path="/dashboard/userpage/:id/taking-part">
-                            <CreatedProjectsByUser />
-                        </Route>
+                        <Route path="/dashboard/userpage/:id/taking-part" />
                     </Switch>
                 </div>
             </div>

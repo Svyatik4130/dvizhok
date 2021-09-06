@@ -19,7 +19,7 @@ const s3 = new aws.S3({
  */
 function checkFileType(file, cb) {
     // Allowed ext
-    const filetypes = /jpeg|jpg|mp4|mov|m4v|png/;
+    const filetypes = /jpeg|jpg|mp4|mov|png/;
     // Check ext
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     // Check mime
@@ -107,7 +107,6 @@ const ProjectXLSUploads = multer({
 router.post('/prepublish-check', auth, async (req, res) => {
     try {
         const { selections, userId, } = req.body
-        console.log(req.body)
         let areSelectionsCorrect = true
         selections.forEach(selection => {
             // add new categories here
@@ -118,7 +117,6 @@ router.post('/prepublish-check', auth, async (req, res) => {
         if (!areSelectionsCorrect) {
             return res.status(400).json({ msg: "Не треба так))))" })
         }
-        console.log(userId !== req.user)
         if (userId !== req.user) {
             return res.status(400).json({ msg: "Ошибка" })
         }
@@ -147,7 +145,7 @@ router.post('/create-project', (req, res) => {
                     fileLocation = fileArray[i].location;
                     galleryImgLocationArray.push(fileLocation)
                 }
-
+                console.log(galleryImgLocationArray)
                 // last image in array is the logo
                 const logo = galleryImgLocationArray.splice(-1)
 

@@ -109,7 +109,7 @@ export default function GPSLocation() {
                     >
                         <div className="max-w-4xl">
                             <div key={selected._id} className="flex mt-3 p-2 rounded-xl">
-                                <div className="flex items-center min-w-0">
+                                <div className="flex items-center min-w-0 max-w-md">
                                     <div className="w-7 h-7 flex-shrink-0 rounded-xl relative responsive-image-bgImgUrl" style={{ backgroundImage: `url(${selected.logoUrl[0]})` }}>
                                     </div>
                                     <div className="ml-2 truncate">
@@ -117,7 +117,7 @@ export default function GPSLocation() {
                                     </div>
                                 </div>
                             </div>
-                            <button onClick={() => { history.push(`/dashboard/projects/${selected._id}`)}} className="rounded-lg py-1 px-1 text-center hover:bg-yellow-300 bg-yellow-350 ">Перейти на стрінцу проекту</button>
+                            <button onClick={() => { history.push(`/dashboard/projects/${selected._id}`)}} className="rounded-lg w-full py-1 px-1 text-center hover:bg-yellow-300 bg-yellow-350 ">Перейти на стрінцу проекту</button>
                         </div>
                     </InfoWindow>
                 ) : null}
