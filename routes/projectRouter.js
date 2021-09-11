@@ -30,26 +30,15 @@ function checkFileType(file, cb) {
         cb('Error: Images & Videos Only!');
     }
 }
-function checkPdfType(file, cb) {
+function checkPdfAndXlsType(file, cb) {
     // Allowed ext
-    const filetypes = /pdf/;
+    const filetypes = /pdf|xls|xlsx/;
     // Check ext
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     if (extname) {
         return cb(null, true);
     } else {
-        cb('Error: PDF Only!');
-    }
-}
-function checkXlsType(file, cb) {
-    // Allowed ext
-    const filetypes = /xls/;
-    // Check ext
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    if (extname) {
-        return cb(null, true);
-    } else {
-        cb('Error: PDF Only!');
+        cb('Error: PDF, XLS, XLSX Only!');
     }
 }
 
@@ -70,61 +59,46 @@ const ProjectGalleryUploads = multer({
     }
 }).array('galleryImage', 5);
 
-const ProjectPDFUploads = multer({
+const ProjectPDFAndXLSUploads = multer({
     storage: multerS3({
         s3: s3,
         bucket: 'dvizhok-hosted-content',
         acl: 'public-read',
         key: function (req, file, cb) {
             let FileName = path.basename(file.originalname, path.extname(file.originalname)) + '-' + Date.now() + path.extname(file.originalname)
-            cb(null, req.headers.locationForPdf + FileName)
+            cb(null, "images/files/pdfAndXlsFiles/" + FileName)
         }
     }),
-    limits: { fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
+    limits: { fileSize: 11000000 },
     fileFilter: function (req, file, cb) {
-        checkPdfType(file, cb);
+        checkPdfAndXlsType(file, cb);
     }
-}).array('filePDF', 1);
-
-const ProjectXLSUploads = multer({
-    storage: multerS3({
-        s3: s3,
-        bucket: 'dvizhok-hosted-content',
-        acl: 'public-read',
-        key: function (req, file, cb) {
-            let FileName = path.basename(file.originalname, path.extname(file.originalname)) + '-' + Date.now() + path.extname(file.originalname)
-            cb(null, req.headers.locationForXls + FileName)
-        }
-    }),
-    limits: { fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
-    fileFilter: function (req, file, cb) {
-        checkXlsType(file, cb);
-    }
-}).array('fileXLS', 1);
+}).array('filePDFAndXLS', 2);
 
 
+router.post('/upload-xlsANDpdf', (req, res) => {
+    ProjectPDFAndXLSUploads(req, res, (error) => {
+        if (error) {
+            res.json({ msg: error });
+        } else {
+            // If File not found
+            if (req.files === undefined) {
+                res.status(400).json({ msg: "Error: No File Selected" })
+            } else {
+                // If Success
+                let fileArray = req.files,
+                    fileLocation;
+                const PdfAndXlsLocationArray = []
+                for (let i = 0; i < fileArray.length; i++) {
+                    fileLocation = fileArray[i].location;
+                    PdfAndXlsLocationArray.push(fileLocation)
+                }
 
-router.post('/prepublish-check', auth, async (req, res) => {
-    try {
-        const { selections, userId, } = req.body
-        let areSelectionsCorrect = true
-        selections.forEach(selection => {
-            // add new categories here
-            if (selection !== "Культура" && selection !== "Екологія") {
-                areSelectionsCorrect = false
+                console.log(req.body)
+                res.status(201).json(PdfAndXlsLocationArray)
             }
-        });
-        if (!areSelectionsCorrect) {
-            return res.status(400).json({ msg: "Не треба так))))" })
         }
-        if (userId !== req.user) {
-            return res.status(400).json({ msg: "Ошибка" })
-        }
-
-        res.status(201).json(req.user)
-    } catch (error) {
-        res.status(500).json({ msg: error.message })
-    }
+    })
 })
 
 router.post('/create-project', (req, res) => {
@@ -145,11 +119,12 @@ router.post('/create-project', (req, res) => {
                     fileLocation = fileArray[i].location;
                     galleryImgLocationArray.push(fileLocation)
                 }
-                console.log(galleryImgLocationArray)
                 // last image in array is the logo
                 const logo = galleryImgLocationArray.splice(-1)
-
                 let latNlng = req.body.Location.split(',').map(Number)
+                const teamMemeberIds = req.body.teamMembers.split(",")
+
+                const files_pdf_xls = req.body.XlsAndPdfFilesLocations.split(',')
                 // save proj in mongodb
                 const newProj = new Project({
                     projectleaderName: req.body.userName,
@@ -160,14 +135,14 @@ router.post('/create-project', (req, res) => {
                     location: latNlng,
                     logoUrl: logo,
                     projectName: req.body.projName,
-                    filePDF: req.body.filePDF,
-                    fileXLS: req.body.fileXLS,
+                    filePDF: files_pdf_xls[0],
+                    fileXLS: files_pdf_xls[1],
                     spendingPlans: req.body.spendingPlans,
                     expectations: req.body.expectations,
                     projectPlan: req.body.projectPlan,
                     preHistory: req.body.preHistory,
                     projectRelevance: req.body.projectRelevance,
-                    teamMembers: req.body.teamMembers,
+                    teamMembers: teamMemeberIds,
                     isFundsInfinite: req.body.isFundsInfinite,
                     isProjectInfinite: req.body.isProjectInfinite,
                     fundsReqrd: req.body.fundsReqrd,

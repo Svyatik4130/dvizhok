@@ -7,11 +7,14 @@ import { useHistory } from "react-router-dom"
 import { loggedUser } from '../../actions/UserActions'
 import { addAllProjects } from '../../actions/ProjectActions'
 import Loading from '../Loaders/loading'
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 
 import { getSignature } from '../helpers/browser-key'
 
 export default function SignIn() {
     const [name, setName] = useState('')
+    const [surname, setSurname] = useState('')
     const [phone, setPhone] = useState('')
     const [passwordCheck, setPasswordCheck] = useState()
     const [password, setPassword] = useState('')
@@ -67,8 +70,15 @@ export default function SignIn() {
                                     {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
                                     {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
                                     <input value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Ім’я" className="w-full mt-4 mb-3 h-8 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
-                                    <input value={phone} onChange={e => setPhone(e.target.value)} type="phone" placeholder="Телефон" className="w-full mb-3 h-8 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
-                                    <div><input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="E-mail" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" /></div>
+                                    <input value={surname} onChange={e => setSurname(e.target.value)} type="text" placeholder="Прізвище" className="w-full mb-3 h-8 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
+                                    <PhoneInput
+                                        international
+                                        placeholder="Enter phone number"
+                                        countryCallingCodeEditable={false}
+                                        value={phone}
+                                        defaultCountry="UA"
+                                        onChange={setPhone} />
+                                    <div><input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="E-mail" className="w-full h-8 my-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" /></div>
                                     <div>
                                         <input autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="password" className="w-full h-8 mb-0.5 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                                         <input autoComplete="new-password" value={passwordCheck} onChange={e => setPasswordCheck(e.target.value)} type="password" placeholder="password repeate" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />

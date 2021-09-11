@@ -187,6 +187,10 @@ export default function ProjectPage() {
                         {Project.spendingPlans}
                     </div>
 
+                    <div className="flex float-right">
+                        <a href={Project.fileXLS} download className="px-3 py-2 mr-3 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl inline-flex text-lg font-medium text-purple-950">Завантажити презентацію Проекту</a>
+                        <a href={Project.filePDF} download className="px-3 py-2 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl inline-flex text-lg font-medium text-purple-950">Завантажити бюджет Проекту</a>
+                    </div>
                 </p>
 
                 {/* responsive mob design */}

@@ -10,7 +10,7 @@ const aws = require('aws-sdk');
 
 router.post('/register', async (req, res) => {
     try {
-        const { email, name, phone, password, passwordCheck, logoUrl } = req.body
+        const { email, name, surname, phone, password, passwordCheck, logoUrl } = req.body
 
         if (!email || !password || !passwordCheck) {
             return res.status(400).json({ msg: 'Не всі поля введені' })
@@ -21,8 +21,14 @@ router.post('/register', async (req, res) => {
         if (name.length <= 1) {
             return res.status(400).json({ msg: "Введіть своє ім'я, будь ласка" })
         }
-        if (phone.length <= 9) {
-            return res.status(400).json({ msg: "Телефон повинен мастити не менше 5 символів" })
+        if (name.length >= 20) {
+            return res.status(400).json({ msg: "Bведіть коротше ім'я, будь ласка" })
+        }
+        if (surname.length >= 20) {
+            return res.status(400).json({ msg: "Bведіть коротше прізвище, будь ласка" })
+        }
+        if (surname.length <= 1) {
+            return res.status(400).json({ msg: "Bведіть своє прізвище, будь ласка" })
         }
         if (passwordCheck !== password) {
             return res.status(400).json({ msg: "Паролі не співпадають" });
@@ -48,7 +54,7 @@ router.post('/register', async (req, res) => {
             password: passwordHash,
             roleId: 0,
             name,
-            phone,
+            phoneNumber: [phone],
             avatarUrl: logoUrlToDB
         })
         const savedUser = await newUser.save()
@@ -84,7 +90,14 @@ router.post("/login", async (req, res) => {
                 role: userAcc.roleId,
                 email: userAcc.email.address,
                 name: userAcc.name,
-                avaUrl: userAcc.avatarUrl
+                avaUrl: userAcc.avatarUrl,
+                surname: userAcc?.surname,
+                birthDate: userAcc?.birthDate,
+                sex: userAcc?.sex,
+                country: userAcc?.country,
+                hometown: userAcc?.hometown,
+                occupationTown: userAcc?.occupationTown,
+                phoneNumber: userAcc.phoneNumber,
             }
         })
 
@@ -95,21 +108,45 @@ router.post("/login", async (req, res) => {
 
 router.post('/info_change', auth, async (req, res) => {
     try {
-        const { name, email, userID, signature } = req.body
+        const { name, email, surname, country, birthDate, occupation, phoneNumber, sex, userID, signature } = req.body
 
         if (req.user !== userID) {
             return res.status(400).json({ msg: 'Ошибка' })
         }
-        if (!email || !name) {
+        if (!email || !name || !phoneNumber) {
             return res.status(400).json({ msg: 'Не всі поля введені' })
         }
         if (name.length <= 1) {
             return res.status(400).json({ msg: "Введіть своє ім'я, будь ласка" })
         }
+        if (name.length >= 20) {
+            return res.status(400).json({ msg: "Bведіть коротше ім'я, будь ласка" })
+        }
+        if (surname.length >= 20) {
+            return res.status(400).json({ msg: "Bведіть коротше прізвище, будь ласка" })
+        }
+        if (country.length >= 35) {
+            return res.status(400).json({ msg: "Bведіть коротку назву країни, будь ласка" })
+        }
+        if (occupation.length >= 35) {
+            return res.status(400).json({ msg: "Bведіть коротку назву місця проживання, будь ласка" })
+        }
+        if (sex[0] !== "Чоловік" && sex[0] !== "Жінка") {
+            return res.status(400).json({ msg: "Не треба так!))" })
+        }
+
         const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         if (!re.test(email)) {
             return res.status(400).json({ msg: "E-mail введено некоректно" })
         }
+
+        const existingUserWithSuchEmail = await User.findOne({ "email.address": email })
+        if (existingUserWithSuchEmail) {
+            if (existingUserWithSuchEmail._id.toString() !== userID) {
+                return res.status(400).json({ msg: "Обліковий запис із цією електронною адресою вже існує" })
+            }
+        }
+
         let userAcc = await User.findById(userID)
         await User.updateOne({ _id: userID }, {
             $set: {
@@ -117,7 +154,13 @@ router.post('/info_change', auth, async (req, res) => {
                 "email": {
                     address: email,
                     visibility: userAcc.email.visibility
-                }
+                },
+                "surname": surname,
+                "birthDate": birthDate,
+                "sex": sex,
+                "country": country,
+                "occupationTown": occupation,
+                "phoneNumber": phoneNumber,
             }
         })
         const token = jwt.sign({ id: userAcc._id, key: signature }, process.env.JWT_SECRET)
@@ -130,7 +173,14 @@ router.post('/info_change', auth, async (req, res) => {
                 role: updatedUser.roleId,
                 email: updatedUser.email.address,
                 name: updatedUser.name,
-                avaUrl: updatedUser.avatarUrl
+                avaUrl: updatedUser.avatarUrl,
+                surname: updatedUser?.surname,
+                birthDate: updatedUser?.birthDate,
+                sex: updatedUser?.sex,
+                country: updatedUser?.country,
+                hometown: updatedUser?.hometown,
+                occupationTown: updatedUser?.occupationTown,
+                phoneNumber: updatedUser.phoneNumber,
             }
         })
     } catch (err) {
@@ -182,7 +232,14 @@ router.post('/pass_change', auth, async (req, res) => {
                 role: updatedUser.roleId,
                 email: updatedUser.email.address,
                 name: updatedUser.name,
-                avaUrl: updatedUser.avatarUrl
+                avaUrl: updatedUser.avatarUrl,
+                surname: updatedUser?.surname,
+                birthDate: updatedUser?.birthDate,
+                sex: updatedUser?.sex,
+                country: updatedUser?.country,
+                hometown: updatedUser?.hometown,
+                occupationTown: updatedUser?.occupationTown,
+                phoneNumber: updatedUser.phoneNumber,
             }
         })
     } catch (err) {
@@ -242,11 +299,18 @@ router.post("/tokenIsValid", async (req, res) => {
 router.get("/getme", auth, async (req, res) => {
     const user = await User.findById(req.user);
     res.json({
-        id: user.id,
+        id: user._id,
         role: user.roleId,
         email: user.email.address,
         name: user.name,
-        avaUrl: user.avatarUrl
+        avaUrl: user.avatarUrl,
+        surname: user?.surname,
+        birthDate: user?.birthDate,
+        sex: user?.sex,
+        country: user?.country,
+        hometown: user?.hometown,
+        occupationTown: user?.occupationTown,
+        phoneNumber: user.phoneNumber,
     })
 })
 
@@ -334,7 +398,14 @@ router.post('/change-avatar', (req, res) => {
                         role: updatedUser.roleId,
                         email: updatedUser.email.address,
                         name: updatedUser.name,
-                        avaUrl: updatedUser.avatarUrl
+                        avaUrl: updatedUser.avatarUrl,
+                        surname: updatedUser?.surname,
+                        birthDate: updatedUser?.birthDate,
+                        sex: updatedUser?.sex,
+                        country: updatedUser?.country,
+                        hometown: updatedUser?.hometown,
+                        occupationTown: updatedUser?.occupationTown,
+                        phoneNumber: updatedUser.phoneNumber,
                     }
                 })
             }

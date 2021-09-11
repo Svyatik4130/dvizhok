@@ -67,7 +67,7 @@ export default function Change_Pass() {
                             <input value={curPass} onChange={e => setCurPass(e.target.value)} type="password" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                         </div>
                         <div>
-                            <p className=" font-semibold text-lg">Новиий пароль</p>
+                            <p className=" font-semibold text-lg">Новий пароль</p>
                             <input value={newPass} onChange={e => setNewPass(e.target.value)} type="password" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                         </div>
                         <div>

@@ -38,8 +38,8 @@ export default function CreateProject() {
     const [projectPlan, setProjectPlan] = useState("")
     const [expectations, setExpectations] = useState("")
     const [spendingPlans, setSpendingPlans] = useState("")
-    const [filePDF, setFilePDF] = useState([])
-    const [fileXLS, setFileXLS] = useState([])
+    const [filePDF, setFilePDF] = useState("")
+    const [fileXLS, setFileXLS] = useState("")
 
     const [error, setError] = useState()
     const [successMessage, setSuccessMessage] = useState()
@@ -149,39 +149,34 @@ export default function CreateProject() {
         // If file selected
         if (selectedFiles) {
             const data = new FormData();
-            let AreExtsSuitable = true
-            for (let i = 0; i < selectedFiles.length; i++) {
-                if (i < 4) {
-                    if ((/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
-                        data.append('galleryImage', selectedFiles[i]);
-                    } else {
-                        AreExtsSuitable = false
-                    }
-                }
-            }
-            if ((/(jpe?g|png)$/i).test(logoFile.name.split('.').pop())) {
-                data.append('galleryImage', logoFile);
-            } else {
-                AreExtsSuitable = false
-            }
-            if (!AreExtsSuitable) {
-                setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .png, .mov, .mp4');
-                setreqLoading(false)
-                return
-            }
+
+
             const onlyMembersIds = teamMembers.map((member, index) => {
                 if (index === teamMembers.length - 1) return true
                 return member._id
             })
             onlyMembersIds.splice(-1)
+
+            let areSelectionsCorrect = true
+            selections.forEach(selection => {
+                // add new categories here
+                if (selection !== "Культура" && selection !== "Екологія") {
+                    areSelectionsCorrect = false
+                }
+            })
+            if (!areSelectionsCorrect) {
+                setError("Не треба так))))")
+                setreqLoading(false)
+                return
+            }
             data.append('description', shortDesc)
             data.append('projName', Name)
             data.append('category', selections)
             data.append('Location', Location)
             data.append('userId', userData.user.id)
             data.append('userName', userData.user.name)
-            data.append('filePDF', filePDF)
-            data.append('fileXLS', fileXLS)
+            data.append('filePDFAndXLS', filePDF)
+            data.append('filePDFAndXLS', fileXLS)
             data.append('spendingPlans', spendingPlans)
             data.append('expectations', expectations)
             data.append('projectPlan', projectPlan)
@@ -192,23 +187,51 @@ export default function CreateProject() {
             data.append('isProjectInfinite', isProjectInfinite)
             data.append('fundsReqrd', fundsReqrd)
             data.append('finishDate', finishDate)
-            let token = localStorage.getItem("auth-token")
-            const payload = { selections, userId: userData.user.id, filePDF, fileXLS }
             try {
-                const prepublishRes = await axios.post("/project/prepublish-check", payload, { headers: { "x-auth-token": token, "secret": signature } })
-                // console.log(prepublishRes.status)
+                let AreExtsSuitable = true
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    if (i < 4) {
+                        if (!(/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
+                            AreExtsSuitable = false
+                        }
+                    }
+                }
+                if (!(/(jpe?g|png)$/i).test(logoFile.name.split('.').pop())) {
+                    AreExtsSuitable = false
+                }
+                if (!AreExtsSuitable) {
+                    setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .mov, .mp4');
+                    setreqLoading(false)
+                    return
+                }
+                // const prepublishRes = await axios.post("/project/prepublish-check", payload, { headers: { "x-auth-token": token, "secret": signature } })
+                const prepublishRes = await axios.post('/project/upload-xlsANDpdf', data, {
+                    headers: {
+                        'accept': 'application/json',
+                        'Accept-Language': 'en-US,en;q=0.8',
+                        'Content-Type': 'multipart/form-data',
+                    }
+                })
+                data.delete("filePDFAndXLS")
+                console.log(prepublishRes)
                 if (prepublishRes.status === 201) {
+                    for (let i = 0; i < selectedFiles.length; i++) {
+                        if (i < 4) {
+                            data.append('galleryImage', selectedFiles[i]);
+                        }
+                    }
+                    data.append('galleryImage', logoFile);
+                    data.append('XlsAndPdfFilesLocations', prepublishRes.data)
                     const publishRes = await axios.post('/project/create-project', data, {
                         headers: {
                             'accept': 'application/json',
                             'Accept-Language': 'en-US,en;q=0.8',
                             'Content-Type': 'multipart/form-data',
                             'location': `images/projects/${location}`,
-                            'locationForXls': `images/projects_files/xls_files/${location}`,
-                            'locationForPdf': `images/projects_files/pdf_files/${location}`,
                         }
                     })
                     // If file size is larger than expected.
+                    console.log(publishRes.data)
                     if (publishRes.data.msg) {
                         if (publishRes.data.msg.code === "LIMIT_FILE_SIZE") {
                             setError('Max size: 20MB')
@@ -239,7 +262,7 @@ export default function CreateProject() {
                 }
                 setreqLoading(false)
             } catch (err) {
-                setError(err.response.data)
+                console.log(err)
                 if (err.response.data.msg) {
                     if (err.response.data.msg.code === "LIMIT_FILE_SIZE") {
                         setError('Max size: 20MB')
@@ -358,7 +381,30 @@ export default function CreateProject() {
             setError(`'Плани витрат' має бути меншим за 2000 символів. Зараз:${projectPlan.length}`);
             return
         }
-
+        if (filePDF == "" || !filePDF) {
+            setError('Завантажте презентацію проекту, будь ласка');
+            return
+        }
+        if (fileXLS == "" || !fileXLS) {
+            setError('Завантажте бюджет проекту, будь ласка');
+            return
+        }
+        if (filePDF.name.split('.').pop() !== "pdf") {
+            setError('Неприпустимий формат презентації проекту, дозволені розширення: .pdf');
+            return
+        }
+        if (filePDF.size / 1024 / 1024 > 10) {
+            setError('Розмір презентації проекту занадто великий. Допустимий: 10мб');
+            return
+        }
+        if (fileXLS.name.split('.').pop() !== "xls" && fileXLS.name.split('.').pop() !== "xlsx") {
+            setError('Неприпустимий формат бюджету проекту, дозволені розширення: .xls');
+            return
+        }
+        if (fileXLS.size / 1024 / 1024 > 10) {
+            setError('Розмір бюджету проекту занадто великий. Допустимий: 10мб');
+            return
+        }
         const dateNow = formatDate(new Date)
         const location = `${dateNow}/`
         multipleFileUploadHandler(location)
@@ -552,7 +598,7 @@ export default function CreateProject() {
                             let newArr = [...teamMembers]
                             newArr[teamMembers.length - 1] = e.target.value
                             setTeamMembers(newArr)
-                        }} placeholder="+ Додати учасника команди (ім'я/email/телефон)" type="text" className="w-full relative z-10 h-8 text-lg px-3 py-4 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
+                        }} placeholder="+ Додати учасника команди (ім'я/email/телефон)" type="text" className={`w-full ${inputStyle} relative z-10 h-8 text-lg px-3 py-4 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450`} />
                         <div className="rounded-3xl drop-shadow-lg max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-7 top-0 w-full bg-gray-200">
                             {findedUsers.map(({ item }) => {
                                 return (
@@ -614,7 +660,7 @@ export default function CreateProject() {
 
                     <div className="flex items-center mt-4 space-x-1">
                         <p className="font-medium text-lg">Завантажити бюджет Проекту. Файл в форматі XLS</p>
-                        <input onChange={(event) => { setFileXLS(event.target.files[0]) }} type="file" accept=".xls" className="flex px-1 py-2 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
+                        <input onChange={(event) => { setFileXLS(event.target.files[0]) }} type="file" accept=".xls, .xlsx" className="flex px-1 py-2 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                     </div>
 
                     <div className="w-10/12 mt-3 m-auto">

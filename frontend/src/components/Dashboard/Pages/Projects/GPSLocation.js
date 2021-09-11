@@ -66,6 +66,32 @@ export default function GPSLocation() {
         mapRef.current.setZoom(14);
     }, []);
 
+    const CheckAndShowProjectsAtThisLocation = (id, lat, lng) => {
+        const OtherProjectsAtThisCoords = allProjects.filter((project) => {
+            return project._id !== id && project.location[0] == lat && project.location[1] == lng
+        })
+        if (OtherProjectsAtThisCoords) {
+            return (
+                OtherProjectsAtThisCoords.map((project) => {
+                    return (
+                        <>
+                            <div key={project._id} className="flex mt-3 p-2 rounded-xl">
+                                <div className="flex items-center min-w-0 max-w-md">
+                                    <div className="w-7 h-7 flex-shrink-0 rounded-xl relative responsive-image-bgImgUrl" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
+                                    </div>
+                                    <div className="ml-2 truncate">
+                                        <a>{project.projectName}</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onClick={() => { history.push(`/dashboard/projects/${project._id}`) }} className="rounded-lg w-full py-1 px-1 text-center hover:bg-yellow-300 bg-yellow-350 ">Перейти на стрінцу проекту</button>
+                        </>
+                    )
+                })
+            )
+        }
+    }
+
 
     if (loadError) return "Error";
     if (!isLoaded) return "Loading...";
@@ -86,8 +112,8 @@ export default function GPSLocation() {
             >
                 {allProjects.map((project) => (
                     <Marker
-                        key={`${project?.location?.[0]}-${project?.location?.[1]}`}
-                        position={{ lat: project?.location?.[0], lng: project?.location?.[1] }}
+                        key={`${project?._id}`}
+                        position={{ lat: Number(project?.location?.[0]), lng: Number(project?.location?.[1]) }}
                         onClick={() => {
                             setSelected(project);
                         }}
@@ -102,12 +128,12 @@ export default function GPSLocation() {
 
                 {selected ? (
                     <InfoWindow
-                        position={{ lat: selected.location[0], lng: selected.location[1] }}
+                        position={{ lat: Number(selected.location[0]), lng: Number(selected.location[1]) }}
                         onCloseClick={() => {
                             setSelected(null);
                         }}
                     >
-                        <div className="max-w-4xl">
+                        <div className="max-w-4xl max-h-192 overflow-y-scroll">
                             <div key={selected._id} className="flex mt-3 p-2 rounded-xl">
                                 <div className="flex items-center min-w-0 max-w-md">
                                     <div className="w-7 h-7 flex-shrink-0 rounded-xl relative responsive-image-bgImgUrl" style={{ backgroundImage: `url(${selected.logoUrl[0]})` }}>
@@ -117,7 +143,8 @@ export default function GPSLocation() {
                                     </div>
                                 </div>
                             </div>
-                            <button onClick={() => { history.push(`/dashboard/projects/${selected._id}`)}} className="rounded-lg w-full py-1 px-1 text-center hover:bg-yellow-300 bg-yellow-350 ">Перейти на стрінцу проекту</button>
+                            <button onClick={() => { history.push(`/dashboard/projects/${selected._id}`) }} className="rounded-lg w-full py-1 px-1 text-center hover:bg-yellow-300 bg-yellow-350 ">Перейти на стрінцу проекту</button>
+                            {CheckAndShowProjectsAtThisLocation(selected._id, selected.location[0], selected.location[1])}
                         </div>
                     </InfoWindow>
                 ) : null}
@@ -130,7 +157,7 @@ export default function GPSLocation() {
             <button
                 className=" rounded-2xl p-2 bg-white bg-opacity-90 hover:bg-opacity-50 transition-all absolute top-4 right-4 z-10"
                 onClick={() => {
-                    if(curPosition) panTo(curPosition)
+                    if (curPosition) panTo(curPosition)
                 }}
             >
                 <img src="/cur_loc.svg" className=" w-9" alt="compass" />

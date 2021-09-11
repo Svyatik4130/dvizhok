@@ -22,11 +22,11 @@ export default function DescTopMenu() {
                 const userRed = await axios.get("/users/get-all-users")
                 setAllUsers(userRed.data)
             } catch (err) {
-                console.log(err);
+                console.log(err)
             }
-        };
-        getUsersNProjects();
-    }, [userData.user.id]);
+        }
+        getUsersNProjects()
+    }, [userData.user.id])
 
     useEffect(() => {
         const optionsForUsers = {

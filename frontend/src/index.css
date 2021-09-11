@@ -433,6 +433,29 @@ code {
   border-top: 5px solid black;
 }
 
+.PhoneInputInput {
+  height: 2rem;
+  font-style: 1.25rem;
+  line-height: 1.75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-radius: 8px;
+  border-width: 2px;
+  border-color: rgba(72, 0, 75, var(--tw-border-opacity));
+  outline-style: none;
+}
+.PhoneInputInput:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgba(176, 104, 199, var(--tw-border-opacity));
+}
+.PhoneInputCountrySelect {
+  height: 2rem;
+}
+
 /* @media for mob devices */
 @media (max-width: 768px) {
   .popup-content {
