@@ -1,6 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
+import { useHistory } from 'react-router-dom'
 
 export default function Potential() {
+    const [WFPresponse, setWFPresponse] = useState()
+    const history = useHistory()
+
+    const Pay = async () => {
+        try {
+            const resWayForPay = await axios.post("/payments/create-potential-invoice")
+            setWFPresponse(resWayForPay.data)
+            console.log(resWayForPay.data)
+            window.open(resWayForPay.data.invoiceUrl, '_blank');
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <div className="h-full lg:w-5/7 w-full p-5 pb-10 flex flex-col">
             <div className="text-purple-950">
@@ -17,9 +32,10 @@ export default function Potential() {
 
                     Після цього ви зможете «замовляти музику», обирати і фінансувати важливі для вас
                     проекти на ту суму, яку вважатимете за доцільне.</p>
+                {WFPresponse ? (<img src={WFPresponse.qrCode} className=" w-44" alt="qr" />) : (null)}
             </div>
             <div className="mt-4 pb-6 lg:pb-0">
-                <a href="#" className="bg-yellow-350 font-semibold text-xl text-purple-950 rounded-full px-7 py-3">Стати Творцем</a>
+                <a onClick={Pay} className="bg-yellow-350 cursor-pointer font-semibold text-xl text-purple-950 rounded-full px-7 py-3">Стати Творцем</a>
             </div>
         </div>
     )

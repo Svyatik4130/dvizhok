@@ -26,9 +26,11 @@
   "homepage": "https://github.com/Svyatik4130/dvizhok#readme",
   "dependencies": {
     "aws-sdk": "^2.963.0",
+    "axios": "^0.21.4",
     "bcryptjs": "^2.4.3",
     "concurrently": "^6.2.0",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "device-uuid": "^1.0.4",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",

@@ -4,6 +4,9 @@ require("dotenv").config()
 const path = require('path');
 const passport = require("passport");
 const app = express()
+const cors = require('cors')
+
+app.use(cors())
 
 app.use(express.json())
 const PORT = process.env.PORT || 5040
@@ -22,6 +25,7 @@ app.use("/landing", require("./routes/landingRouter"))
 app.use("/project", require("./routes/projectRouter"))
 app.use("/conversations", require("./routes/conversationRouter"))
 app.use("/messages", require("./routes/messageRouter"))
+app.use("/payments", require("./routes/wayforpayRouter"))
 
 // Passport middleware
 app.use(passport.initialize());
