@@ -5,7 +5,7 @@ const crypto = require('crypto')
 router.post("/create-potential-invoice", async (req, res) => {
     try {
         const date = Math.floor(new Date().getTime() / 1000)
-        let data = `freelance_user_6138863bab744;https://dvizhok.herokuapp.com;${date.toString()};1415379863;0.36;UAH;Процессор;1;0.36`
+        let data = `freelance_user_6138863bab744;https://dvizhok.herokuapp.com;${date.toString()};1415379863;1;UAH;Процессор;1;1`
         // let data = "freelance_user_613ca7aae2a68;www.madrket.ua;DH343448702;1415379863;0.36;UAH;Процессор Intel Core i5-4670 3.4GHz;Память Kingston DDR3-1600 4096MB PC3-12800;1;1;1000;547.36"
         var hmac = crypto.createHmac('md5', process.env.MERCHANT_SECRET_KEY)
         hmac.update(data)
@@ -21,11 +21,12 @@ router.post("/create-potential-invoice", async (req, res) => {
             "language": "ru",
             "orderReference": date.toString(),
             "orderDate": 1415379863,
-            "amount": 0.36,
+            "amount": 1,
             "currency": "UAH",
+            "serviceurl": "https://dvizhok.herokuapp.com/payments/get-invoice-response",
             "orderTimeout": 86400,
             "productName": ["Процессор"],
-            "productPrice": [0.36],
+            "productPrice": [1],
             "productCount": [1],
             "clientEmail": "appletrollface@gmail.com",
             "clientPhone": "380556667788"
@@ -36,6 +37,10 @@ router.post("/create-potential-invoice", async (req, res) => {
     } catch (error) {
         console.log(error)
     }
+})
+
+router.post("/get-invoice-response", async (req, res) => {
+    console.log(req.body)
 })
 
 module.exports = router
