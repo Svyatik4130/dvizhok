@@ -23,7 +23,7 @@ router.post("/create-potential-invoice", async (req, res) => {
             "orderDate": 1415379863,
             "amount": 1,
             "currency": "UAH",
-            "serviceurl": "https://dvizhok.herokuapp.com/payments/get-invoice-response",
+            "serviceUrl": "https://dvizhok.herokuapp.com/payments/get-invoice-response",
             "orderTimeout": 86400,
             "productName": ["Процессор"],
             "productPrice": [1],
@@ -41,6 +41,12 @@ router.post("/create-potential-invoice", async (req, res) => {
 
 router.post("/get-invoice-response", async (req, res) => {
     console.log(req.body)
+    res.json(req.body)
+})
+
+router.post("/test", async (req, res) => {
+    const testresponse = await axios.post("https://dvizhok.herokuapp.com/payments/get-invoice-response", req.body)
+    res.json("okaymb")
 })
 
 module.exports = router

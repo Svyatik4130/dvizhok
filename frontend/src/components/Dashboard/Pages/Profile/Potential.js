@@ -8,6 +8,8 @@ export default function Potential() {
 
     const Pay = async () => {
         try {
+            const test = await axios.post("/payments/test", { "smt": 1322332 })
+            console.log(test.data)
             const resWayForPay = await axios.post("/payments/create-potential-invoice")
             setWFPresponse(resWayForPay.data)
             console.log(resWayForPay.data)
