@@ -39,10 +39,12 @@ router.post("/create-potential-invoice", async (req, res) => {
         console.log(error)
     }
 })
+let test = ""
 
 router.post("/get-invoice-response", async (req, res) => {
     console.log(req.body)
     const json = qs.parse(req.body)
+    test = req.body 
     console.log("hold on hold om hold on", json)
     res.json(req.body)
 })
@@ -50,7 +52,7 @@ router.post("/get-invoice-response", async (req, res) => {
 router.post("/test", async (req, res) => {
     const testresponse = await axios.post("https://dvizhok.herokuapp.com/payments/get-invoice-response", req.body)
     console.log(testresponse.data)
-    res.json("okaymb")
+    res.json(test)
 })
 
 module.exports = router
