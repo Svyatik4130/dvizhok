@@ -1,6 +1,7 @@
 const router = require("express").Router()
 const axios = require('axios')
 const crypto = require('crypto')
+const qs = require('querystring')
 
 router.post("/create-potential-invoice", async (req, res) => {
     try {
@@ -40,10 +41,9 @@ router.post("/create-potential-invoice", async (req, res) => {
 })
 
 router.post("/get-invoice-response", async (req, res) => {
-    console.log(req)
     console.log(req.body)
-    const { merchantAccount } = req.body
-    console.log(merchantAccount)
+    const json = qs.parse(req.body)
+    console.log("hold on hold om hold on", json)
     res.json(req.body)
 })
 
