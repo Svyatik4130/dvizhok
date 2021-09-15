@@ -42,19 +42,12 @@ router.post("/create-potential-invoice", async (req, res) => {
 let test = []
 
 router.post("/get-invoice-response", async (req, res) => {
-    console.log(req.body)
-    // const formatedString = req.body.replace(":':", ':').replace("}': ''", "")
-    // console.log(formatedString)
-    // const obj = JSON.parse(formatedString)
-    // test.push(obj)
     const firstKey = Object.keys(req.body)[0];
     const firstProduct = Object.keys(req.body[firstKey])[0];
     const str = `${firstKey}${firstProduct}}`
-    console.log("hold on hold om hold on", firstKey)
-    console.log("whhhaaaaaaaat", firstProduct)
-    console.log("whhhaaaaaaaat1212121111111", typeof str)
     const requestObject = JSON.parse(str)
     console.log("string: 1", requestObject)
+    console.log("2323222222", requestObject.products.name)
     res.json(req.body)
 })
 
