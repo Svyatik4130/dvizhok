@@ -22,9 +22,11 @@ function App() {
   useEffect(() => {
     const PreLoadOpps = async () => {
       try {
-        const str = '{ "merchantAccount": "freelance_user_6138863bab744", "orderReference": "1631696334", "merchantSignature": "a1d51066edcdfbc93ab82b00822024f9", "amount": 1, "currency": "UAH", "authCode": "", "email": "appletrollface@gmail.com", "phone": "380556667788", "createdDate": 1631696336, "processingDate": 1631697252, "cardPan": "", "cardType": null, "issuerBankCountry": null, "issuerBankName": null, "recToken": "", "transactionStatus": "Declined", "reason": "Cardholder session expired", "reasonCode": 1124, "fee": 0, "paymentSystem": "card", "acquirerBankName": "WayForPay", "clientName": null, "repayUrl": "https:\/\/secure.wayforpay.com\/repay\/e0421c22cee9315dad124dfb7ed00874", "products": { "name": "\u041f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440", "price": 1, "count": 1 }}'
+        const str = '{"merchantAccount":"freelance_user_6138863bab744","orderReference":"1631725551","merchantSignature":"44318c38ec4fd05e62e1a05f550226c6","amount":1,"currency":"UAH","authCode":"","email":"appletrollface@gmail.com","phone":"380556667788","createdDate":1631725553,"processingDate":1631726486,"cardPan":"","cardType":null,"issuerBankCountry":null,"issuerBankName":null,"recToken":"","transactionStatus":"Declined","reason":"Cardholder session expired","reasonCode":1124,"fee":0,"paymentSystem":"card","acquirerBankName":"WayForPay","clientName":null,"repayUrl":"https:\\/\\/secure.wayforpay.com\\/repay\\/100c9af55a6d70cab47a568e9467f2af","products":{"name":"\\u041f\\u0440\\u043e\\u0446\\u0435\\u0441\\u0441\\u043e\\u0440","price":1,"count":1}}'
         console.log(JSON.parse(str))
 
+        // const firstKey = Object.keys(req.body)[0];
+        // const firstProduct = Object.keys(req.body.firstKey)[0];
 
         let token = localStorage.getItem("auth-token")
         if (token === null) {
