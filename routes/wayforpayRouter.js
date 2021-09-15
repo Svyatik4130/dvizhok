@@ -47,9 +47,11 @@ router.post("/get-invoice-response", async (req, res) => {
     // console.log(formatedString)
     // const obj = JSON.parse(formatedString)
     // test.push(obj)
+    const string = JSON.stringify(req.body)
     console.log("hold on hold om hold on", req.body)
     console.log(typeof req.body)
     console.log("whhhaaaaaaaat", req.body[Object.keys(req.body)[0]])
+    console.log("string: 1", string)
     res.json(req.body)
 })
 
