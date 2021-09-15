@@ -39,12 +39,12 @@ router.post("/create-potential-invoice", async (req, res) => {
         console.log(error)
     }
 })
-let test = ""
+let test = []
 
 router.post("/get-invoice-response", async (req, res) => {
     console.log(req.body)
     const json = qs.parse(req.body)
-    test = req.body 
+    test.push(req.body)
     console.log("hold on hold om hold on", json)
     res.json(req.body)
 })
