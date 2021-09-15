@@ -43,10 +43,11 @@ let test = []
 
 router.post("/get-invoice-response", async (req, res) => {
     console.log(req.body)
-    const json = qs.parse(req.body)
-    test.push(req.body)
-    const myobj = JSON.parse(req.body);
-    console.log("hold on hold om hold on", myobj)
+    const formatedString = req.body.replace("::", ':').replace(': ""', "")
+    console.log(formatedString)
+    const obj = JSON.parse(formatedString)
+    test.push(obj)
+    console.log("hold on hold om hold on", obj)
     res.json(req.body)
 })
 
