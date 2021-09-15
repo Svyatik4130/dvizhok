@@ -48,11 +48,12 @@ router.post("/get-invoice-response", async (req, res) => {
     // const obj = JSON.parse(formatedString)
     // test.push(obj)
     const firstKey = Object.keys(req.body)[0];
-    const firstProduct = Object.keys(req.body.firstKey)[0];
+    const firstProduct = Object.keys(req.body[firstKey])[0];
     const str = `${firstKey}${firstProduct}}`
     console.log("hold on hold om hold on", firstKey)
     console.log("whhhaaaaaaaat", firstProduct)
-    const requestObject = JSON.parse(str)
+    console.log("whhhaaaaaaaat1212121111111", str)
+    // const requestObject = JSON.parse(str)
     console.log("string: 1", requestObject)
     res.json(req.body)
 })
