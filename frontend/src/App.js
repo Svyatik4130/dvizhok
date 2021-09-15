@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     const PreLoadOpps = async () => {
       try {
-        const str = '{"merchantAccount":"freelance_user_6138863bab744","orderReference":"1631653332","merchantSignature":"5e7221b6acc4056d5d3a3001d8c0af4b","amount":1,"currency":"UAH","authCode":"31224Z","email":null,"phone":null,"createdDate":1631653334,"processingDate":1631654433,"cardPan":"","cardType":null,"issuerBankCountry":null,"issuerBankName":null,"recToken":"","transactionStatus":"Refunded","reason":"Ok","reasonCode":1100,"fee":0,"paymentSystem":"googlePay","acquirerBankName":"WayForPay","cardProduct":"debit","clientName":null,"products":{"name":"\\u041f\\u0440\\u043e\\u0446\\u0435\\u0441\\u0441\\u043e\\u0440","price":1,"count":1}}'
+        const str = '{"merchantAccount":"freelance_user_6138863bab744","orderReference":"1631653332","merchantSignature":"5e7221b6acc4056d5d3a3001d8c0af4b","amount":1,"currency":"UAH","authCode":"31224Z","email":null,"phone":null,"createdDate":1631653334,"processingDate":1631654433,"cardPan":"","cardType":null,"issuerBankCountry":null,"issuerBankName":null,"recToken":"","transactionStatus":"Refunded","reason":"Ok","reasonCode":1100,"fee":0,"paymentSystem":"googlePay","acquirerBankName":"WayForPay","cardProduct":"debit","clientName":null,"products":{"name":"\u041f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440","price":1,"count":1}}'
         console.log(JSON.parse(str))
 
         // const firstKey = Object.keys(req.body)[0];
