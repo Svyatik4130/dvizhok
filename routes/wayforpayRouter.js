@@ -40,8 +40,8 @@ router.post("/create-potential-invoice", async (req, res) => {
 })
 
 router.post("/get-invoice-response", async (req, res) => {
+    console.log(req)
     console.log(req.body)
-
     const { merchantAccount } = req.body
     console.log(merchantAccount)
     res.json(req.body)

@@ -254,7 +254,7 @@ export default function ProjectPage() {
 
                 </div>
                 <div className="w-6/12 px-1">
-                    <ProjectsChat />
+                    <ProjectsChat projectId={id} />
                 </div>
             </div>
         </div>

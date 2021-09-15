@@ -64,7 +64,7 @@ const getUser = (userId) => {
 
 io.on("connection", (socket) => {
     //when ceonnect
-    console.log("a " + socket.id + " connected.");
+    console.log(socket.id + " connected.");
 
     //take userId and socketId from user
     socket.on("addUser", (userId) => {
@@ -76,6 +76,16 @@ io.on("connection", (socket) => {
     socket.on("sendMessage", ({ senderId, receiverId, text, createdAt }) => {
         const user = getUser(receiverId);
         io.to(user?.socketId).emit("getMessage", {
+            senderId,
+            text,
+            createdAt
+        });
+    });
+
+    //send and get message from projects
+    socket.on("sendMessageToProjects", ({ senderId, receiverId, text, createdAt }) => {
+        const user = getUser(receiverId);
+        io.to(user?.socketId).emit("getProjectsMessage", {
             senderId,
             text,
             createdAt
