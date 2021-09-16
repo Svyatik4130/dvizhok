@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 export default function Potential() {
     const [WFPresponse, setWFPresponse] = useState()
+    const userData = useSelector(state => state.userData)
     const history = useHistory()
 
     const Pay = async () => {
         try {
-            const test = await axios.post("/payments/test", { "smt": 1322332 })
-            console.log(test.data)
-            const resWayForPay = await axios.post("/payments/create-potential-invoice")
+            const params = { userId:userData.user.id, amount: 1, email: userData.user.email, phone: userData.user.phoneNumber[0]}
+            const resWayForPay = await axios.post("/payments/create-potential-invoice", params)
             setWFPresponse(resWayForPay.data)
             console.log(resWayForPay.data)
             window.open(resWayForPay.data.invoiceUrl, '_blank');

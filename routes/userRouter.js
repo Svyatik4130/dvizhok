@@ -11,6 +11,7 @@ const aws = require('aws-sdk');
 router.post('/register', async (req, res) => {
     try {
         const { email, name, surname, phone, password, passwordCheck, logoUrl } = req.body
+        console.log(req.body)
 
         if (!email || !password || !passwordCheck) {
             return res.status(400).json({ msg: 'Не всі поля введені' })
@@ -54,6 +55,7 @@ router.post('/register', async (req, res) => {
             password: passwordHash,
             roleId: 0,
             name,
+            surname,
             phoneNumber: [phone],
             avatarUrl: logoUrlToDB
         })

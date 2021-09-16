@@ -1,13 +1,17 @@
 const router = require("express").Router()
 const axios = require('axios')
 const crypto = require('crypto')
-const qs = require('querystring')
+
+const Transaction = require("../models/transactionModel")
+const User = require("../models/userModel")
 
 router.post("/create-potential-invoice", async (req, res) => {
     try {
+        const { userId, amount, email, phone } = req.body
+        console.log(req.body)
         const date = Math.floor(new Date().getTime() / 1000)
-        let data = `freelance_user_6138863bab744;https://dvizhok.herokuapp.com;${date.toString()};1415379863;1;UAH;Процессор;1;1`
-        // let data = "freelance_user_613ca7aae2a68;www.madrket.ua;DH343448702;1415379863;0.36;UAH;Процессор Intel Core i5-4670 3.4GHz;Память Kingston DDR3-1600 4096MB PC3-12800;1;1;1000;547.36"
+        const orderName = `${userId}-${date}`
+        let data = `freelance_user_6138863bab744;https://dvizhok.herokuapp.com;${orderName};${date};1;UAH;Поповнення внутрішнього балансу Dvizhok;1;${amount}`
         var hmac = crypto.createHmac('md5', process.env.MERCHANT_SECRET_KEY)
         hmac.update(data)
         gen_hmac = hmac.digest('hex')
@@ -20,21 +24,21 @@ router.post("/create-potential-invoice", async (req, res) => {
             "merchantSignature": gen_hmac,
             "apiVersion": 1,
             "language": "ru",
-            "orderReference": date.toString(),
-            "orderDate": 1415379863,
-            "amount": 1,
+            "orderReference": orderName,
+            "orderDate": date,
+            "amount": amount,
             "currency": "UAH",
+            // change url Here after posting on new hosting!!!
             "serviceUrl": "https://dvizhok.herokuapp.com/payments/get-invoice-response",
             "orderTimeout": 86400,
-            "productName": ["Процессор"],
-            "productPrice": [1],
+            "productName": ["Поповнення внутрішнього балансу Dvizhok"],
+            "productPrice": [amount],
             "productCount": [1],
-            "clientEmail": "appletrollface@gmail.com",
-            "clientPhone": "380556667788"
+            "clientEmail": email,
+            "clientPhone": phone
         }
         const resWayForPay = await axios.post("https://api.wayforpay.com/api", params)
         res.json(resWayForPay.data);
-
     } catch (error) {
         console.log(error)
     }
@@ -42,13 +46,49 @@ router.post("/create-potential-invoice", async (req, res) => {
 let test = []
 
 router.post("/get-invoice-response", async (req, res) => {
+    const date = Math.floor(new Date().getTime() / 1000)
+
     const firstKey = Object.keys(req.body)[0];
     const firstProduct = Object.keys(req.body[firstKey])[0];
     const str = `${firstKey}${firstProduct}}`
     const requestObject = JSON.parse(str)
-    console.log("string: 1", requestObject)
-    console.log("2323222222", requestObject.products.name)
-    res.json(req.body)
+
+    const data = `${requestObject.orderReference};accept;${date}`
+    var hmac = crypto.createHmac('md5', process.env.MERCHANT_SECRET_KEY)
+    hmac.update(data)
+    gen_hmac = hmac.digest('hex')
+
+    const payerId = requestObject.orderReference.split("-")[0]
+    const duplicateTransaction = await Transaction.findOne({ "orderName": requestObject.orderReference })
+    if (!duplicateTransaction) {
+        const payerUser = await User.findById(payerId)
+        const newBalance = Number(payerUser.balance) + Number(requestObject.products.price)
+        console.log("wwwwww", payerUser)
+        console.log("dddddd", newBalance)
+        console.log("dd", typeof newBalance)
+        await User.updateOne({ _id: payerId }, {
+            $set: {
+                "balance": newBalance,
+            }
+        })
+        const newTrans = new Transaction({
+            orderName: requestObject.orderReference,
+            payerId,
+            amount: requestObject.products.price,
+        })
+
+        const savedTransaction = await newTrans.save()
+        console.log('1', savedTransaction)
+
+        const resObject = {
+            "orderReference": requestObject.orderReference,
+            "status": "accept",
+            "time": date,
+            "signature": gen_hmac
+        }
+        console.log(resObject)
+        res.json(resObject)
+    }
 })
 
 router.post("/test", async (req, res) => {

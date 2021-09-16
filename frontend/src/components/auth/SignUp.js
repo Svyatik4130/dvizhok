@@ -30,7 +30,11 @@ export default function SignIn() {
     const signUp = async (e) => {
         e.preventDefault()
         try {
-            const newUser = { name, phone, email, password, passwordCheck, signature }
+            if (!isValidPhoneNumber(phone)) {
+                setError("Будь ласка, введіть дійсний номер телефону");
+                return
+            }
+            const newUser = { name, phone, surname, email, password, passwordCheck, signature }
             await axios.post("/users/register", newUser)
             const loginRes = await axios.post("users/login", { email, password, signature })
             dispatch(loggedUser({
@@ -63,6 +67,7 @@ export default function SignIn() {
                     <div className=" w-full">
                         <img onClick={() => { history.push('/') }} src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/bigLogo.png" alt="Dvizhok" className=" cursor-pointer w-40 mb-16" />
                         <div className="h-full bg-white lg:bg-transparent p-4 rounded-3xl pt-1">
+
                             <form onSubmit={signUp} className="w-full flex flex-col justify-between h-full " >
                                 <div>
                                     <div className="flex items-center mt-5 justify-center"><p className="font-bold pl-2 text-4xl text-black">Привіт!</p></div>
