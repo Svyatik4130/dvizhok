@@ -94,39 +94,13 @@ export default function DescTopMenu() {
                                 </div>
                             )
                         })) : (null)}
-                        {/* {findedUsersNProjects?.map(({ item }) => {
-                            if (item.projectName) {
-                                return (
-                                    <div onClick={() => history.push(`/dashboard/projects/${item._id}`)} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
-                                        <div className="flex items-center min-w-0">
-                                            <div className="w-14 h-14 flex-shrink-0 rounded-xl relative responsive-image-bgImgUrl" style={{ backgroundImage: `url(${item.logoUrl[0]})` }}>
-                                            </div>
-                                            <div className="ml-2 truncate">
-                                                <a className="font-semibold text-lg">{item.projectName}</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            }
-                            return (
-                                <div onClick className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
-                                    <div className="flex items-center">
-                                        <div className="w-14 h-14 rounded-full relative responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${item.avatarUrl})` }}>
-                                        </div>
-                                        <div className="ml-2 ">
-                                            <a className="font-semibold text-lg block">{item.name}</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        })} */}
                     </div>
                 </div>
                 <div className="flex items-center ml-4 justify-center xl:w-4/12 md:w-6/12 w-5/12">
                     <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/wallet.png" alt="dvizhok_wallte" className="w-9 hidden lg:block" />
                     <div className="text-center text-lg font-medium text-purple-950 ml-2">
                         {/* Funds here */}
-                        <p>200200 грн</p>
+                        <p>{userData.user.balance}</p>
                         <p>Ваш потенціал</p>
                     </div>
                 </div>

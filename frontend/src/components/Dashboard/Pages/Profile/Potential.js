@@ -10,7 +10,7 @@ export default function Potential() {
 
     const Pay = async () => {
         try {
-            const params = { userId:userData.user.id, amount: 1, email: userData.user.email, phone: userData.user.phoneNumber[0]}
+            const params = { userId: userData.user.id, amount: 1, email: userData.user.email, phone: userData.user.phoneNumber[0] }
             const resWayForPay = await axios.post("/payments/create-potential-invoice", params)
             setWFPresponse(resWayForPay.data)
             console.log(resWayForPay.data)
@@ -22,9 +22,9 @@ export default function Potential() {
     return (
         <div className="h-full lg:w-5/7 w-full p-5 pb-10 flex flex-col">
             <div className="text-purple-950">
-                <p className="font-semibold mb-4 text-2xl">Ваш Потенціал: 0 грн</p>
+                <p className="font-semibold mb-4 text-2xl">Ваш Потенціал: {userData.user.balance} грн</p>
                 <p className="font-medium text-lg">Ви не можете ефективно впливати на процеси в країні,
-                    адже ваш Потенціал для творення змін – 0 гривень. <br />
+                    адже ваш Потенціал для творення змін – {userData.user.balance} гривень. <br />
 
                     Але ви можете стати замовником змін, підтримуючи саме ті процеси та проекти, які
                     важливі саме для вас.<br />

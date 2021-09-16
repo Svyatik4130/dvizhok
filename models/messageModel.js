@@ -5,7 +5,9 @@ const MessageSchema = new mongoose.Schema(
     {
         conversationId: { type: String },
         sender: { type: String },
-        text: { type: String }
+        text: { type: String },
+        userAvatar: { type: String },
+        userName: { type: String },
     },
     { timestamps: true }
 );

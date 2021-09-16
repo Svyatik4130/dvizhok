@@ -100,6 +100,7 @@ router.post("/login", async (req, res) => {
                 hometown: userAcc?.hometown,
                 occupationTown: userAcc?.occupationTown,
                 phoneNumber: userAcc.phoneNumber,
+                balance: userAcc.balance,
             }
         })
 
@@ -183,6 +184,7 @@ router.post('/info_change', auth, async (req, res) => {
                 hometown: updatedUser?.hometown,
                 occupationTown: updatedUser?.occupationTown,
                 phoneNumber: updatedUser.phoneNumber,
+                balance: updatedUser.balance,
             }
         })
     } catch (err) {
@@ -242,6 +244,7 @@ router.post('/pass_change', auth, async (req, res) => {
                 hometown: updatedUser?.hometown,
                 occupationTown: updatedUser?.occupationTown,
                 phoneNumber: updatedUser.phoneNumber,
+                balance: updatedUser.balance,
             }
         })
     } catch (err) {
@@ -313,6 +316,7 @@ router.get("/getme", auth, async (req, res) => {
         hometown: user?.hometown,
         occupationTown: user?.occupationTown,
         phoneNumber: user.phoneNumber,
+        balance: user.balance,
     })
 })
 
@@ -408,6 +412,7 @@ router.post('/change-avatar', (req, res) => {
                         hometown: updatedUser?.hometown,
                         occupationTown: updatedUser?.occupationTown,
                         phoneNumber: updatedUser.phoneNumber,
+                        balance: updatedUser.balance,
                     }
                 })
             }

@@ -9,22 +9,24 @@ import { useSelector } from 'react-redux'
 export default function ProjectsChat({ projectId }) {
     const [btnColor, setbtnColor] = useState("bg-gray-500 cursor-default")
     const [btnFunction, setbtnFunction] = useState("button")
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState("");
     const scrollRef = useRef();
     const socket = useRef();
     const [newMessage, setNewMessage] = useState("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
-    const currProject = useSelector(state => state.allProjects).filter(project => projectId === project._id)
+    const currProject = useSelector(state => state.allProjects).filter(project => projectId === project._id)[0]
     const user = useSelector(state => state.userData).user
     const [error, setError] = useState()
     const [onlineUsers, setOnlineUsers] = useState([]);
 
     useEffect(() => {
         socket.current = io("/");
-        socket.current.on("getMessage", (data) => {
+        socket.current.on("getProjectsMessage", (data) => {
             setArrivalMessage({
                 sender: data.senderId,
                 text: data.text,
+                userAvatar: data.userAvatar,
+                userName: data.userName,
                 createdAt: data.createdAt
             });
         });
@@ -44,17 +46,15 @@ export default function ProjectsChat({ projectId }) {
     }, [user, newMessage]);
 
     useEffect(() => {
-        if (currProject !== null) {
-            const getMessages = async () => {
-                try {
-                    const res = await axios.get("/messages/" + currProject?._id);
-                    setMessages(res.data);
-                } catch (err) {
-                    console.log(err);
-                }
-            };
-            getMessages();
-        }
+        const getMessages = async () => {
+            try {
+                const res = await axios.get("/messages/" + currProject._id);
+                setMessages(res.data)
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        getMessages();
     }, [currProject]);
 
     const handleSubmit = async (e) => {
@@ -70,25 +70,29 @@ export default function ProjectsChat({ projectId }) {
                 sender: user.id,
                 text: newMessage,
                 conversationId: currProject._id,
+                userAvatar: user.avaUrl,
+                userName: user.name,
             };
 
-            const receiverIds = currProject.teamMembers.find(
+            const receiverIds = currProject.teamMembers.filter(
                 (member) => member !== user.id
             );
 
+            console.log(receiverIds)
             const isoDate = new Date().toISOString()
-            socket.current.emit("sendMessage", {
+            socket.current.emit("sendMessageToProjects", {
                 senderId: user.id,
                 receiverIds,
                 text: newMessage,
-                createdAt: isoDate
+                userAvatar: user.avaUrl,
+                userName: user.name,
+                createdAt: isoDate,
             });
 
             try {
                 const res = await axios.post("/messages/add", message);
                 setMessages([...messages, res.data]);
                 setNewMessage("");
-                console.log(res.data.createdAt)
             } catch (err) {
                 console.log(err);
             }
@@ -109,17 +113,20 @@ export default function ProjectsChat({ projectId }) {
         }
     }, [newMessage])
 
+    if (messages === "") {
+        return <h1>d</h1>
+    }
     return (
         <div className="w-full">
             <div className="bg-white relative rounded-3xl pb-12 h-196">
                 <p className="text-2xl text-center py-1 font-semibold text-purple-950">Чат Проекту</p>
                 <div className="w-full h-0.5 bg-gray-300"></div>
-                <div className="overflow-y-scroll h-full" >
-                    {/* {messages.map((m) => (
+                <div className="overflow-y-scroll pb-9 h-full" >
+                    {messages.map((m) => (
                         <div ref={scrollRef} key={m._id}>
-                            <Message message={m} own={m.sender === user.id} friend={friend} />
+                            <Message message={m} own={m.sender === user.id} friend={{ avatarUrl: m.userAvatar, name: m.userName }} />
                         </div>
-                    ))} */}
+                    ))}
                     <div className="w-full mt-2">
                         {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
                     </div>
@@ -136,6 +143,6 @@ export default function ProjectsChat({ projectId }) {
                     </div>
                 </form>
             </div>
-        </div>
+        </div >
     )
 }

@@ -86,13 +86,18 @@ io.on("connection", (socket) => {
     });
 
     //send and get message from projects
-    socket.on("sendMessageToProjects", ({ senderId, receiverId, text, createdAt }) => {
-        const user = getUser(receiverId);
-        io.to(user?.socketId).emit("getProjectsMessage", {
-            senderId,
-            text,
-            createdAt
-        });
+    socket.on("sendMessageToProjects", ({ senderId, receiverIds, text, createdAt, userAvatar, userName }) => {
+        receiverIds.map(id => {
+            const user = getUser(id);
+            console.log(user)
+            io.to(user?.socketId).emit("getProjectsMessage", {
+                senderId,
+                text,
+                userAvatar,
+                userName,
+                createdAt
+            });
+        })
     });
 
     //when disconnect

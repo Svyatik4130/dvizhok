@@ -59,13 +59,11 @@ router.post("/get-invoice-response", async (req, res) => {
     gen_hmac = hmac.digest('hex')
 
     const payerId = requestObject.orderReference.split("-")[0]
+    console.log(requestObject)
     const duplicateTransaction = await Transaction.findOne({ "orderName": requestObject.orderReference })
     if (!duplicateTransaction) {
         const payerUser = await User.findById(payerId)
         const newBalance = Number(payerUser.balance) + Number(requestObject.products.price)
-        console.log("wwwwww", payerUser)
-        console.log("dddddd", newBalance)
-        console.log("dd", typeof newBalance)
         await User.updateOne({ _id: payerId }, {
             $set: {
                 "balance": newBalance,
@@ -77,8 +75,7 @@ router.post("/get-invoice-response", async (req, res) => {
             amount: requestObject.products.price,
         })
 
-        const savedTransaction = await newTrans.save()
-        console.log('1', savedTransaction)
+        await newTrans.save()
 
         const resObject = {
             "orderReference": requestObject.orderReference,
@@ -86,15 +83,8 @@ router.post("/get-invoice-response", async (req, res) => {
             "time": date,
             "signature": gen_hmac
         }
-        console.log(resObject)
         res.json(resObject)
     }
-})
-
-router.post("/test", async (req, res) => {
-    const testresponse = await axios.post("https://dvizhok.herokuapp.com/payments/get-invoice-response", req.body)
-    console.log(testresponse.data)
-    res.json(test)
 })
 
 module.exports = router
