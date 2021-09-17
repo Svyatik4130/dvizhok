@@ -62,28 +62,33 @@ router.post("/get-invoice-response", async (req, res) => {
     console.log(requestObject)
     const duplicateTransaction = await Transaction.findOne({ "orderName": requestObject.orderReference })
     if (!duplicateTransaction) {
-        const payerUser = await User.findById(payerId)
-        const newBalance = Number(payerUser.balance) + Number(requestObject.products.price)
-        await User.updateOne({ _id: payerId }, {
-            $set: {
-                "balance": newBalance,
+        try {
+            const payerUser = await User.findById(payerId)
+            const newBalance = Number(payerUser.balance) + Number(requestObject.products.price)
+            const newTrans = new Transaction({
+                orderName: requestObject.orderReference,
+                payerId,
+                amount: requestObject.products.price,
+            })
+
+            await newTrans.save()
+
+            await User.updateOne({ _id: payerId }, {
+                $set: {
+                    "balance": newBalance,
+                }
+            })
+
+            const resObject = {
+                "orderReference": requestObject.orderReference,
+                "status": "accept",
+                "time": date,
+                "signature": gen_hmac
             }
-        })
-        const newTrans = new Transaction({
-            orderName: requestObject.orderReference,
-            payerId,
-            amount: requestObject.products.price,
-        })
-
-        await newTrans.save()
-
-        const resObject = {
-            "orderReference": requestObject.orderReference,
-            "status": "accept",
-            "time": date,
-            "signature": gen_hmac
+            res.json(resObject)
+        } catch (error) {
+            res.json(error)
         }
-        res.json(resObject)
     }
 })
 

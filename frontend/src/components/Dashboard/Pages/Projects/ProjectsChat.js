@@ -78,7 +78,6 @@ export default function ProjectsChat({ projectId }) {
                 (member) => member !== user.id
             );
 
-            console.log(receiverIds)
             const isoDate = new Date().toISOString()
             socket.current.emit("sendMessageToProjects", {
                 senderId: user.id,
@@ -121,7 +120,7 @@ export default function ProjectsChat({ projectId }) {
             <div className="bg-white relative rounded-3xl pb-12 h-196">
                 <p className="text-2xl text-center py-1 font-semibold text-purple-950">Чат Проекту</p>
                 <div className="w-full h-0.5 bg-gray-300"></div>
-                <div className="overflow-y-scroll pb-9 h-full" >
+                <div className="overflow-y-scroll pb-9 px-2 h-full" >
                     {messages.map((m) => (
                         <div ref={scrollRef} key={m._id}>
                             <Message message={m} own={m.sender === user.id} friend={{ avatarUrl: m.userAvatar, name: m.userName }} />

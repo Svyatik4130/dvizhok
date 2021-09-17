@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const TransactionSchema = new mongoose.Schema(
     {
-        orderName: { type: String, required: true },
+        orderName: { type: String, required: true, unique: true },
         payerId: { type: String, required: true },
         amount: { type: Number, required: true }
     },

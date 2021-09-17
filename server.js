@@ -89,7 +89,7 @@ io.on("connection", (socket) => {
     socket.on("sendMessageToProjects", ({ senderId, receiverIds, text, createdAt, userAvatar, userName }) => {
         receiverIds.map(id => {
             const user = getUser(id);
-            console.log(user)
+            console.log(user?.socketId)
             io.to(user?.socketId).emit("getProjectsMessage", {
                 senderId,
                 text,
