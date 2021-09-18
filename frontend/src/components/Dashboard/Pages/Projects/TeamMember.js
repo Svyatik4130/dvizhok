@@ -7,6 +7,8 @@ export default function TeamMember({ userId }) {
     const [isLoading, setisLoading] = useState(true)
     const history = useHistory()
 
+    console.log(userId)
+
     useEffect(() => {
         const preloadOpps = async () => {
             try {

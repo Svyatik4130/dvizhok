@@ -75,7 +75,7 @@ export default function Info() {
             let token = localStorage.getItem("auth-token")
             const payload = { userId: userData.user.id, signature }
             try {
-                const prepublishRes = await axios.post("/users/prepublish-check", payload, { headers: { "x-auth-token": token, "secret": signature  } })
+                const prepublishRes = await axios.post("/users/prepublish-check", payload, { headers: { "x-auth-token": token, "secret": signature } })
                 console.log(prepublishRes)
                 if (prepublishRes.status === 201) {
                     const ChangeRes = await axios.post('/users/change-avatar', data, {
@@ -246,7 +246,7 @@ export default function Info() {
             </div>
             <div className="lg:w-4/12 w-full lg:py-0 py-5">
                 <div className="m-auto text-center">
-                    <p className="text-purple-950 lg:text-2xl text-lg lg:mb-4 mb-2 font-semibold">Ваш потенціал: 0 грн</p>
+                    <p className="text-purple-950 lg:text-2xl text-lg lg:mb-4 mb-2 font-semibold">Ваш потенціал: {userData.user.balance} грн</p>
                     {/* title has to be responsive */}
                     <a href="#" className="bg-yellow-350 font-semibold text-lg text-purple-950 rounded-full px-6 py-2">Стати Творцем</a>
                 </div>

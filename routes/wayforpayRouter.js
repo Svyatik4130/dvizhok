@@ -43,7 +43,6 @@ router.post("/create-potential-invoice", async (req, res) => {
         console.log(error)
     }
 })
-let test = []
 
 router.post("/get-invoice-response", async (req, res) => {
     const date = Math.floor(new Date().getTime() / 1000)
