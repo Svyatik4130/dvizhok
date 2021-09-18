@@ -8,7 +8,6 @@ const User = require("../models/userModel")
 router.post("/create-potential-invoice", async (req, res) => {
     try {
         const { userId, amount, email, phone } = req.body
-        console.log(req.body)
         const date = Math.floor(new Date().getTime() / 1000)
         const orderName = `${userId}-${date}`
         let data = `freelance_user_6138863bab744;https://dvizhok.herokuapp.com;${orderName};${date};1;UAH;Поповнення внутрішнього балансу Dvizhok;1;${amount}`
@@ -57,21 +56,42 @@ router.post("/get-invoice-response", async (req, res) => {
     hmac.update(data)
     gen_hmac = hmac.digest('hex')
 
-    const payerId = requestObject.orderReference.split("-")[0]
-    console.log(requestObject)
-    const duplicateTransaction = await Transaction.findOne({ "orderName": requestObject.orderReference })
-    if (!duplicateTransaction) {
+    if (requestObject.transactionStatus === "Approved") {
+        const duplicateTransaction = await Transaction.findOne({ "orderName": requestObject.orderReference })
+        if (!duplicateTransaction) {
+            try {
+                const payerUser = await User.findById(payerId)
+                const newBalance = Number(payerUser.balance) + Number(requestObject.products.price)
+                const newTrans = new Transaction({
+                    orderName: requestObject.orderReference,
+                    payerId,
+                    amount: requestObject.products.price,
+                })
+
+                await newTrans.save()
+
+                await User.updateOne({ _id: payerId }, {
+                    $set: {
+                        "balance": newBalance,
+                    }
+                })
+
+                const resObject = {
+                    "orderReference": requestObject.orderReference,
+                    "status": "accept",
+                    "time": date,
+                    "signature": gen_hmac
+                }
+                res.json(resObject)
+            } catch (error) {
+                console.log(error)
+                res.json(error)
+            }
+        }
+    } else if (requestObject.transactionStatus === "Refunded") {
         try {
             const payerUser = await User.findById(payerId)
-            const newBalance = Number(payerUser.balance) + Number(requestObject.products.price)
-            const newTrans = new Transaction({
-                orderName: requestObject.orderReference,
-                payerId,
-                amount: requestObject.products.price,
-            })
-
-            await newTrans.save()
-
+            const newBalance = Number(payerUser.balance) - Number(requestObject.products.price)
             await User.updateOne({ _id: payerId }, {
                 $set: {
                     "balance": newBalance,
@@ -86,9 +106,13 @@ router.post("/get-invoice-response", async (req, res) => {
             }
             res.json(resObject)
         } catch (error) {
+            console.log(error)
             res.json(error)
         }
     }
+    const payerId = requestObject.orderReference.split("-")[0]
+    console.log(requestObject)
+
 })
 
 module.exports = router
