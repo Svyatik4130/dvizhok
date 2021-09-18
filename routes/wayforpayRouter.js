@@ -56,6 +56,8 @@ router.post("/get-invoice-response", async (req, res) => {
     hmac.update(data)
     gen_hmac = hmac.digest('hex')
 
+    const payerId = requestObject.orderReference.split("-")[0]
+    console.log(requestObject)
     if (requestObject.transactionStatus === "Approved") {
         const duplicateTransaction = await Transaction.findOne({ "orderName": requestObject.orderReference })
         if (!duplicateTransaction) {
@@ -110,9 +112,6 @@ router.post("/get-invoice-response", async (req, res) => {
             res.json(error)
         }
     }
-    const payerId = requestObject.orderReference.split("-")[0]
-    console.log(requestObject)
-
 })
 
 module.exports = router
