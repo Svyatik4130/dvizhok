@@ -28,6 +28,7 @@ export default function CreateProject() {
     const [logoFile, setlogoFile] = useState("")
     const [shortDesc, setshortDesc] = useState("")
     const [Location, setLocation] = useState()
+    const [locationString, setLocationString] = useState()
     const [finishDate, setFinishDate] = useState("")
     const [fundsReqrd, setFundsReqrd] = useState("")
     const [isProjectInfinite, setIsProjectInfinite] = useState(false)
@@ -78,6 +79,8 @@ export default function CreateProject() {
     }, [])
 
     useEffect(() => {
+        console.log(locationString)
+
         const options = {
             minMatchCharLength: 2,
             keys: [
@@ -173,6 +176,7 @@ export default function CreateProject() {
             data.append('projName', Name)
             data.append('category', selections)
             data.append('Location', Location)
+            data.append('locationString', locationString)
             data.append('userId', userData.user.id)
             data.append('userName', userData.user.name)
             data.append('filePDFAndXLS', filePDF)
@@ -531,7 +535,7 @@ export default function CreateProject() {
                         )}
                     </div>
 
-                    <SearchBar setLocation={(text) => setLocation(text)} />
+                    <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} />
                     <p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>
 
                     <div className="w-full mt-4">

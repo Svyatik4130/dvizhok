@@ -143,7 +143,7 @@ export default function ProjectPage() {
                     <p className="text-2xl font-bold truncate w-full text-purple-950 text-center">{Project.projectName}</p>
                     <div className="font-medium text-lg w-full lg:w-6/12">
                         <p>Тип проекту: <strong className=" uppercase">{Project.category}</strong></p>
-                        <p>Місце реалізації: <strong className=" uppercase">{Project.category}</strong></p>
+                        <p>Місце реалізації: <strong className=" uppercase">{Project.locationString}</strong></p>
                         <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
                     </div>
                     <p className="hidden lg:block font-medium text-lg mt-3 w-full whitespace-normal break-words">

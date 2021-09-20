@@ -11,7 +11,7 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from "use-places-autocomplete";
 
-export default function Search({ setLocation }) {
+export default function Search({ setLocation, setLocationText }) {
     const {
         ready,
         value,
@@ -32,13 +32,14 @@ export default function Search({ setLocation }) {
 
     const handleSelect = async (address) => {
         setValue(address, false);
+        setLocationText(address)
 
         clearSuggestions();
 
         try {
             const results = await getGeocode({ address });
             const { lat, lng } = await getLatLng(results[0]);
-            setLocation([ lat, lng ])
+            setLocation([lat, lng])
         } catch (error) {
             console.log("😱 Error: ", error);
         }

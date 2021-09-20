@@ -133,6 +133,7 @@ router.post('/create-project', (req, res) => {
                     photosNvideos: galleryImgLocationArray,
                     category: req.body.category,
                     location: latNlng,
+                    locationString: req.body.locationString,
                     logoUrl: logo,
                     projectName: req.body.projName,
                     filePDF: files_pdf_xls[0],

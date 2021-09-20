@@ -14,7 +14,6 @@ router.post("/create-potential-invoice", async (req, res) => {
         var hmac = crypto.createHmac('md5', process.env.MERCHANT_SECRET_KEY)
         hmac.update(data)
         gen_hmac = hmac.digest('hex')
-        console.log(gen_hmac)
         const params = {
             "transactionType": "CREATE_INVOICE",
             "merchantAccount": "freelance_user_6138863bab744",

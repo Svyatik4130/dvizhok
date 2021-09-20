@@ -24,19 +24,10 @@ export default function ProjectsChat({ projectId }) {
     })
 
     useEffect(() => {
-        if (currProject.teamMembers.includes(user.id)) {
+        if (currProject.teamMembers.includes(user.id) || currProject.projectleaderId === user.id) {
             setLayout({
                 customClass: "pb-10",
-                inputForm: (
-                    <div className="absolute w-full flex items-center p-1 bottom-0">
-                        <input onChange={(e) => setNewMessage(e.target.value)} value={newMessage} type="text" className="rounded-full bg-gray-200 px-4 py-2 w-10/12 outline-none" placeholder="Введіть повідомлення..." />
-                        <div className="w-2/12 flex-1 px-2">
-                            <button type={btnFunction} className={`w-full h-full transition-all ${btnColor} rounded-3xl py-2 flex justify-center`}>
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/send_icon.png" alt="send_icon" className="h-6" />
-                            </button>
-                        </div>
-                    </div>
-                )
+                inputForm: true
             })
         }
         socket.current = io("/");
@@ -118,7 +109,20 @@ export default function ProjectsChat({ projectId }) {
     }
 
     useEffect(() => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+
+        // if any scroll is attempted, set this to the previous value
+        window.onscroll = function () {
+            window.scrollTo(scrollLeft, scrollTop);
+        };
+
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+        if (messages !== "") {
+            setTimeout(() => {
+                window.onscroll = function () { };
+            }, 300);
+        }
     }, [messages, newMessage, error]);
 
     useEffect(() => {
@@ -131,9 +135,11 @@ export default function ProjectsChat({ projectId }) {
         }
     }, [newMessage])
 
+
     if (messages === "") {
         return <h1>Loading...</h1>
     }
+
     return (
         <div className="w-full">
             <div className="bg-white relative rounded-3xl pb-12 h-196">
@@ -152,7 +158,16 @@ export default function ProjectsChat({ projectId }) {
                     </div>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    {layout.inputForm}
+                    {layout.inputForm ? (
+                        <div className="absolute w-full flex items-center p-1 bottom-0">
+                            <input onChange={(e) => setNewMessage(e.target.value)} value={newMessage} type="text" className="rounded-full bg-gray-200 px-4 py-2 w-10/12 outline-none" placeholder="Введіть повідомлення..." />
+                            <div className="w-2/12 flex-1 px-2">
+                                <button type={btnFunction} className={`w-full h-full transition-all ${btnColor} rounded-3xl py-2 flex justify-center`}>
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/send_icon.png" alt="send_icon" className="h-6" />
+                                </button>
+                            </div>
+                        </div>
+                    ) : null}
                 </form>
             </div>
         </div >
