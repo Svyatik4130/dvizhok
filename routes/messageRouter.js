@@ -26,6 +26,7 @@ router.get("/:conversationId", async (req, res) => {
         res.status(500).json(err);
     }
 });
+
 router.get("/lastMess/:conversationId", async (req, res) => {
     try {
         const messages = await Message.find({

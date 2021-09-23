@@ -32,7 +32,6 @@ export default function Personal_Info() {
     const [selections, setSelections] = useState(userData.user.sex);
     const PLATFORMS = ["Чоловік", "Жінка"];
 
-
     const toggleExpanded = () => {
         if (!expanded) {
             setExpanded(true);

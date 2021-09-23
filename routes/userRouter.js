@@ -134,7 +134,7 @@ router.post('/info_change', auth, async (req, res) => {
         if (occupation.length >= 35) {
             return res.status(400).json({ msg: "Bведіть коротку назву місця проживання, будь ласка" })
         }
-        if (sex[0] !== "Чоловік" && sex[0] !== "Жінка") {
+        if (sex[0] !== "Чоловік" && sex[0] !== "Жінка" && sex[0] !== "") {
             return res.status(400).json({ msg: "Не треба так!))" })
         }
 
@@ -358,10 +358,14 @@ const ProjectGalleryUploads = multer({
 
 router.post('/prepublish-check', auth, async (req, res) => {
     try {
-        const { userId } = req.body
+        const { userId, signature } = req.body
         if (userId !== req.user) {
             return res.status(400).json({ msg: "Ошибка" })
         }
+        const token = req.header("x-auth-token")
+        if (!token) return res.status(400).json({ msg: "Ошибка" })
+        const verified = jwt.verify(token, process.env.JWT_SECRET)
+        if (verified.key !== signature) return res.status(400).json({ msg: "Ошибка" })
 
         res.status(201).json(req.user)
     } catch (error) {
@@ -380,6 +384,11 @@ router.post('/change-avatar', (req, res) => {
                 res.status(400).json({ msg: "Error: No File Selected" })
             } else {
                 // If Success
+                const token = req.header("x-auth-token")
+                if (!token) return res.status(400).json({ msg: "Ошибка" })
+                const verified = jwt.verify(token, process.env.JWT_SECRET)
+                if (verified.key !== req.body.secret) return res.status(400).json({ msg: "Ошибка" })
+
                 let fileArray = req.files,
                     fileLocation;
                 const galleryImgLocationArray = [];
@@ -394,7 +403,7 @@ router.post('/change-avatar', (req, res) => {
                         "avatarUrl": galleryImgLocationArray[0]
                     }
                 })
-                const token = jwt.sign({ id: userAcc._id, key: req.body.signature }, process.env.JWT_SECRET)
+
                 const updatedUser = await User.findById(userAcc._id)
 
                 res.json({

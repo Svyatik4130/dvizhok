@@ -22,6 +22,9 @@ const projectSchema = new mongoose.Schema({
     finishDate: { type: String, },
     location: {type: Array, required: true},
     locationString: {type: String, required: true},
+    followers: { type: Array, default: [] },
+    helpers: { type: Array, default: [] },
+    raised: { type: Number, default: 0 },
 },
     { timestamps: true }
 )

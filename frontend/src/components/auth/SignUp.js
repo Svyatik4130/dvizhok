@@ -5,7 +5,6 @@ import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom"
 import { loggedUser } from '../../actions/UserActions'
-import { addAllProjects } from '../../actions/ProjectActions'
 import Loading from '../Loaders/loading'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'

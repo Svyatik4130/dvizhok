@@ -67,7 +67,7 @@ export default function DescTopMenu() {
                         {findedUsers ? (
                             findedUsers.map(({ item }) => {
                                 return (
-                                    <div key={item._id} onClick={() => { history.push(`/dashboard/userpage/${item._id}`); setsearchText("") }} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
+                                    <div key={item._id} onClick={() => { history.push(`/dashboard/userpage/${item._id}/created-projects`); setsearchText("") }} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
                                         <div className="flex items-center">
                                             <div className="w-14 h-14 rounded-full relative responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${item.avatarUrl})` }}>
                                             </div>

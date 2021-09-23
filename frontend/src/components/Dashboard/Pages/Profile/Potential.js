@@ -16,10 +16,12 @@ export default function Potential() {
 
     const Pay = async () => {
         try {
+            setreqLoading(true)
             const params = { userId: userData.user.id, amount: 1, email: userData.user.email, phone: userData.user.phoneNumber[0] }
             const resWayForPay = await axios.post("/payments/create-potential-invoice", params)
             setWFPresponse(resWayForPay.data)
             console.log(resWayForPay.data)
+            setreqLoading(false)
             window.open(resWayForPay.data.invoiceUrl, '_blank');
         } catch (error) {
             console.log(error)

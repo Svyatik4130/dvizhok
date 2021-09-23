@@ -6,9 +6,16 @@ import { Carousel } from 'react-responsive-carousel';
 import { useHistory } from 'react-router-dom'
 import TeamMember from './TeamMember';
 import ProjectsChat from './ProjectsChat';
+import Popup from 'reactjs-popup';
+import ErrorNotice from '../../../misc/ErrorNotice';
+import SuccessNotice from '../../../misc/SuccessNotice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSignature } from '../../../helpers/browser-key'
+import { loggedUser } from '../../../../actions/UserActions'
 
 export default function ProjectPage() {
     let { id } = useParams()
+    const userData = useSelector(state => state.userData)
     const [Project, setProject] = useState()
     const [ProjectLeader, setProjectLeader] = useState()
     const [isLoading, setisLoading] = useState(true)
@@ -16,6 +23,13 @@ export default function ProjectPage() {
     const history = useHistory()
     const [startDate, setStartDate] = useState()
     const [dateDifference, setDateDifference] = useState()
+    const [reqLoading, setreqLoading] = useState(false)
+    const [amount, setAmount] = useState(0)
+    const [successMessage, setSuccessMessage] = useState()
+    const [error, setError] = useState()
+
+    const signature = getSignature()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const receivingExactProject = async () => {
@@ -57,6 +71,46 @@ export default function ProjectPage() {
         receivingExactProject()
     }, [])
 
+    const handleAmountInputChange = (amount) => {
+        if (amount > userData.user.balance) {
+            setAmount(userData.user.balance)
+        } else if (amount < 0) {
+            setAmount(0)
+        } else if (!Number.isInteger(amount)) {
+            if (amount === "") {
+                setAmount(amount)
+            } else {
+                setAmount(Math.round(amount))
+            }
+        } else {
+            setAmount(amount)
+        }
+    }
+
+    const Support = async (closeFnc) => {
+        try {
+            let token = localStorage.getItem("auth-token")
+
+            setreqLoading(true)
+            const res = await axios.post("/project/raise", { amount: Number(amount), userId: userData.user.id, projectId: id, signature }, {
+                headers: { "x-auth-token": token },
+            })
+            if (res.status === 200) {
+                setSuccessMessage("Ви успішно підтримали проект!")
+                dispatch(loggedUser({
+                    token: res.data.token,
+                    user: res.data.user
+                }))
+                setTimeout(() => {
+                    closeFnc()
+                }, 1500);
+            }
+            setreqLoading(false)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     if (isLoading) {
         return (
             <div className="h-screen">
@@ -69,7 +123,7 @@ export default function ProjectPage() {
             <div>
                 <div style={StyleForFundDiv} className="p-4 bg-white lg:fixed rounded-3xl mt-3 lg:mt-0 lg:rounded-r-3xl rounded-l-3xl overflow-y-scroll top-0 right-0 w-full lg:w-1/5">
                     <p className="text-2xl font-bold text-purple-950 text-center">Зібрано, грн</p>
-                    <p className="text-2xl font-semibold mt-1">25 300</p>
+                    <p className="text-2xl font-semibold mt-1">{Project.raised}</p>
                     <div className="flex justify-between items-center mt-3">
                         <p className="text-sm font-medium text-purple-950 text-center">Ціль проекта</p>
                         <p className="text-sm font-medium text-center">{Project.isFundsInfinite ? ("Необмежений збір") : (Project.fundsReqrd)}</p>
@@ -86,7 +140,7 @@ export default function ProjectPage() {
                                 <p className="text-sm font-medium text-center">{Project.isProjectInfinite ? ("Постійний проект") : (Project.finishDate)}</p>
                             </div>
                             <div className="flex justify-between items-center mt-1">
-                                <p className="text-sm font-medium text-purple-950 text-center">Залишилось</p>
+                                <p className="text-sm font-medium text-purple-950 text-center">Залишилось днів</p>
                                 <p className="text-sm font-medium text-center">{dateDifference}</p>
                             </div>
                         </>
@@ -96,7 +150,53 @@ export default function ProjectPage() {
                         <p className="text-sm font-medium text-purple-950 text-center">Проект запущений</p>
                         <p className="text-sm font-medium text-center">{startDate}</p>
                     </div>
-                    <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
+                    <Popup
+                        trigger={
+                            <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
+                        }
+                        modal
+                        nested
+                    >
+                        {close => (
+                            <div className="modal bg-white rounded-xl">
+                                <button className="close" onClick={close}>
+                                    &times;
+                                </button>
+                                <div className="w-full bg-purple-850 px-4 py-2 text-white text-2xl font-bold rounded-t-xl">
+                                    Вікно підтримки проекту
+                                </div>
+
+                                <div className="w-10/12 mt-3 m-auto">
+                                    <div className="px-2 m-auto">
+                                        {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
+                                        {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
+                                    </div>
+                                </div>
+
+                                <p className="font-medium text-lg px-5 mt-4 text-gray-600">Будь ласка, виберіть суму оплати</p>
+                                <div className="w-full m-auto flex items-center p-6">
+                                    <input value={amount} onChange={(e) => handleAmountInputChange(e.target.value)} type="number" min="0" max={userData.user.balance} className="h-8 w-6/12 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" /><br />
+                                    <p className=" pl-2 font-medium text-xl">грн</p>
+                                </div>
+                                <div className="w-full rounded-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
+                                    {reqLoading ? (
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
+                                    ) : (
+                                        null
+                                    )}
+                                    <button onClick={() => Support(close)} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-yellow-350 text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Підтримати</button>
+                                    <button
+                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                        onClick={() => {
+                                            close();
+                                        }}
+                                    >
+                                        Закрити
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </Popup>
                     <p className="font-medium text-lg text-gray-500 mt-3">Лідери проекту</p>
                     {/* leader profile */}
                     <div onClick={() => { history.push(`/dashboard/userpage/${ProjectLeader._id}/created-projects`) }} className="flex cursor-pointer w-full hover:shadow-inner p-2 shadow-none hover:bg-gray-100 rounded-3xl transition-all">
@@ -144,7 +244,53 @@ export default function ProjectPage() {
                     <div className="font-medium text-lg w-full lg:w-6/12">
                         <p>Тип проекту: <strong className=" uppercase">{Project.category}</strong></p>
                         <p>Місце реалізації: <strong className=" uppercase">{Project.locationString}</strong></p>
-                        <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
+                        <Popup
+                            trigger={
+                                <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
+                            }
+                            modal
+                            nested
+                        >
+                            {close => (
+                                <div className="modal bg-white rounded-xl">
+                                    <button className="close" onClick={close}>
+                                        &times;
+                                    </button>
+                                    <div className="w-full bg-purple-850 px-4 py-2 text-white text-2xl font-bold rounded-t-xl">
+                                        Вікно підтримки проекту
+                                    </div>
+
+                                    <div className="w-10/12 mt-3 m-auto">
+                                        <div className="px-2 m-auto">
+                                            {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
+                                            {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
+                                        </div>
+                                    </div>
+
+                                    <p className="font-medium text-lg px-5 mt-4 text-gray-600">Будь ласка, виберіть суму оплати</p>
+                                    <div className="w-full m-auto flex items-center p-6">
+                                        <input value={amount} onChange={(e) => handleAmountInputChange(e.target.value)} type="number" min="0" max={userData.user.balance} className="h-8 w-6/12 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" /><br />
+                                        <p className=" pl-2 font-medium text-xl">грн</p>
+                                    </div>
+                                    <div className="w-full rounded-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
+                                        {reqLoading ? (
+                                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
+                                        ) : (
+                                            null
+                                        )}
+                                        <button onClick={() => Support(close)} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-yellow-350 text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Підтримати</button>
+                                        <button
+                                            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                            onClick={() => {
+                                                close();
+                                            }}
+                                        >
+                                            Закрити
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </Popup>
                     </div>
                     <p className="hidden lg:block font-medium text-lg mt-3 w-full whitespace-normal break-words">
                         <div className="float-right w-6/12 -mt-28">
