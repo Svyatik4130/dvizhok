@@ -4,17 +4,17 @@ import axios from 'axios'
 import SimpleLoader from '../../../Loaders/SimpleLoader';
 import { Doughnut } from 'react-chartjs-2'
 
-export default function CreatedProjectsByUser() {
+export default function UserTookAPart() {
     let { id } = useParams()
-    const [CreatedProjects, setCreatedProjects] = useState()
+    const [takenProjects, setTakenProjects] = useState()
     const [isLoading, setisLoading] = useState(true)
     const history = useHistory()
 
     useEffect(() => {
         const oppsBeforeMount = async () => {
-            const getCreatedProjects = await axios.post("/project/get-created-projects-by-user", { id })
-            setCreatedProjects(getCreatedProjects.data)
-            console.log(getCreatedProjects.data)
+            const getTakenProjects = await axios.post("/project/get-user-took-a-part", { id })
+            setTakenProjects(getTakenProjects.data)
+            console.log(getTakenProjects.data)
             setisLoading(false)
         }
         oppsBeforeMount()
@@ -27,18 +27,17 @@ export default function CreatedProjectsByUser() {
     if (isLoading) {
         return <SimpleLoader />
     }
-
     return (
         <div className="flex flex-wrap">
-            {CreatedProjects.length > 0 ? (null) : (
+            {takenProjects.length > 0 ? (null) : (
                 <div className="w-full opacity-50">
                     <div className="">
                         <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
-                        <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Користувач ще не створив жодного проекту</p>
+                        <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Користувач не прийняв участь в жодному проекті</p>
                     </div>
                 </div>
             )}
-            {CreatedProjects.map((project) => {
+            {takenProjects.map((project) => {
                 let raised = project.raised
                 let rqrd = project.fundsReqrd
                 if (project.isFundsInfinite) {

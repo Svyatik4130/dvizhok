@@ -325,6 +325,24 @@ router.post("/get-created-projects-by-user", async (req, res) => {
         console.log(error)
     }
 })
+router.post("/get-user-took-a-part", async (req, res) => {
+    try {
+        const { id } = req.body
+        const TookAPartProjects = await Project.find({ teamMembers: { $all: [id] } })
+        res.json(TookAPartProjects)
+    } catch (error) {
+        console.log(error)
+    }
+})
+router.post("/get-supported-projects", async (req, res) => {
+    try {
+        const { id } = req.body
+        const SupportedProjects = await Project.find({ helpers: { $all: [id] } })
+        res.json(SupportedProjects)
+    } catch (error) {
+        console.log(error)
+    }
+})
 router.post("/raise", async (req, res) => {
     try {
         const { amount, userId, projectId, signature } = req.body
@@ -342,11 +360,11 @@ router.post("/raise", async (req, res) => {
         }
         let userInfo = await User.findById(userId)
         if (userInfo.balance < amount) return res.status(400).json({ msg: "An error occurred" });
-        
+
         let projectInfo = await Project.findById(projectId)
         let helpersArr = projectInfo.helpers
         if (!projectInfo.helpers.includes(userId)) {
-            helpersArr = projectInfo.helpers.push(userId)
+            helpersArr.push(userId)
         }
         await User.updateOne({ _id: userId }, {
             $set: {

@@ -3,7 +3,9 @@ import axios from 'axios'
 import SimpleLoader from '../../../Loaders/SimpleLoader';
 import { Switch, Route, NavLink, useParams, useHistory } from "react-router-dom";
 import CreatedProjectsByUser from './CreatedProjectsByUser';
+import UserTookAPart from './UserTookAPart';
 import { useSelector } from 'react-redux';
+import SupportedProjects from './SupportedProjects';
 
 export default function UserPage() {
     let { id } = useParams()
@@ -155,7 +157,8 @@ export default function UserPage() {
                 <div className="w-full bg-white rounded-b-xl p-2">
                     <Switch>
                         <Route path="/dashboard/userpage/:id/created-projects" children={<CreatedProjectsByUser />} />
-                        <Route path="/dashboard/userpage/:id/taking-part" />
+                        <Route path="/dashboard/userpage/:id/taking-part" children={<UserTookAPart />} />
+                        <Route path="/dashboard/userpage/:id/supported-projects" children={<SupportedProjects />} />
                     </Switch>
                 </div>
             </div>
