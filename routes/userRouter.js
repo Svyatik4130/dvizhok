@@ -99,6 +99,16 @@ router.post("/login", async (req, res) => {
                 country: userAcc?.country,
                 hometown: userAcc?.hometown,
                 occupationTown: userAcc?.occupationTown,
+                whoI: userAcc?.whoI,
+                workAs: userAcc?.workAs,
+                workPlace: userAcc?.workPlace,
+                myProjects: userAcc?.myProjects,
+                whatICan: userAcc?.whatICan,
+                whatILike: userAcc?.whatILike,
+                whatIWant: userAcc?.whatIWant,
+                myGoals: userAcc?.myGoals,
+                mySocialDream: userAcc?.mySocialDream,
+                selfPresentation: userAcc?.selfPresentation,
                 phoneNumber: userAcc.phoneNumber,
                 balance: userAcc.balance,
             }
@@ -111,7 +121,7 @@ router.post("/login", async (req, res) => {
 
 router.post('/info_change', auth, async (req, res) => {
     try {
-        const { name, email, surname, country, birthDate, occupation, phoneNumber, sex, userID, signature } = req.body
+        const { name, email, surname, country, birthDate, occupation, phoneNumber, sex, whoI, workAs, myGoals, workPlace, whatICan, whatILike, whatIWant, mySocialDream, selfPresentation, myProjects, userID, signature } = req.body
 
         if (req.user !== userID) {
             return res.status(400).json({ msg: 'Ошибка' })
@@ -134,10 +144,38 @@ router.post('/info_change', auth, async (req, res) => {
         if (occupation.length >= 35) {
             return res.status(400).json({ msg: "Bведіть коротку назву місця проживання, будь ласка" })
         }
+        if (whoI.length > 300) {
+            return res.status(400).json({ msg: "Поле 'Хто ви' має бути менше 300 символів" })
+        }
+        if (workAs.length > 300) {
+            return res.status(400).json({ msg: "Поле 'Ким працюєте' має бути менше 300 символів" })
+        }
+        if (workPlace.length > 300) {
+            return res.status(400).json({ msg: "Поле 'Місце роботи' має бути менше 300 символів" })
+        }
+        if (myGoals.length > 300) {
+            return res.status(400).json({ msg: "Поле 'Мої цілі' має бути менше 300 символів" })
+        }
+        if (whatICan.length > 300) {
+            return res.status(400).json({ msg: "Поле 'Що я вмію' має бути менше 300 символів" })
+        }
+        if (whatILike.length > 300) {
+            return res.status(400).json({ msg: "Поле 'Що я люблю' має бути менше 300 символів" })
+        }
+        if (whatIWant.length > 300) {
+            return res.status(400).json({ msg: "Поле 'Чим я хочу займатися' має бути менше 300 символів" })
+        }
+        if (mySocialDream.length > 300) {
+            return res.status(400).json({ msg: "Поле 'Моя соціальна мрія' має бути менше 300 символів" })
+        }
+        if (selfPresentation.length > 300) {
+            return res.status(400).json({ msg: "Поле 'Ще декілька слів про себе/самопрезентація' має бути менше 300 символів" })
+        }
+
+
         if (sex[0] !== "Чоловік" && sex[0] !== "Жінка" && sex[0] !== "") {
             return res.status(400).json({ msg: "Не треба так!))" })
         }
-
         const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         if (!re.test(email)) {
             return res.status(400).json({ msg: "E-mail введено некоректно" })
@@ -163,7 +201,16 @@ router.post('/info_change', auth, async (req, res) => {
                 "sex": sex,
                 "country": country,
                 "occupationTown": occupation,
-                "phoneNumber": phoneNumber,
+                "whoI": whoI,
+                "workAs": workAs,
+                "workPlace": workPlace,
+                "myGoals": myGoals,
+                "whatICan": whatICan,
+                "whatILike": whatILike,
+                "whatIWant": whatIWant,
+                "mySocialDream": mySocialDream,
+                "selfPresentation": selfPresentation,
+                "myProjects": myProjects,
             }
         })
         const token = jwt.sign({ id: userAcc._id, key: signature }, process.env.JWT_SECRET)
@@ -183,6 +230,16 @@ router.post('/info_change', auth, async (req, res) => {
                 country: updatedUser?.country,
                 hometown: updatedUser?.hometown,
                 occupationTown: updatedUser?.occupationTown,
+                whoI: updatedUser?.whoI,
+                workAs: updatedUser?.workAs,
+                workPlace: updatedUser?.workPlace,
+                myProjects: updatedUser?.myProjects,
+                whatICan: updatedUser?.whatICan,
+                whatILike: updatedUser?.whatILike,
+                whatIWant: updatedUser?.whatIWant,
+                myGoals: updatedUser?.myGoals,
+                mySocialDream: updatedUser?.mySocialDream,
+                selfPresentation: updatedUser?.selfPresentation,
                 phoneNumber: updatedUser.phoneNumber,
                 balance: updatedUser.balance,
             }
@@ -243,6 +300,16 @@ router.post('/pass_change', auth, async (req, res) => {
                 country: updatedUser?.country,
                 hometown: updatedUser?.hometown,
                 occupationTown: updatedUser?.occupationTown,
+                whoI: updatedUser?.whoI,
+                workAs: updatedUser?.workAs,
+                workPlace: updatedUser?.workPlace,
+                myProjects: updatedUser?.myProjects,
+                whatICan: updatedUser?.whatICan,
+                whatILike: updatedUser?.whatILike,
+                whatIWant: updatedUser?.whatIWant,
+                myGoals: updatedUser?.myGoals,
+                mySocialDream: updatedUser?.mySocialDream,
+                selfPresentation: updatedUser?.selfPresentation,
                 phoneNumber: updatedUser.phoneNumber,
                 balance: updatedUser.balance,
             }
@@ -315,6 +382,16 @@ router.get("/getme", auth, async (req, res) => {
         country: user?.country,
         hometown: user?.hometown,
         occupationTown: user?.occupationTown,
+        whoI: user?.whoI,
+        workAs: user?.workAs,
+        workPlace: user?.workPlace,
+        myProjects: user?.myProjects,
+        whatICan: user?.whatICan,
+        whatILike: user?.whatILike,
+        whatIWant: user?.whatIWant,
+        myGoals: user?.myGoals,
+        mySocialDream: user?.mySocialDream,
+        selfPresentation: user?.selfPresentation,
         phoneNumber: user.phoneNumber,
         balance: user.balance,
     })
@@ -420,6 +497,16 @@ router.post('/change-avatar', (req, res) => {
                         country: updatedUser?.country,
                         hometown: updatedUser?.hometown,
                         occupationTown: updatedUser?.occupationTown,
+                        whoI: updatedUser?.whoI,
+                        workAs: updatedUser?.workAs,
+                        workPlace: updatedUser?.workPlace,
+                        myProjects: updatedUser?.myProjects,
+                        whatICan: updatedUser?.whatICan,
+                        whatILike: updatedUser?.whatILike,
+                        whatIWant: updatedUser?.whatIWant,
+                        myGoals: updatedUser?.myGoals,
+                        mySocialDream: updatedUser?.mySocialDream,
+                        selfPresentation: updatedUser?.selfPresentation,
                         phoneNumber: updatedUser.phoneNumber,
                         balance: updatedUser.balance,
                     }

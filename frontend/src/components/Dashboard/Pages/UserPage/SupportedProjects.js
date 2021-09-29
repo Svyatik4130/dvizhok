@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from "react-router-dom";
 import axios from 'axios'
 import SimpleLoader from '../../../Loaders/SimpleLoader';
-import { Doughnut } from 'react-chartjs-2'
+import { Doughnut, defaults } from 'react-chartjs-2'
+defaults.animation = false;
 
 export default function SupportedProjects() {
     let { id } = useParams()

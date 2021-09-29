@@ -3,7 +3,8 @@ import ErrorNotice from '../../../misc/ErrorNotice';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Fuse from 'fuse.js'
-import { Doughnut } from 'react-chartjs-2'
+import { Doughnut, defaults } from 'react-chartjs-2'
+defaults.animation = false;
 
 export default function ProjectList() {
     const [error, setError] = useState()

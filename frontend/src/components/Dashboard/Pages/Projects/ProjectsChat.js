@@ -147,11 +147,17 @@ export default function ProjectsChat({ projectId }) {
                 <div className="w-full h-0.5 bg-gray-300"></div>
                 <div className={`overflow-y-scroll ${layout.customClass} px-2 h-full`} >
                     <div className="overflow-y-scroll h-full">
-                        {messages.map((m) => (
-                            <div ref={scrollRef} key={m._id}>
-                                <Message message={m} own={m.sender === user.id} friend={{ avatarUrl: m.userAvatar, name: m.userName }} />
+                        {messages.length > 0 ? (
+                            messages.map((m) => (
+                                <div ref={scrollRef} key={m._id}>
+                                    <Message message={m} own={m.sender === user.id} friend={{ avatarUrl: m.userAvatar, name: m.userName }} />
+                                </div>
+                            ))) : (
+                            <div className="w-full opacity-50">
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
+                                    <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">У чаті проекту ще немає повідомлень</p>
                             </div>
-                        ))}
+                        )}
                         <div className="w-full mt-2">
                             {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
                         </div>

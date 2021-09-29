@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Fuse from 'fuse.js'
-import { Doughnut } from 'react-chartjs-2'
+import { Doughnut, defaults } from 'react-chartjs-2'
+defaults.animation = false;
 
 export default function MyProjects() {
     const myProjects = useSelector(state => state.myProjects)

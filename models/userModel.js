@@ -13,6 +13,16 @@ const userSchema = new mongoose.Schema({
     country: { type: String, default: "" },
     hometown: { type: String, default: "" },
     occupationTown: { type: String, default: "" },
+    whoI: { type: String, default: "" },
+    workAs: { type: String, default: "" },
+    workPlace: { type: String, default: "" },
+    myProjects: { type: Array, default: [''] },
+    whatICan: { type: String, default: "" },
+    whatILike: { type: String, default: "" },
+    whatIWant: { type: String, default: "" },
+    myGoals: { type: String, default: "" },
+    mySocialDream: { type: String, default: "" },
+    selfPresentation: { type: String, default: "" },
     phoneNumber: { type: Array, required: true },
 }, { timestamps: true })
 

@@ -5,10 +5,8 @@ import { loggedUser } from '../../../../actions/UserActions'
 import ErrorNotice from '../../../misc/ErrorNotice'
 import SuccessNotice from '../../../misc/SuccessNotice'
 import { getSignature } from '../../../helpers/browser-key'
-// import InputMask from 'react-input-mask';
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
-import SimpleLoader from '../../../Loaders/SimpleLoader'
 
 export default function Personal_Info() {
     const userData = useSelector(state => state.userData)
@@ -21,10 +19,12 @@ export default function Personal_Info() {
     const [country, setCountry] = useState(userData.user.country)
     const [birthDate, setbirthDate] = useState(userData.user.birthDate)
     const [occupation, setOccupation] = useState(userData.user.occupationTown)
-    const [phoneNumbers, setPhoneNumbers] = useState(userData.user.phoneNumber[0])
+    const defaultNumbers = userData.user.phoneNumber.map((number, index) => { return { id: index, phone: number } })
+    const [phoneNumbers, setPhoneNumbers] = useState(userData.user.phoneNumber.map((number, index) => { return { id: index, phone: number } }))
     const [email, setEmail] = useState(userData.user.email)
 
     const [error, setError] = useState()
+    const [addNumberBtn, setAddNumberBtn] = useState(<p onClick={() => { setPhoneNumbers([...phoneNumbers, { id: Math.max(...phoneNumbers.map(number => { return (number.id) })) + 1, phone: "" }]) }} className=" font-medium text-lg text-purple-950 cursor-pointer hover:text-purple-900 transition-all">+ Додати інший номер телефону</p>)
     const [successMessage, setSuccessMessage] = useState()
     const signature = getSignature()
 
@@ -38,7 +38,9 @@ export default function Personal_Info() {
         } else {
             setExpanded(false);
         }
-    };
+    }
+
+    const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
     const handleChange = event => {
         if (event.target.checked) {
@@ -58,14 +60,21 @@ export default function Personal_Info() {
                 setError("Будь ласка, введіть правильну дату вашого народження");
                 return
             }
-            if (!isValidPhoneNumber(phoneNumbers)) {
+            let arePhonesValid = true
+            const PhoneNumbersArray = phoneNumbers.map(nmbrOnj => {
+                if (!isValidPhoneNumber(nmbrOnj.phone)) {
+                    arePhonesValid = false
+                }
+                return nmbrOnj.phone
+            })
+            if (!arePhonesValid) {
                 setError("Будь ласка, введіть дійсний номер телефону");
                 return
             }
 
-            if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || occupation !== userData.user.occupationTown || phoneNumbers !== userData.user.phoneNumber[0] || selections !== userData.user.sex) {
+            if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || occupation !== userData.user.occupationTown || !equals(phoneNumbers, defaultNumbers) || selections !== userData.user.sex) {
                 const userID = userData.user.id
-                const payload = { name, email, surname, country, birthDate, occupation, phoneNumber: [phoneNumbers], sex: selections, userID, signature }
+                const payload = { name, isValidPhoneNumber, email, surname, country, birthDate, occupation, phoneNumber: PhoneNumbersArray, sex: selections, whoI: userData.user.whoI, workAs: userData.user.workAs, workPlace: userData.user.workPlace, myGoals: userData.user.myGoals, whatICan: userData.user.whatICan, whatILike: userData.user.whatILike, whatIWant: userData.user.whatIWant, mySocialDream: userData.user.mySocialDream, selfPresentation: userData.user.selfPresentation, myProjects: userData.user.myProjects, userID, signature }
                 let token = localStorage.getItem("auth-token")
                 const changeRes = await axios.post("/users/info_change", payload, { headers: { "x-auth-token": token, "secret": signature }, })
                 console.log(changeRes)
@@ -88,7 +97,8 @@ export default function Personal_Info() {
     }
 
     useEffect(() => {
-        if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || occupation !== userData.user.occupationTown || phoneNumbers !== userData.user.phoneNumber[0] || selections !== userData.user.sex) {
+        console.log("hi")
+        if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || occupation !== userData.user.occupationTown || !equals(phoneNumbers, defaultNumbers) || selections !== userData.user.sex) {
             setBtnColor("bg-purple-950 cursor-pointer")
             setBtnType("submit")
         } else {
@@ -96,6 +106,27 @@ export default function Personal_Info() {
             setBtnType("button")
         }
     }, [name, email, surname, country, birthDate, occupation, phoneNumbers, selections])
+
+    const ChangeNumberInState = (value, index) => {
+        let ChangableNumbers = [...phoneNumbers]
+        const foundItem = ChangableNumbers.findIndex(number => number.id === index)
+        ChangableNumbers[foundItem] = { id: index, phone: value }
+        setPhoneNumbers(ChangableNumbers)
+    }
+    const deleteNumber = (index) => {
+        let ChangableNumbers = [...phoneNumbers]
+        let foundItem = phoneNumbers.findIndex(number => number.id === index)
+        ChangableNumbers.splice(foundItem, 1)
+        setPhoneNumbers(ChangableNumbers)
+    }
+
+    useEffect(() => {
+        if (phoneNumbers.length >= 3) {
+            setAddNumberBtn()
+        } else {
+            setAddNumberBtn(<p onClick={() => { setPhoneNumbers([...phoneNumbers, { id: Math.max(...phoneNumbers.map(number => { return (number.id) })) + 1, phone: "" }]) }} className=" font-medium text-lg text-purple-950 cursor-pointer hover:text-purple-900 transition-all">+ Додати інший номер телефону</p>)
+        }
+    }, [phoneNumbers])
 
     return (
         <div>
@@ -170,12 +201,21 @@ export default function Personal_Info() {
                         </div>
                         <div>
                             <p className=" font-semibold text-lg">Мобільний телефон</p>
-                            <PhoneInput
-                                international
-                                countryCallingCodeEditable={false}
-                                value={phoneNumbers}
-                                defaultCountry="UA"
-                                onChange={setPhoneNumbers} />
+                            {phoneNumbers.map((number, index) => {
+                                return (
+                                    <div className="flex items-center pb-2">
+                                        <PhoneInput
+                                            international
+                                            className="w-full"
+                                            countryCallingCodeEditable={false}
+                                            value={phoneNumbers[index].phone}
+                                            defaultCountry="UA"
+                                            onChange={(e) => { ChangeNumberInState(e, phoneNumbers[index].id) }} />
+                                        {phoneNumbers.length > 1 ? (<div onClick={() => deleteNumber(phoneNumbers[index].id)} className="cursor-pointer pl-1"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#da0800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>) : (null)}
+                                    </div>
+                                )
+                            })}
+                            {addNumberBtn}
                         </div>
                         <button type={btnType} className={`font-meduim mt-4 transition-all text-lg px-6 py-2 ${btnColor} text-white rounded-xl`}>Зберегти зміни</button>
                     </div>
