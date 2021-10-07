@@ -1,5 +1,6 @@
 const router = require("express").Router()
 const User = require("../models/userModel")
+const Transaction = require("../models/transactionModel")
 const bcrypt = require("bcryptjs")
 const auth = require("../middleware/auth")
 const jwt = require("jsonwebtoken")
@@ -349,11 +350,18 @@ router.post("/tokenIsValid", async (req, res) => {
         const token = req.header("x-auth-token")
         if (!token) return res.json(false)
 
+        const roleIdCheck = async (user) => {
+            console.log(user._id)
+            const userTransactions = await Transaction.find({ payerId: user._id })
+            console.log(userTransactions)
+        }
+
         if (token.length < 500) {
             const verified = jwt.verify(token, process.env.JWT_SECRET)
             if (!verified) return res.json(false)
             if (verified.key !== signature) return res.json(false)
             const user = await User.findById(verified.id)
+            await roleIdCheck(user)
             if (!user) return res.json(false)
             return res.json(true)
         } else {
@@ -363,6 +371,7 @@ router.post("/tokenIsValid", async (req, res) => {
             if (!user) return res.json(false)
             return res.json(true)
         }
+
     } catch (err) {
         res.status(500).json(err.message)
     }

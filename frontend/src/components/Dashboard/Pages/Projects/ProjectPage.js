@@ -34,6 +34,7 @@ export default function ProjectPage() {
     useEffect(() => {
         const receivingExactProject = async () => {
             try {
+                setisLoading(true)
                 const payload = { id }
                 const exactProject = await axios.post("/project/get-exact-projects", payload)
                 setProject(exactProject.data[0])
@@ -69,7 +70,7 @@ export default function ProjectPage() {
             }
         }
         receivingExactProject()
-    }, [])
+    }, [id])
 
     const handleAmountInputChange = (amount) => {
         if (amount > userData.user.balance) {

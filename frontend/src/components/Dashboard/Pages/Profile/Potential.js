@@ -14,17 +14,34 @@ export default function Potential() {
 
     const [amount, setAmount] = useState(0)
 
-    const Pay = async () => {
+    const Pay = async (close) => {
         try {
             setreqLoading(true)
-            const params = { userId: userData.user.id, amount: 1, email: userData.user.email, phone: userData.user.phoneNumber[0] }
+            const params = { userId: userData.user.id, amount: amount, email: userData.user.email, phone: userData.user.phoneNumber[0] }
             const resWayForPay = await axios.post("/payments/create-potential-invoice", params)
             setWFPresponse(resWayForPay.data)
             console.log(resWayForPay.data)
             setreqLoading(false)
+            close()
             window.open(resWayForPay.data.invoiceUrl, '_blank');
         } catch (error) {
             console.log(error)
+            setreqLoading(false)
+            setError(error.response.data.msg)
+        }
+    }
+
+    const handleAmountInputChange = (amount) => {
+        if (amount < 0) {
+            setAmount(0)
+        } else if (!Number.isInteger(amount)) {
+            if (amount === "") {
+                setAmount(amount)
+            } else {
+                setAmount(Math.round(amount))
+            }
+        } else {
+            setAmount(amount)
         }
     }
     return (
@@ -71,11 +88,7 @@ export default function Potential() {
 
                             <p className="font-medium text-lg px-5 mt-4 text-gray-600">Будь ласка, виберіть суму оплати</p>
                             <div className="w-full m-auto flex p-6">
-                                <input value={amount} onChange={(e) => setAmount(e.target.value)} type="number" className="h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" step="100" /><br />
-
-
-
-
+                                <input value={amount} onChange={(e) => handleAmountInputChange(e.target.value)} type="number" className="h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" min="100" /><br />
                             </div>
                             <div className="w-full rounded-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
                                 {reqLoading ? (
@@ -83,7 +96,7 @@ export default function Potential() {
                                 ) : (
                                     null
                                 )}
-                                <button onClick={Pay} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-yellow-350 text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Поповнити</button>
+                                <button onClick={() => { Pay(close) }} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-yellow-350 text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Поповнити</button>
                                 <button
                                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                     onClick={() => {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import React from 'react'
 import axios from "axios";
 import { useSelector } from 'react-redux'
-import { Switch, Route, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Fuse from 'fuse.js'
 
 export default function DescTopMenu() {
@@ -41,9 +41,10 @@ export default function DescTopMenu() {
                 "projectName"
             ]
         }
+        console.log(allUsers)
         const fuseUsers = new Fuse(allUsers, optionsForUsers)
         const fuseProjects = new Fuse(allProjects, optionsForProjects)
-        const findedfuseUsers = fuseUsers.search(searchText).filter(({ item }) => { return item._id !== userData.user.id })
+        const findedfuseUsers = fuseUsers.search(searchText)
         const findedfuseProjects = fuseProjects.search(searchText)
         setFindedUsers(findedfuseUsers)
         setFindedProjects(findedfuseProjects)
@@ -108,7 +109,11 @@ export default function DescTopMenu() {
             <div className="lg:flex lg:w-6/12 md:w-7/12 hidden items-center">
                 <div className="xl:w-6/12 md:w-5/12 px-2">
                     {/* add funds here */}
-                    <p className="cursor-pointer rounded-lg px-4 py-2 bg-purple-950 text-white text-lg font-semibold text-center">Поповнити Потенціал </p>
+                    {userData.user.role === 0 ? (
+                        <p className="cursor-pointer rounded-lg px-4 py-2 bg-purple-950 text-white text-lg font-semibold text-center">Стати Творцем</p>
+                    ) : (
+                        <p className="cursor-pointer rounded-lg px-4 py-2 bg-purple-950 text-white text-lg font-semibold text-center">Поповнити Потенціал</p>
+                    )}
                 </div>
                 <div className="w-6/12">
                     <div className="flex justify-end pr-4">
@@ -145,6 +150,6 @@ export default function DescTopMenu() {
                 </div>
             </div>
 
-        </div>
+        </div >
     )
 }

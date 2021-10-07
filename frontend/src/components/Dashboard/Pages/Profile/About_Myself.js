@@ -39,7 +39,8 @@ export default function Personal_Info() {
         try {
             let areLinksValid = true
             const ProjectsArray = myProjects.map(prjObj => {
-                if (prjObj.projectLink.length < 2 && prjObj.projectLink.length > 50) {
+                console.log(prjObj.projectLink)
+                if (prjObj.projectLink.length < 2 || prjObj.projectLink.length > 50) {
                     areLinksValid = false
                 }
                 return prjObj.projectLink
@@ -73,7 +74,6 @@ export default function Personal_Info() {
     }
 
     useEffect(() => {
-        console.log("hi")
         if (whoI !== userData.user.whoI || workAs !== userData.user.workAs || workPlace !== userData.user.workPlace || myGoals !== userData.user.myGoals || whatICan !== userData.user.whatICan || whatILike !== userData.user.whatILike || whatIWant !== userData.user.whatIWant || !equals(myProjects, defaultProject) || mySocialDream !== userData.user.mySocialDream || selfPresentation !== userData.user.selfPresentation) {
             setBtnColor("bg-purple-950 cursor-pointer")
             setBtnType("submit")

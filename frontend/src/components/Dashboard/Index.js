@@ -13,6 +13,7 @@ import MobileNavbar from './Navbars/MobileNavbar';
 import UserPage from './Pages/UserPage/UserPage';
 import { getSignature } from '../helpers/browser-key'
 import Messenger from './Pages/Messenger/Messenger';
+import Calendar from './Pages/Calendar/Calendar';
 
 export default function Index() {
     const [IsLoading, setIsLoading] = useState(0)
@@ -90,7 +91,7 @@ export default function Index() {
                             <Projects />
                         </Route>
                         <Route path="/dashboard/calendar">
-                            <div>calendar</div>
+                            <Calendar />
                         </Route>
                         <Route path="/dashboard">
                             <Redirect to="/dashboard/profile/personal_info" />

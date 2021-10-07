@@ -6,6 +6,7 @@ import CreatedProjectsByUser from './CreatedProjectsByUser';
 import UserTookAPart from './UserTookAPart';
 import { useSelector } from 'react-redux';
 import SupportedProjects from './SupportedProjects';
+import UserInformation from './UserInformation';
 
 export default function UserPage() {
     let { id } = useParams()
@@ -17,6 +18,7 @@ export default function UserPage() {
     useEffect(() => {
         const receivingExactUser = async () => {
             try {
+                setisLoading(true)
                 const userInfoReq = await axios.post("/users/get-user", { id })
                 setUserInfo(userInfoReq.data)
 
@@ -26,7 +28,7 @@ export default function UserPage() {
             }
         }
         receivingExactUser()
-    }, [])
+    }, [id])
 
     const CreateConversation = async () => {
         try {
@@ -100,47 +102,7 @@ export default function UserPage() {
                     </div>
                 </div>
 
-                <div className="mt-14">
-                    <div className="flex items-center">
-                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/globe.png" alt="globe" className="w-9" />
-                        <p className="font-semibold text-2xl ml-2">Про себе</p>
-                    </div>
-                    <div className="flex items-center mt-7">
-                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/portfolio.png" alt="portfolio" className="w-7" />
-                        <p className="font-medium text-lg ml-2">Працює в OK Fund</p>
-                    </div>
-                    <div className="flex items-center mt-2">
-                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/university.png" alt="university" className="w-6" />
-                        <p className="font-medium text-lg ml-2">Навчався в КНУ імені Тараса Шевченка</p>
-                    </div>
-                    <div className="flex items-center mt-2">
-                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/hometown.png" alt="hometown" className="w-6" />
-                        <p className="font-medium text-lg ml-2">Живе в Київ</p>
-                    </div>
-                    <div className="flex items-center mt-2">
-                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/gps.png" alt="gps" className="w-6" />
-                        <p className="font-medium text-lg ml-2">З Харкова</p>
-                    </div>
-                    <div className="flex items-center mt-2">
-                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/clock.png" alt="clock" className="w-6" />
-                        <p className="font-medium text-lg ml-2">На Омріянїй Країні з 2007 року</p>
-                    </div>
-
-                    {/* social networks */}
-                    <div className="flex items-center mt-2">
-                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/bankCard.png" alt="bankCard" className="w-6" />
-                        <p className="font-medium text-lg ml-2">Інтернет ресурси:</p>
-                    </div>
-                    <div className="flex items-center ml-2 mt-2">
-                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/facebook-notFilled.png" alt="facebook-notFilled" className="w-6" />
-                        <p className="font-medium text-lg ml-2">https://www.facebook.com/oleksiy.tolkachov</p>
-                    </div>
-
-                    <div className="flex items-center mt-2">
-                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/heart.png" alt="heart" className="w-6" />
-                        <p className="font-medium text-lg ml-2">Місія: Зробити Світ кращим</p>
-                    </div>
-                </div>
+                <UserInformation UserInfo={UserInfo} />
             </div>
             <div className="w-6/12 pt-10 pr-8">
                 <div className="w-full text-sm items-stretch flex rounded-t-xl font-medium lg:text-lg" style={{ backgroundColor: "#DDDDDD" }}>

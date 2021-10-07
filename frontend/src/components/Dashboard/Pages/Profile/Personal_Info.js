@@ -97,7 +97,6 @@ export default function Personal_Info() {
     }
 
     useEffect(() => {
-        console.log("hi")
         if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || occupation !== userData.user.occupationTown || !equals(phoneNumbers, defaultNumbers) || selections !== userData.user.sex) {
             setBtnColor("bg-purple-950 cursor-pointer")
             setBtnType("submit")

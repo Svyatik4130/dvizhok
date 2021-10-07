@@ -17,7 +17,6 @@ export default function ProjectsChat({ projectId }) {
     const currProject = useSelector(state => state.allProjects).filter(project => projectId === project._id)[0]
     const user = useSelector(state => state.userData).user
     const [error, setError] = useState()
-    const [onlineUsers, setOnlineUsers] = useState([]);
     const [layout, setLayout] = useState({
         customClass: "",
         inputForm: ""
@@ -50,9 +49,7 @@ export default function ProjectsChat({ projectId }) {
 
     useEffect(() => {
         socket.current.emit("addUser", user.id);
-        socket.current.on("getUsers", (users) => {
-            setOnlineUsers(users)
-        });
+        socket.current.on("getUsers");
     }, [user, newMessage]);
 
     useEffect(() => {
@@ -109,20 +106,9 @@ export default function ProjectsChat({ projectId }) {
     }
 
     useEffect(() => {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
-
-        // if any scroll is attempted, set this to the previous value
-        window.onscroll = function () {
-            window.scrollTo(scrollLeft, scrollTop);
-        };
-
-        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-        if (messages !== "") {
-            setTimeout(() => {
-                window.onscroll = function () { };
-            }, 300);
-        }
+        document.body.style.position = "fixed"
+        scrollRef.current?.scrollIntoView();
+        document.body.style.position = ""
     }, [messages, newMessage, error]);
 
     useEffect(() => {
@@ -154,8 +140,8 @@ export default function ProjectsChat({ projectId }) {
                                 </div>
                             ))) : (
                             <div className="w-full opacity-50">
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
-                                    <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">У чаті проекту ще немає повідомлень</p>
+                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
+                                <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">У чаті проекту ще немає повідомлень</p>
                             </div>
                         )}
                         <div className="w-full mt-2">

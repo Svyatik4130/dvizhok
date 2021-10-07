@@ -8,9 +8,14 @@ const User = require("../models/userModel")
 router.post("/create-potential-invoice", async (req, res) => {
     try {
         const { userId, amount, email, phone } = req.body
+
+        if (amount < 100) {
+            return res.status(400).json({ msg: "Введіть коректну суму поповнення" })
+        }
+
         const date = Math.floor(new Date().getTime() / 1000)
         const orderName = `${userId}-${date}`
-        let data = `freelance_user_6138863bab744;https://dvizhok.herokuapp.com;${orderName};${date};1;UAH;Поповнення внутрішнього балансу Dvizhok;1;${amount}`
+        let data = `freelance_user_6138863bab744;https://dvizhok.herokuapp.com;${orderName};${date};${amount};UAH;Поповнення внутрішнього балансу Dvizhok;1;${amount}`
         var hmac = crypto.createHmac('md5', process.env.MERCHANT_SECRET_KEY)
         hmac.update(data)
         gen_hmac = hmac.digest('hex')
