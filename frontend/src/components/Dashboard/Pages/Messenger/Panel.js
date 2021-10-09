@@ -20,7 +20,7 @@ export default function Panel() {
     const scrollRef = useRef();
     const [friend, setFriend] = useState(null)
     const history = useHistory()
-
+    console.log(friend)
     const [btnColor, setbtnColor] = useState("bg-gray-500 cursor-default")
     const [btnFunction, setbtnFunction] = useState("button")
     const [error, setError] = useState()
@@ -157,17 +157,18 @@ export default function Panel() {
                                     {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
                                 </div>
                             </div>
-                            <form onSubmit={handleSubmit}>
-                                <div className="absolute w-full flex items-center py-1 bottom-0">
-                                    <input onChange={(e) => setNewMessage(e.target.value)} value={newMessage} type="text" className="rounded-full bg-gray-200 px-4 py-2 w-10/12 outline-none" placeholder="Введіть повідомлення..." />
-                                    <div className="w-2/12 flex-1 px-2">
-                                        <button type={btnFunction} className={`w-full h-full ${btnColor} transition-all rounded-3xl py-2 flex justify-center`}>
-                                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/send_icon.png" alt="send_icon" className="h-6" />
-                                        </button>
+                            {friend._id === "6150c9c7aa554a186344ba4b" || friend.role > 2 ? (null) : (
+                                <form onSubmit={handleSubmit}>
+                                    <div className="absolute w-full flex items-center py-1 bottom-0">
+                                        <input onChange={(e) => setNewMessage(e.target.value)} value={newMessage} type="text" className="rounded-full bg-gray-200 px-4 py-2 w-10/12 outline-none" placeholder="Введіть повідомлення..." />
+                                        <div className="w-2/12 flex-1 px-2">
+                                            <button type={btnFunction} className={`w-full h-full ${btnColor} transition-all rounded-3xl py-2 flex justify-center`}>
+                                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/send_icon.png" alt="send_icon" className="h-6" />
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
-
+                                </form>
+                            )}
                         </div>
 
                         <div className="w-4/12 p-4 overflow-y-scroll h-full">
