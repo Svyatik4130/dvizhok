@@ -14,6 +14,7 @@ import UserPage from './Pages/UserPage/UserPage';
 import { getSignature } from '../helpers/browser-key'
 import Messenger from './Pages/Messenger/Messenger';
 import Calendar from './Pages/Calendar/Calendar';
+import News from './Pages/News/News';
 
 export default function Index() {
     const [IsLoading, setIsLoading] = useState(0)
@@ -82,7 +83,7 @@ export default function Index() {
                         <Route path="/dashboard/userpage/:id" children={<UserPage />}>
                         </Route>
                         <Route path="/dashboard/news">
-                            <div>news</div>
+                            <News />
                         </Route>
                         <Route path="/dashboard/messages">
                             <Messenger />

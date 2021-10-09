@@ -149,9 +149,6 @@ router.post("/get-invoice-response", async (req, res) => {
                 CnvId = savedConversation._id
             }
 
-            const dateInMonth = new Date()
-            dateInMonth.setMonth(dateInMonth.getMonth() + 1)
-
             const message = {
                 sender: "6150c9c7aa554a186344ba4b",
                 text: `Сума ${requestObject.products.price}грн була повернута🔄.`,
