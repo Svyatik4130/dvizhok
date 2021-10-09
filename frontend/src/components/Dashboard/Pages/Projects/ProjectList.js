@@ -59,6 +59,10 @@ export default function ProjectList() {
                         if (!project.isProjectInfinite) {
                             remainTime = finishDate - dateNow
                             passedTime = finishDate - createdAt - remainTime
+                            if(remainTime < 0){
+                                remainTime = 0
+                                passedTime = 100
+                            }
                         }
                         const FundsOps = {
                             data: {

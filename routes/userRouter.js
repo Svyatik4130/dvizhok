@@ -351,9 +351,23 @@ router.post("/tokenIsValid", async (req, res) => {
         if (!token) return res.json(false)
 
         const roleIdCheck = async (user) => {
-            console.log(user._id)
             const userTransactions = await Transaction.find({ payerId: user._id })
-            console.log(userTransactions)
+            const date = new Date()
+            if (user.roleId === 0) {
+                date.setMonth(date.getMonth() - 1);
+                date.setDate(date.getDate() + 1)
+                console.log(userTransactions)
+                if (userTransactions.length > 0) {
+                    if (new Date(userTransactions[userTransactions.length - 1].createdAt) > date) {
+                        console.log(new Date(userTransactions[userTransactions.length - 1].createdAt), date)
+                        await User.updateOne({ _id: user._id }, {
+                            $set: {
+                                "roleId": 1
+                            }
+                        })
+                    }
+                }
+            }
         }
 
         if (token.length < 500) {

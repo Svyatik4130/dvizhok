@@ -4,14 +4,16 @@ const crypto = require('crypto')
 
 const Transaction = require("../models/transactionModel")
 const User = require("../models/userModel")
+const Conversation = require("../models/conversationModel");
+const Message = require("../models/messageModel");
 
 router.post("/create-potential-invoice", async (req, res) => {
     try {
-        const { userId, amount, email, phone } = req.body
-
-        if (amount < 100) {
-            return res.status(400).json({ msg: "Введіть коректну суму поповнення" })
-        }
+        let { userId, amount, email, phone } = req.body
+        amount = 1
+        // if (amount < 100) {
+        //     return res.status(400).json({ msg: "Введіть коректну суму поповнення(більше 100 грн)" })
+        // }
 
         const date = Math.floor(new Date().getTime() / 1000)
         const orderName = `${userId}-${date}`
@@ -61,7 +63,6 @@ router.post("/get-invoice-response", async (req, res) => {
     gen_hmac = hmac.digest('hex')
 
     const payerId = requestObject.orderReference.split("-")[0]
-    console.log(requestObject)
     if (requestObject.transactionStatus === "Approved") {
         const duplicateTransaction = await Transaction.findOne({ "orderName": requestObject.orderReference })
         if (!duplicateTransaction) {
@@ -74,8 +75,40 @@ router.post("/get-invoice-response", async (req, res) => {
                     amount: requestObject.products.price,
                 })
 
-                await newTrans.save()
+                let message = {}
+                let CnvId = ""
+                const newConversation = new Conversation({
+                    members: [payerId, "6150c9c7aa554a186344ba4b"],
+                });
+                const isConversationUnique = await Conversation.findOne({ members: { $all: [payerId, "6150c9c7aa554a186344ba4b"] } })
+                if (isConversationUnique) {
+                    CnvId = isConversationUnique._id
+                } else {
+                    const savedConversation = await newConversation.save();
+                    CnvId = savedConversation._id
+                }
 
+                const dateInMonth = new Date()
+                dateInMonth.setMonth(dateInMonth.getMonth() + 1)
+
+                if (payerUser.roleId === 0) {
+                    message = {
+                        sender: "6150c9c7aa554a186344ba4b",
+                        text: `Вітаємо! Ви стали Творцем! Поповнення на ${requestObject.products.price}грн. Наступне поповнення потенціалу - ${dateInMonth.getFullYear()}/${dateInMonth.getMonth()}/${dateInMonth.getDate()}`,
+                        conversationId: CnvId,
+                    };
+                } else {
+                    message = {
+                        sender: "6150c9c7aa554a186344ba4b",
+                        text: `Вітаємо! Ви поповнили свій потенціал на ${requestObject.products.price}грн і продовжуєте бути Творцем! Мершій обирайте проекти для підтримки!`,
+                        conversationId: CnvId,
+                    };
+                }
+
+                const newMessage = new Message(message);
+                await newMessage.save();
+
+                await newTrans.save()
                 await User.updateOne({ _id: payerId }, {
                     $set: {
                         "balance": newBalance,
@@ -115,6 +148,15 @@ router.post("/get-invoice-response", async (req, res) => {
             console.log(error)
             res.json(error)
         }
+    }
+})
+
+router.get("/get-last-transaction/:userId", async (req, res) => {
+    try {
+        const lastTransaction = await Transaction.find({ payerId: req.params.userId })
+        res.json(lastTransaction[lastTransaction.length - 1])
+    } catch (error) {
+        console.log(error)
     }
 })
 

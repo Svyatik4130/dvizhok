@@ -10,6 +10,7 @@ import { getSignature } from '../../../helpers/browser-key'
 
 export default function Info() {
     const userData = useSelector(state => state.userData)
+    const [WFPresponse, setWFPresponse] = useState()
     const [photoFile, setPhotoFile] = useState("")
     const [avatar, setAvatar] = useState([])
     const [error, setError] = useState()
@@ -18,6 +19,38 @@ export default function Info() {
 
     const dispatch = useDispatch()
     const signature = getSignature()
+
+    const [amount, setAmount] = useState(0)
+
+    const Pay = async (close) => {
+        try {
+            setreqLoading(true)
+            const params = { userId: userData.user.id, amount: amount, email: userData.user.email, phone: userData.user.phoneNumber[0] }
+            const resWayForPay = await axios.post("/payments/create-potential-invoice", params)
+            setWFPresponse(resWayForPay.data)
+            console.log(resWayForPay.data)
+            setreqLoading(false)
+            close()
+            window.open(resWayForPay.data.invoiceUrl, '_blank');
+        } catch (error) {
+            console.log(error)
+            setreqLoading(false)
+            setError(error.response.data.msg)
+        }
+    }
+    const handleAmountInputChange = (amount) => {
+        if (amount < 0) {
+            setAmount(0)
+        } else if (!Number.isInteger(amount)) {
+            if (amount === "") {
+                setAmount(amount)
+            } else {
+                setAmount(Math.round(amount))
+            }
+        } else {
+            setAmount(amount)
+        }
+    }
 
     const renderPhotos = (source) => {
         return source.map((photo) => {
@@ -75,7 +108,7 @@ export default function Info() {
             let token = localStorage.getItem("auth-token")
             const payload = { userId: userData.user.id, signature }
             try {
-                const prepublishRes = await axios.post("/users/prepublish-check", payload, { headers: { "x-auth-token": token } })
+                const prepublishRes = await axios.post("/users/prepublish-check", payload, { headers: { "x-auth-token": token, "secret": signature } })
                 console.log(prepublishRes)
                 if (prepublishRes.status === 201) {
                     const ChangeRes = await axios.post('/users/change-avatar', data, {
@@ -249,7 +282,52 @@ export default function Info() {
                 <div className="m-auto text-center">
                     <p className="text-purple-950 lg:text-2xl text-lg lg:mb-4 mb-2 font-semibold">Ваш потенціал: {userData.user.balance} грн</p>
                     {/* title has to be responsive */}
-                    <a href="#" className="bg-yellow-350 font-semibold text-lg text-purple-950 rounded-full px-6 py-2">Стати Творцем</a>
+                    <Popup
+                        trigger={
+                            <a href="#" className="bg-yellow-350 font-semibold text-lg text-purple-950 rounded-full px-6 py-2">{userData.user.role > 0 ? ("Поповнити Потенціал") : ("Стати Творцем")}</a>
+                        }
+                        modal
+                        nested
+                    >
+                        {close => (
+                            <div className="modal bg-white rounded-xl">
+                                <button className="close" onClick={close}>
+                                    &times;
+                                </button>
+                                <div className="w-full bg-purple-850 px-4 py-2 text-white text-2xl font-bold rounded-t-xl">
+                                    Вікно зміни аватара
+                                </div>
+
+                                <div className="w-10/12 mt-3 m-auto">
+                                    <div className="px-2 m-auto">
+                                        {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
+                                        {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
+                                    </div>
+                                </div>
+
+                                <p className="font-medium text-lg px-5 mt-4 text-gray-600">Будь ласка, виберіть суму оплати</p>
+                                <div className="w-full m-auto flex p-6">
+                                    <input value={amount} onChange={(e) => handleAmountInputChange(e.target.value)} type="number" className="h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" min="100" /><br />
+                                </div>
+                                <div className="w-full rounded-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
+                                    {reqLoading ? (
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
+                                    ) : (
+                                        null
+                                    )}
+                                    <button onClick={() => { Pay(close) }} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-yellow-350 text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Поповнити</button>
+                                    <button
+                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                        onClick={() => {
+                                            close();
+                                        }}
+                                    >
+                                        Закрити
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </Popup>
                 </div>
             </div>
         </div>
