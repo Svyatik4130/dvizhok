@@ -94,13 +94,13 @@ router.post("/get-invoice-response", async (req, res) => {
                 if (payerUser.roleId === 0) {
                     message = {
                         sender: "6150c9c7aa554a186344ba4b",
-                        text: `Вітаємо! Ви стали Творцем! Поповнення на ${requestObject.products.price}грн. Наступне поповнення потенціалу - ${dateInMonth.getFullYear()}/${dateInMonth.getMonth()}/${dateInMonth.getDate()}`,
+                        text: `Вітаємо🤩! Ви стали Творцем! Поповнення на ${requestObject.products.price}грн💰. Наступне поповнення потенціалу - ${dateInMonth.getFullYear()}/${dateInMonth.getMonth() + 1}/${dateInMonth.getDate()}`,
                         conversationId: CnvId,
                     };
                 } else {
                     message = {
                         sender: "6150c9c7aa554a186344ba4b",
-                        text: `Вітаємо! Ви поповнили свій потенціал на ${requestObject.products.price}грн і продовжуєте бути Творцем! Мершій обирайте проекти для підтримки!`,
+                        text: `Вітаємо🤩! Ви поповнили свій потенціал на ${requestObject.products.price}грн💰 і продовжуєте бути Творцем! Мершій обирайте проекти для підтримки💪! Наступне поповнення потенціалу - ${dateInMonth.getFullYear()}/${dateInMonth.getMonth() + 1}/${dateInMonth.getDate()}`,
                         conversationId: CnvId,
                     };
                 }
@@ -136,6 +136,30 @@ router.post("/get-invoice-response", async (req, res) => {
                     "balance": newBalance,
                 }
             })
+
+            let CnvId = ""
+            const newConversation = new Conversation({
+                members: [payerId, "6150c9c7aa554a186344ba4b"],
+            });
+            const isConversationUnique = await Conversation.findOne({ members: { $all: [payerId, "6150c9c7aa554a186344ba4b"] } })
+            if (isConversationUnique) {
+                CnvId = isConversationUnique._id
+            } else {
+                const savedConversation = await newConversation.save();
+                CnvId = savedConversation._id
+            }
+
+            const dateInMonth = new Date()
+            dateInMonth.setMonth(dateInMonth.getMonth() + 1)
+
+            const message = {
+                sender: "6150c9c7aa554a186344ba4b",
+                text: `Сума ${requestObject.products.price}грн була повернута🔄.`,
+                conversationId: CnvId,
+            };
+
+            const newMessage = new Message(message);
+            await newMessage.save();
 
             const resObject = {
                 "orderReference": requestObject.orderReference,
