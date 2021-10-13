@@ -175,6 +175,7 @@ router.post("/get-invoice-response", async (req, res) => {
 router.get("/get-last-transaction/:userId", async (req, res) => {
     try {
         const lastTransaction = await Transaction.find({ payerId: req.params.userId })
+        lastTransaction.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
         res.json(lastTransaction[lastTransaction.length - 1])
     } catch (error) {
         console.log(error)

@@ -6,7 +6,7 @@ export default function EventCard() {
     const userData = useSelector(state => state.userData)
 
     return (
-        <div className="bg-white rounded-3xl p-3">
+        <div className="bg-white rounded-3xl p-3 mb-2">
             <div className="flex items-center mb-2">
                 <div className="lg:w-16 lg:h-16 h-14 w-14 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
                 <p className="font-medium text-xl pl-3">BookSpace додав(-ла) 2 нових фото</p>

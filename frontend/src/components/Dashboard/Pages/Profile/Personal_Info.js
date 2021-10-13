@@ -61,18 +61,23 @@ export default function Personal_Info() {
                 return
             }
             let arePhonesValid = true
-            const PhoneNumbersArray = phoneNumbers.map(nmbrOnj => {
-                if (!isValidPhoneNumber(nmbrOnj.phone)) {
-                    arePhonesValid = false
-                }
-                return nmbrOnj.phone
-            })
+            let PhoneNumbersArray = [""]
+            if (phoneNumbers[0].phone !== undefined) {
+                PhoneNumbersArray = phoneNumbers.map(nmbrOnj => {
+                    if (!isValidPhoneNumber(nmbrOnj.phone)) {
+                        arePhonesValid = false
+                    }
+                    return nmbrOnj.phone
+                })
+            }
             if (!arePhonesValid) {
                 setError("Будь ласка, введіть дійсний номер телефону");
                 return
             }
+            console.log(PhoneNumbersArray, phoneNumbers)
 
             if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || occupation !== userData.user.occupationTown || !equals(phoneNumbers, defaultNumbers) || selections !== userData.user.sex) {
+
                 const userID = userData.user.id
                 const payload = { name, isValidPhoneNumber, email, surname, country, birthDate, occupation, phoneNumber: PhoneNumbersArray, sex: selections, whoI: userData.user.whoI, workAs: userData.user.workAs, workPlace: userData.user.workPlace, myGoals: userData.user.myGoals, whatICan: userData.user.whatICan, whatILike: userData.user.whatILike, whatIWant: userData.user.whatIWant, mySocialDream: userData.user.mySocialDream, selfPresentation: userData.user.selfPresentation, myProjects: userData.user.myProjects, userID, signature }
                 let token = localStorage.getItem("auth-token")
@@ -91,8 +96,8 @@ export default function Personal_Info() {
                 }
             }
         } catch (err) {
-            console.log(err.response.data.msg)
-            err.response.data.msg && setError(err.response.data.msg)
+            console.log(err)
+            setError(err.response.data.msg)
         }
     }
 

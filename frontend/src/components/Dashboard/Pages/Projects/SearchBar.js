@@ -27,7 +27,6 @@ export default function Search({ setLocation, setLocationText }) {
 
     const handleInput = (e) => {
         setValue(e.target.value);
-
     };
 
     const handleSelect = async (address) => {
@@ -46,8 +45,8 @@ export default function Search({ setLocation, setLocationText }) {
     };
 
     return (
-        <div className="w-full">
-            <Combobox onSelect={handleSelect}>
+        <div className="w-full relative">
+            <Combobox className="w-full" onSelect={handleSelect}>
                 <ComboboxInput
                     className={"w-full h-8 mt-4 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450"}
                     value={value}
@@ -55,14 +54,14 @@ export default function Search({ setLocation, setLocationText }) {
                     disabled={!ready}
                     placeholder="Mісце розташування проекту на Google Maps"
                 />
-                <ComboboxPopover>
+                <div className="absolute bg-gray-200 w-full z-50">
                     <ComboboxList>
                         {status === "OK" &&
                             data.map(({ id, description }) => (
                                 <ComboboxOption key={id} value={description} />
                             ))}
                     </ComboboxList>
-                </ComboboxPopover>
+                </div>
             </Combobox>
         </div>
     );

@@ -79,8 +79,6 @@ export default function CreateProject() {
     }, [])
 
     useEffect(() => {
-        console.log(locationString)
-
         const options = {
             minMatchCharLength: 2,
             keys: [

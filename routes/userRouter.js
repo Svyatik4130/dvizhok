@@ -112,6 +112,7 @@ router.post("/login", async (req, res) => {
                 selfPresentation: userAcc?.selfPresentation,
                 phoneNumber: userAcc.phoneNumber,
                 balance: userAcc.balance,
+                leaderReady: userAcc.leaderReady,
             }
         })
 
@@ -124,6 +125,7 @@ router.post('/info_change', auth, async (req, res) => {
     try {
         const { name, email, surname, country, birthDate, occupation, phoneNumber, sex, whoI, workAs, myGoals, workPlace, whatICan, whatILike, whatIWant, mySocialDream, selfPresentation, myProjects, userID, signature } = req.body
 
+        console.log(phoneNumber)
         if (req.user !== userID) {
             return res.status(400).json({ msg: 'Ошибка' })
         }
@@ -208,6 +210,7 @@ router.post('/info_change', auth, async (req, res) => {
                 "myGoals": myGoals,
                 "whatICan": whatICan,
                 "whatILike": whatILike,
+                "phoneNumber": phoneNumber,
                 "whatIWant": whatIWant,
                 "mySocialDream": mySocialDream,
                 "selfPresentation": selfPresentation,
@@ -243,6 +246,7 @@ router.post('/info_change', auth, async (req, res) => {
                 selfPresentation: updatedUser?.selfPresentation,
                 phoneNumber: updatedUser.phoneNumber,
                 balance: updatedUser.balance,
+                leaderReady: updatedUser.leaderReady,
             }
         })
     } catch (err) {
@@ -313,6 +317,7 @@ router.post('/pass_change', auth, async (req, res) => {
                 selfPresentation: updatedUser?.selfPresentation,
                 phoneNumber: updatedUser.phoneNumber,
                 balance: updatedUser.balance,
+                leaderReady: updatedUser.leaderReady,
             }
         })
     } catch (err) {
@@ -352,20 +357,73 @@ router.post("/tokenIsValid", async (req, res) => {
 
         const roleIdCheck = async (user) => {
             const userTransactions = await Transaction.find({ payerId: user._id })
+            userTransactions.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
             const date = new Date()
+            date.setMonth(date.getMonth() - 1);
+            date.setDate(date.getDate() - 1)
             if (user.roleId === 0) {
-                date.setMonth(date.getMonth() - 1);
-                date.setDate(date.getDate() + 1)
-                console.log(userTransactions)
                 if (userTransactions.length > 0) {
                     if (new Date(userTransactions[userTransactions.length - 1].createdAt) > date) {
-                        console.log(new Date(userTransactions[userTransactions.length - 1].createdAt), date)
                         await User.updateOne({ _id: user._id }, {
                             $set: {
                                 "roleId": 1
                             }
                         })
                     }
+                }
+            } else if (user.roleId === 1 || user.roleId === 2) {
+                if (new Date(userTransactions[userTransactions.length - 1].createdAt) < date) {
+                    await User.updateOne({ _id: user._id }, {
+                        $set: {
+                            "roleId": 0
+                        }
+                    })
+                }
+
+                const PaymentMonths = [... new Set(userTransactions.map(payment => `${new Date(payment.createdAt).getFullYear()}-${new Date(payment.createdAt).getMonth()}`))]
+                const dateNow = new Date()
+                const yearNow = dateNow.getFullYear()
+                const monthNow = dateNow.getMonth()
+                if (PaymentMonths[PaymentMonths.length - 1] === `${yearNow}-${monthNow}` && PaymentMonths[PaymentMonths.length - 2] === `${yearNow}-${monthNow - 1}` && PaymentMonths[PaymentMonths.length - 3] === `${yearNow}-${monthNow - 2}`) {
+                    await User.updateOne({ _id: user._id }, {
+                        $set: {
+                            "leaderReady": true
+                        }
+                    })
+                } else if (monthNow === 0) {
+                    if (PaymentMonths[PaymentMonths.length - 1] === `${yearNow}-${monthNow}` && PaymentMonths[PaymentMonths.length - 2] === `${yearNow - 1}-${11}` && PaymentMonths[PaymentMonths.length - 3] === `${yearNow - 1}-${10}`) {
+                        await User.updateOne({ _id: user._id }, {
+                            $set: {
+                                "leaderReady": true
+                            }
+                        })
+                    } else {
+                        await User.updateOne({ _id: user._id }, {
+                            $set: {
+                                "leaderReady": false
+                            }
+                        })
+                    }
+                } else if (monthNow === 1) {
+                    if (PaymentMonths[PaymentMonths.length - 1] === `${yearNow}-${monthNow}` && PaymentMonths[PaymentMonths.length - 2] === `${yearNow}-${monthNow - 1}` && PaymentMonths[PaymentMonths.length - 3] === `${yearNow - 1}-${11}`) {
+                        await User.updateOne({ _id: user._id }, {
+                            $set: {
+                                "leaderReady": true
+                            }
+                        })
+                    } else {
+                        await User.updateOne({ _id: user._id }, {
+                            $set: {
+                                "leaderReady": false
+                            }
+                        })
+                    }
+                } else {
+                    await User.updateOne({ _id: user._id }, {
+                        $set: {
+                            "leaderReady": false
+                        }
+                    })
                 }
             }
         }
@@ -417,6 +475,7 @@ router.get("/getme", auth, async (req, res) => {
         selfPresentation: user?.selfPresentation,
         phoneNumber: user.phoneNumber,
         balance: user.balance,
+        leaderReady: user.leaderReady,
     })
 })
 
@@ -532,6 +591,7 @@ router.post('/change-avatar', (req, res) => {
                         selfPresentation: updatedUser?.selfPresentation,
                         phoneNumber: updatedUser.phoneNumber,
                         balance: updatedUser.balance,
+                        leaderReady: updatedUser.leaderReady,
                     }
                 })
             }

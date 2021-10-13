@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
     mySocialDream: { type: String, default: "" },
     selfPresentation: { type: String, default: "" },
     phoneNumber: { type: Array, required: true },
+    leaderReady: { type: Boolean, required: true, default: false },
 }, { timestamps: true })
 
 module.exports = user = mongoose.model("user", userSchema)

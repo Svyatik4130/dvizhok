@@ -10,6 +10,7 @@ export default function Potential() {
     const [lastPayment, setLastPayment] = useState()
     const userData = useSelector(state => state.userData)
     const [error, setError] = useState()
+    const [stylesForPayment, setstylesForPayment] = useState("")
     const [successMessage, setSuccessMessage] = useState()
     const [reqLoading, setreqLoading] = useState(false)
 
@@ -22,6 +23,14 @@ export default function Potential() {
                     const lastTransaction = await axios.get(`/payments/get-last-transaction/${userData.user.id}`)
                     console.log(lastTransaction.data)
                     setLastPayment(lastTransaction.data)
+
+                    const lastPayDate = new Date(lastTransaction.data.createdAt)
+                    lastPayDate.setMonth(lastPayDate.getMonth() + 1)
+                    lastPayDate.setDate(lastPayDate.getDate() - 4)
+                    const dateNow = new Date()
+                    if (lastPayDate.getMonth() === dateNow.getMonth() && dateNow.getTime() > lastPayDate.getTime()) {
+                        setstylesForPayment("animate-pulse text-red-700")
+                    }
                 }
             } catch (error) {
                 console.log(error)
@@ -139,7 +148,7 @@ export default function Potential() {
                     <div className="flex">
                         <div className="w-3/6">
                             <p className="font-medium text-lg">Попереднє поповнення: {lastPayment ? (new Date(lastPayment.createdAt).toISOString().substring(0, 10)) : (null)}</p>
-                            <p className="font-medium text-lg">Наступне поповнення (від 100 грн):  {lastPayment ? (
+                            <p className={`font-medium text-lg ${stylesForPayment}`}>Наступне поповнення (від 100 грн):  {lastPayment ? (
                                 function () {
                                     const date = new Date(lastPayment.createdAt)
                                     date.setMonth(date.getMonth() + 1)

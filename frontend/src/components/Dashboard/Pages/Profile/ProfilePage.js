@@ -1,23 +1,51 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import Info from './Info'
 import { Switch, Route, NavLink, Redirect } from "react-router-dom";
+import { useSelector } from 'react-redux'
 import Personal_Info from './Personal_Info';
 import About_Myself from './About_Myself';
 import Potential from './Potential';
 import Change_Pass from './Change_Pass';
+import ErrorNotice from '../../../misc/ErrorNotice';
 
 export default function ProfilePage() {
     const [responsiveStyles, setresponsiveStyles] = useState({})
+    const [stylesForPotentialBtn, setstylesForPotentialBtn] = useState("")
+    const [error, setError] = useState()
+
+    const userData = useSelector(state => state.userData)
 
     useEffect(() => {
         if (window.screen.width >= 1024) {
             setresponsiveStyles({ height: window.innerHeight - 350 })
         }
+
+        const preloadOpps = async () => {
+            try {
+                if (userData.user.role > 0) {
+                    const lastTransaction = await axios.get(`/payments/get-last-transaction/${userData.user.id}`)
+
+                    const lastPayDate = new Date(lastTransaction.data.createdAt)
+                    lastPayDate.setMonth(lastPayDate.getMonth() + 1)
+                    lastPayDate.setDate(lastPayDate.getDate() - 4)
+                    const dateNow = new Date()
+                    if (lastPayDate.getMonth() === dateNow.getMonth() && dateNow.getTime() > lastPayDate.getTime()) {
+                        setstylesForPotentialBtn("animate-pulse bg-red-700 text-white")
+                    }
+                }
+            } catch (error) {
+                console.log(error)
+                setError(error.response.data.msg)
+            }
+        }
+        preloadOpps()
     }, [])
 
     return (
         <div className="w-full pt-0 lg:pt-10 lg:px-6 px-3" style={{ height: window.innerHeight - 100 }}>
             <Info />
+            {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
             <div className="w-full" style={{ height: window.innerHeight - 300 }} >
                 <div className="lg:w-7/12 w-11/12 text-sm items-stretch flex rounded-t-xl font-medium lg:text-lg" style={{ backgroundColor: "#DDDDDD" }}>
                     <NavLink activeClassName="bg-white" to={"/dashboard/profile/personal_info"} className="w-3/12 text-center py-2 rounded-tl-xl border-r-2">
@@ -26,7 +54,7 @@ export default function ProfilePage() {
                     <NavLink activeClassName="bg-white" to={"/dashboard/profile/about_myself"} className="w-3/12 py-2 text-center  border-r-2">
                         Про себе
                     </NavLink>
-                    <NavLink activeClassName="bg-white" to={"/dashboard/profile/potential"} className="w-3/12 text-center py-2 border-r-2">
+                    <NavLink activeClassName="bg-white" to={"/dashboard/profile/potential"} className={`w-3/12 text-center py-2 border-r-2 ${stylesForPotentialBtn}`}>
                         Ваш потенціал
                     </NavLink>
                     <NavLink activeClassName="bg-white" to={"/dashboard/profile/change_pass"} className="w-3/12 text-center py-2 rounded-tr-xl">

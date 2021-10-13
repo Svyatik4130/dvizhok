@@ -32,6 +32,7 @@ function checkFileType(file, cb) {
         cb('Error: Images & Videos Only!');
     }
 }
+
 function checkPdfAndXlsType(file, cb) {
     // Allowed ext
     const filetypes = /pdf|xls|xlsx/;
@@ -79,7 +80,7 @@ const ProjectPDFAndXLSUploads = multer({
 
 
 router.post('/upload-xlsANDpdf', (req, res) => {
-    ProjectPDFAndXLSUploads(req, res, (error) => {
+    ProjectPDFAndXLSUploads(req, res, async (error) => {
         if (error) {
             res.json({ msg: error });
         } else {
@@ -164,7 +165,8 @@ router.post('/upload-xlsANDpdf', (req, res) => {
                 if (!token) return res.status(400).json({ msg: "Ошибка" })
                 const verified = jwt.verify(token, process.env.JWT_SECRET)
                 if (verified.key !== req.body.secret) return res.status(400).json({ msg: "Ошибка" })
-
+                const user = await User.findById(verified.id)
+                if (!user.leaderReady) return res.status(400).json({ msg: "У  вас недостатньо прав" })
 
                 res.status(201).json(PdfAndXlsLocationArray)
             }
@@ -182,6 +184,8 @@ router.post('/create-project', (req, res) => {
             if (req.files === undefined) {
                 res.status(400).json({ msg: "Error: No File Selected" })
             } else {
+                // If Success
+
                 if (req.body.projName.length < 5) {
                     return res.status(400).json({ msg: "Назва проекту має містити принаймні 5 символів" })
                 } else if (req.body.projName.includes('/')) {
@@ -250,8 +254,17 @@ router.post('/create-project', (req, res) => {
                 if (!token) return res.status(400).json({ msg: "Ошибка" })
                 const verified = jwt.verify(token, process.env.JWT_SECRET)
                 if (verified.key !== req.body.secret) return res.status(400).json({ msg: "Ошибка" })
+                const user = await User.findById(verified.id)
+                if (!user.leaderReady) return res.status(400).json({ msg: "У  вас недостатньо прав" })
 
-                // If Success
+                if(user.roleId < 2){
+                    await User.updateOne({ _id: verified.id }, {
+                        $set: {
+                            "roleId": 2
+                        }
+                    })
+                }
+
                 let fileArray = req.files,
                     fileLocation;
                 const galleryImgLocationArray = [];

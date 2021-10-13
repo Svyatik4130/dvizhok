@@ -25,14 +25,23 @@ export default function SignIn() {
 
         try {
             const loginUser = { email, password, signature }
+            let token = localStorage.getItem("auth-token")
+            if (token === null) {
+                localStorage.setItem("auth-token", "")
+                token = ""
+            }
 
             const loginRes = await axios.post("users/login", loginUser)
+
+            localStorage.setItem("auth-token", loginRes.data.token)
+            await axios.post("/users/tokenIsValid", { signature }, {
+                headers: { "x-auth-token": token },
+            })
+
             dispatch(loggedUser({
                 token: loginRes.data.token,
                 user: loginRes.data.user
             }))
-            localStorage.setItem("auth-token", loginRes.data.token)
-
             history.push('/dashboard')
         } catch (err) {
             err.response.data.msg && setError(err.response.data.msg)

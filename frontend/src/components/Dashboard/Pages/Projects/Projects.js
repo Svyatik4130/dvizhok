@@ -29,7 +29,7 @@ export default function Projects() {
                         <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/projects/gps">
                             GPS Геолокація
                         </NavLink>
-                        {userData.user.role < 1 ? (null) : (
+                        {!userData.user.leaderReady ? (null) : (
                             <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2 hover:bg-yellow-300 pretty-shadow-noBg" to="/dashboard/projects/createproject">
                                 + Створити проект
                             </NavLink>
@@ -50,7 +50,7 @@ export default function Projects() {
                         <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/projects/gps">
                             GPS Геолокація
                         </NavLink>
-                        {userData.user.role < 1 ? (null) : (
+                        {!userData.user.leaderReady ? (null) : (
                             <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2 hover:bg-yellow-300 pretty-shadow-noBg" to="/dashboard/projects/createproject">
                                 + Створити проект
                             </NavLink>
@@ -72,7 +72,7 @@ export default function Projects() {
                         <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/projects/gps">
                             GPS Геолокація
                         </NavLink>
-                        {userData.user.role < 1 ? (null) : (
+                        {!userData.user.leaderReady ? (null) : (
                             <NavLink className="bg-yellow-350 rounded-2xl text-purple-950 px-6 font-medium text-lg py-2 hover:bg-yellow-300 pretty-shadow-noBg" to="/dashboard/projects/createproject">
                                 + Створити проект
                             </NavLink>
