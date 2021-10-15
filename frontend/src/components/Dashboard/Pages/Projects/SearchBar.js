@@ -52,7 +52,7 @@ export default function Search({ setLocation, setLocationText }) {
                     value={value}
                     onChange={handleInput}
                     disabled={!ready}
-                    placeholder="Mісце розташування проекту на Google Maps"
+                    placeholder="Mісце розташування на Google Maps"
                 />
                 <div className="absolute bg-gray-200 w-full z-50">
                     <ComboboxList>

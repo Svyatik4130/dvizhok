@@ -99,4 +99,9 @@ router.post('/create-story', (req, res) => {
     })
 })
 
+router.get("/get-all-stories", async (req, res) => {
+    const allStories = await Story.find({})
+    res.json(allStories)
+})
+
 module.exports = router

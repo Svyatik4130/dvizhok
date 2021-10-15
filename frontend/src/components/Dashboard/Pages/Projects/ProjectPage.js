@@ -12,6 +12,7 @@ import SuccessNotice from '../../../misc/SuccessNotice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSignature } from '../../../helpers/browser-key'
 import { loggedUser } from '../../../../actions/UserActions'
+import AdminPanel from './AdminPanel';
 
 export default function ProjectPage() {
     let { id } = useParams()
@@ -241,6 +242,8 @@ export default function ProjectPage() {
                 </div>
 
                 <div className="bg-white order-1 rounded-3xl p-4">
+                    <AdminPanel projectInfo={Project} />
+
                     <p className="text-2xl font-bold truncate w-full text-purple-950 text-center">{Project.projectName}</p>
                     <div className="font-medium text-lg w-full lg:w-6/12">
                         <p>Тип проекту: <strong className=" uppercase">{Project.category}</strong></p>

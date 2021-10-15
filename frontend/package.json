@@ -20,6 +20,7 @@
     "headlessui": "^0.0.0",
     "npm": "^7.22.0",
     "postcss": "^7.0.36",
+    "rc-time-picker": "^3.7.3",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.1",
     "react-chartjs-2": "^3.0.3",

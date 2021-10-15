@@ -463,6 +463,16 @@ code {
   height: 2rem;
 }
 
+.rc-time-picker-input{
+  border-color: #48004b !important;
+  border-width: 2px !important;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  border-radius: 0.5rem;
+  font-size: 18px !important;
+  outline: none;
+}
+
 /* @media for mob devices */
 @media (max-width: 768px) {
   .popup-content {

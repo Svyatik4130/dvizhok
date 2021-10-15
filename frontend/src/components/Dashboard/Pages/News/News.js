@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios';
 import EventCard from './EventCard';
@@ -18,9 +18,12 @@ export default function News() {
     const userData = useSelector(state => state.userData)
     const myProjects = useSelector(state => state.myProjects)
     const [error, setError] = useState()
+    const [isLodaing, setisLodaing] = useState(true)
     const [successMessage, setSuccessMessage] = useState()
     const [reqLoading, setreqLoading] = useState(false)
     const [desc, setDesc] = useState("")
+
+    const [stories, setStories] = useState()
 
     const [selectedFiles, setselectedFiles] = useState("")
     const [htmlImages, sethtmlImages] = useState([])
@@ -32,6 +35,7 @@ export default function News() {
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
         libraries,
     });
+
 
     const signature = getSignature()
 
@@ -155,7 +159,6 @@ export default function News() {
             }
             console.log(publishRes.data)
 
-
         } catch (error) {
             console.log(error)
             setreqLoading(false)
@@ -163,8 +166,22 @@ export default function News() {
         }
     }
 
+    useEffect(() => {
+        const preloadOpps = async () => {
+            try {
+                const res = await axios.get("/story/get-all-stories")
+                setStories(res.data)
+
+                setisLodaing(false)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        preloadOpps()
+    }, [])
+
     if (loadError) return "MapError";
-    if (!isLoaded) return (
+    if (!isLoaded || isLodaing) return (
         <div className="pt-16">
             <SimpleLoader />
         </div>
@@ -187,7 +204,7 @@ export default function News() {
                             <Popup
                                 trigger={
                                     <div className="flex items-center">
-                                        <div className=" cursor-pointer lg:w-14 lg:h-14 h-12 w-12 mr-2 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
+                                        <div className=" cursor-pointer lg:w-14 lg:h-14 h-12 w-12 hover:opacity-80 transition-all mr-2 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
                                         <div className=" cursor-pointer w-full bg-gray-200 hover:bg-gray-300 transition-all py-2 px-3 outline-none rounded-full font-medium text-xl">
                                             <p className="text-gray-400">{`Що у вас нового, ${userData.user.name}`}</p>
                                         </div>
@@ -291,8 +308,12 @@ export default function News() {
                         </div>
                     ) : (null)}
 
-                    <EventCard />
-                    <EventCard />
+                    {stories ? (
+                        stories.map(story => {
+                            return <EventCard story={story} />
+                        })
+                    ) : (null)}
+
                 </div>
                 <div className="w-4/12 p-0.5">
                     <div className=" border rounded-3xl border-purple-950">
