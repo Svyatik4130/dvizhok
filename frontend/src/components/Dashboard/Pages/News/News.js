@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import axios from 'axios';
 import EventCard from './EventCard';
 import SidebarEventAlert from './SidebarEventAlert';
+import NewsNearMe from './NewsNearMe';
 import Popup from 'reactjs-popup';
 import SuccessNotice from '../../../misc/SuccessNotice';
 import ErrorNotice from '../../../misc/ErrorNotice';
@@ -13,6 +14,7 @@ import {
 import SimpleLoader from '../../../Loaders/SimpleLoader';
 import "@reach/combobox/styles.css";
 import { getSignature } from '../../../helpers/browser-key'
+import { Switch, Route, NavLink, Redirect } from "react-router-dom";
 
 export default function News() {
     const userData = useSelector(state => state.userData)
@@ -23,7 +25,8 @@ export default function News() {
     const [reqLoading, setreqLoading] = useState(false)
     const [desc, setDesc] = useState("")
 
-    const [stories, setStories] = useState()
+    const [news, setNews] = useState()
+    const [advrts, setAdvrts] = useState()
 
     const [selectedFiles, setselectedFiles] = useState("")
     const [htmlImages, sethtmlImages] = useState([])
@@ -170,7 +173,8 @@ export default function News() {
         const preloadOpps = async () => {
             try {
                 const res = await axios.get("/story/get-all-stories")
-                setStories(res.data)
+                setNews(res.data.filter(story => story.storyType === "news"))
+                setAdvrts(res.data.filter(announcement => announcement.storyType === "announcement"))
 
                 setisLodaing(false)
             } catch (error) {
@@ -189,13 +193,25 @@ export default function News() {
 
     return (
         <div className='w-full'>
-            <div className="flex"></div>
+            <div className="flex mt-6 mb-2">
+                <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/news/all">
+                    Всі новини
+                </NavLink>
+                <NavLink activeClassName="text-yellow-350 bg-opacity-90" className="bg-purple-950 ml-3 hover:bg-opacity-90 pretty-shadow-noBg rounded-2xl text-white px-6 font-medium text-lg py-2" to="/dashboard/news/gps">
+                    Проекти поблизу
+                </NavLink>
+            </div>
             <div className="flex">
                 <div className="w-2/12 p-0.5">
                     <div className=" border rounded-3xl border-purple-950">
                         <p className="font-semibold text-lg text-center text-purple-950 p-2">Сьогодні</p>
-
-                        <SidebarEventAlert />
+                        {advrts ? (
+                            advrts.map(announcement => {
+                                return (
+                                    <SidebarEventAlert announcement={announcement} />
+                                )
+                            })
+                        ) : (null)}
                     </div>
                 </div>
                 <div className="w-6/12 p-0.5 pl-2">
@@ -307,13 +323,21 @@ export default function News() {
 
                         </div>
                     ) : (null)}
-
-                    {stories ? (
-                        stories.map(story => {
-                            return <EventCard story={story} />
-                        })
-                    ) : (null)}
-
+                    <Switch>
+                        <Route path="/dashboard/news/all">
+                            {news ? (
+                                news.map(story => {
+                                    return <EventCard story={story} />
+                                })
+                            ) : (null)}
+                        </Route>
+                        <Route path="/dashboard/news/gps">
+                            <NewsNearMe news={news} />
+                        </Route>
+                        <Route path="/dashboard/news/">
+                            <Redirect to="/dashboard/news/all" />
+                        </Route>
+                    </Switch>
                 </div>
                 <div className="w-4/12 p-0.5">
                     <div className=" border rounded-3xl border-purple-950">

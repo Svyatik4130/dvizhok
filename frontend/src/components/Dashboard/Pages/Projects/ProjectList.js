@@ -8,7 +8,11 @@ defaults.animation = false;
 
 export default function ProjectList() {
     const [error, setError] = useState()
-    const allProjects = useSelector(state => state.allProjects)
+    const allProjects = useSelector(state => state.allProjects).sort((a, b) => {
+        const aDate = new Date(a.createdAt)
+        const bDate = new Date(b.createdAt)
+        return bDate.getTime() - aDate.getTime()
+    })
     const history = useHistory()
     const [searchText, setSearchText] = useState('')
     const [inputStyle, setInputStyle] = useState("rounded-3xl bg-gray-100")
@@ -59,7 +63,7 @@ export default function ProjectList() {
                         if (!project.isProjectInfinite) {
                             remainTime = finishDate - dateNow
                             passedTime = finishDate - createdAt - remainTime
-                            if(remainTime < 0){
+                            if (remainTime < 0) {
                                 remainTime = 0
                                 passedTime = 100
                             }

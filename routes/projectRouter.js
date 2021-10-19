@@ -257,7 +257,7 @@ router.post('/create-project', (req, res) => {
                 const user = await User.findById(verified.id)
                 if (!user.leaderReady) return res.status(400).json({ msg: "У  вас недостатньо прав" })
 
-                if(user.roleId < 2){
+                if (user.roleId < 2) {
                     await User.updateOne({ _id: verified.id }, {
                         $set: {
                             "roleId": 2
@@ -423,5 +423,180 @@ router.post("/raise", async (req, res) => {
         console.log(error)
     }
 })
+
+router.post("/change-vidNphotos", async (req, res) => {
+    ProjectGalleryUploads(req, res, async (error) => {
+        if (error) {
+            res.json({ msg: error });
+        } else {
+            // If File not found
+            if (req.files === undefined) {
+                res.status(400).json({ msg: "Error: No File Selected" })
+            } else {
+                // If Success
+                const token = req.header("x-auth-token")
+                if (!token) return res.status(400).json({ msg: "Ошибка" })
+                const verified = jwt.verify(token, process.env.JWT_SECRET)
+                if (verified.key !== req.body.secret) return res.status(400).json({ msg: "Ошибка" })
+                // const user = await User.findById(verified.id)
+                // if (!user.leaderReady) return res.status(400).json({ msg: "У  вас недостатньо прав" })}
+                let fileArray = req.files,
+                    fileLocation;
+                const galleryImgLocationArray = [];
+                for (let i = 0; i < fileArray.length; i++) {
+                    fileLocation = fileArray[i].location;
+                    galleryImgLocationArray.push(fileLocation)
+                }
+
+                await Project.updateOne({ _id: req.body.projId }, {
+                    $set: {
+                        "photosNvideos": galleryImgLocationArray,
+                    }
+                })
+                const updatedProject = await Project.findById(req.body.projId)
+                res.json(updatedProject)
+            }
+        }
+    })
+})
+router.post("/change-logo", async (req, res) => {
+    ProjectGalleryUploads(req, res, async (error) => {
+        if (error) {
+            res.json({ msg: error });
+        } else {
+            // If File not found
+            if (req.files === undefined) {
+                res.status(400).json({ msg: "Error: No File Selected" })
+            } else {
+                // If Success
+                const token = req.header("x-auth-token")
+                if (!token) return res.status(400).json({ msg: "Ошибка" })
+                const verified = jwt.verify(token, process.env.JWT_SECRET)
+                if (verified.key !== req.body.secret) return res.status(400).json({ msg: "Ошибка" })
+                // const user = await User.findById(verified.id)
+                // if (!user.leaderReady) return res.status(400).json({ msg: "У  вас недостатньо прав" })}
+                let fileArray = req.files,
+                    fileLocation;
+                const galleryImgLocationArray = [];
+                for (let i = 0; i < fileArray.length; i++) {
+                    fileLocation = fileArray[i].location;
+                    galleryImgLocationArray.push(fileLocation)
+                }
+
+                await Project.updateOne({ _id: req.body.projId }, {
+                    $set: {
+                        "logoUrl": galleryImgLocationArray,
+                    }
+                })
+                const updatedProject = await Project.findById(req.body.projId)
+                res.json(updatedProject)
+            }
+        }
+    })
+})
+router.post("/change-pdf", async (req, res) => {
+    ProjectPDFAndXLSUploads(req, res, async (error) => {
+        if (error) {
+            res.json({ msg: error });
+        } else {
+            // If File not found
+            if (req.files === undefined) {
+                res.status(400).json({ msg: "Error: No File Selected" })
+            } else {
+                let fileArray = req.files,
+                    fileLocation;
+                const PdfAndXlsLocationArray = []
+                for (let i = 0; i < fileArray.length; i++) {
+                    fileLocation = fileArray[i].location;
+                    PdfAndXlsLocationArray.push(fileLocation)
+                }
+
+                const token = req.header("x-auth-token")
+                if (!token) return res.status(400).json({ msg: "Ошибка" })
+                const verified = jwt.verify(token, process.env.JWT_SECRET)
+                if (verified.key !== req.body.secret) return res.status(400).json({ msg: "Ошибка" })
+                // const user = await User.findById(verified.id)
+                // if (!user.leaderReady) return res.status(400).json({ msg: "У  вас недостатньо прав" })
+
+                await Project.updateOne({ _id: req.body.projId }, {
+                    $set: {
+                        "filePDF": PdfAndXlsLocationArray[0],
+                    }
+                })
+                const updatedProject = await Project.findById(req.body.projId)
+                res.json(updatedProject)
+            }
+        }
+    })
+})
+router.post("/change-xls", async (req, res) => {
+    ProjectPDFAndXLSUploads(req, res, async (error) => {
+        if (error) {
+            res.json({ msg: error });
+        } else {
+            // If File not found
+            if (req.files === undefined) {
+                res.status(400).json({ msg: "Error: No File Selected" })
+            } else {
+                let fileArray = req.files,
+                    fileLocation;
+                const PdfAndXlsLocationArray = []
+                for (let i = 0; i < fileArray.length; i++) {
+                    fileLocation = fileArray[i].location;
+                    PdfAndXlsLocationArray.push(fileLocation)
+                }
+
+                const token = req.header("x-auth-token")
+                if (!token) return res.status(400).json({ msg: "Ошибка" })
+                const verified = jwt.verify(token, process.env.JWT_SECRET)
+                if (verified.key !== req.body.secret) return res.status(400).json({ msg: "Ошибка" })
+                // const user = await User.findById(verified.id)
+                // if (!user.leaderReady) return res.status(400).json({ msg: "У  вас недостатньо прав" })
+
+                await Project.updateOne({ _id: req.body.projId }, {
+                    $set: {
+                        "fileXLS": PdfAndXlsLocationArray[0],
+                    }
+                })
+                const updatedProject = await Project.findById(req.body.projId)
+                res.json(updatedProject)
+            }
+        }
+    })
+})
+router.post("/change-info", async (req, res) => {
+    const { projId, description, projName, category, Location, locationString, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, secret } = req.body
+
+    const token = req.header("x-auth-token")
+    if (!token) return res.status(400).json({ msg: "Ошибка" })
+    const verified = jwt.verify(token, process.env.JWT_SECRET)
+    if (verified.key !== secret) return res.status(400).json({ msg: "Ошибка" })
+    // const user = await User.findById(verified.id)
+    // if (!user.leaderReady) return res.status(400).json({ msg: "У  вас недостатньо прав" })
+
+    await Project.updateOne({ _id: projId }, {
+        $set: {
+            "description": description,
+            "projectName": projName,
+            "category": category,
+            "description": description,
+            "location": Location,
+            "locationString": locationString,
+            "spendingPlans": spendingPlans,
+            "expectations": expectations,
+            "projectPlan": projectPlan,
+            "preHistory": preHistory,
+            "projectRelevance": projectRelevance,
+            "teamMembers": teamMembers,
+            "isFundsInfinite": isFundsInfinite,
+            "isProjectInfinite": isProjectInfinite,
+            "fundsReqrd": fundsReqrd,
+            "finishDate": finishDate,
+        }
+    })
+    const updatedProject = await Project.findById(projId)
+    res.json(updatedProject)
+})
+
 
 module.exports = router;

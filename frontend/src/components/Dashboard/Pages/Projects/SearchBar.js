@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     Combobox,
     ComboboxInput,
@@ -11,7 +11,7 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from "use-places-autocomplete";
 
-export default function Search({ setLocation, setLocationText }) {
+export default function Search({ setLocation, setLocationText, defaultValue }) {
     const {
         ready,
         value,
@@ -24,6 +24,12 @@ export default function Search({ setLocation, setLocationText }) {
             radius: 100 * 1000,
         },
     });
+
+    useEffect(() => {
+        setValue(defaultValue, false)
+        clearSuggestions();
+    }, [])
+
 
     const handleInput = (e) => {
         setValue(e.target.value);
@@ -48,7 +54,7 @@ export default function Search({ setLocation, setLocationText }) {
         <div className="w-full relative">
             <Combobox className="w-full" onSelect={handleSelect}>
                 <ComboboxInput
-                    className={"w-full h-8 mt-4 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450"}
+                    className={"w-full h-8 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450"}
                     value={value}
                     onChange={handleInput}
                     disabled={!ready}

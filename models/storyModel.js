@@ -8,9 +8,14 @@ const StorySchema = new mongoose.Schema(
         publisherId: { type: String, required: true },
         storyType: { type: String, required: true },
         text: { type: String, required: true },
-        photosNvideos: { type: Array, required: true },
+        photosNvideos: { type: Array },
         location: { type: Array, required: true },
         locationString: { type: String, required: true },
+        announcementName: { type: String },
+        finishTime: { type: String },
+        finishDate: { type: String },
+        startTime: { type: String },
+        startDate: { type: String },
     },
     { timestamps: true }
 );

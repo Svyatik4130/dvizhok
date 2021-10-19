@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Popup from 'reactjs-popup';
 import SuccessNotice from '../../../misc/SuccessNotice';
@@ -14,17 +14,19 @@ import SimpleLoader from '../../../Loaders/SimpleLoader';
 import 'rc-time-picker/assets/index.css';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
+import EditProjectInAdminPanel from './EditProjectInAdminPanel';
 
-export default function AdminPanel({ projectInfo }) {
+export default function AdminPanel({ projectInfo, setProjectFnc }) {
     const userData = useSelector(state => state.userData)
     const members = projectInfo.teamMembers.map(member => member)
     members.push(projectInfo.projectleaderId)
+    const [isLoading, setIsLoading] = useState(true)
+    const [allUsers, setAllUsers] = useState([])
 
     const [finishTime, setfinishTime] = useState(moment());
     const [finishDate, setfinishDate] = useState()
     const [startTime, setstartTime] = useState(moment());
     const [startDate, setstartDate] = useState()
-    console.log(startTime)
 
     const [error, setError] = useState()
     const [successMessage, setSuccessMessage] = useState()
@@ -86,6 +88,11 @@ export default function AdminPanel({ projectInfo }) {
             setError('')
             setreqLoading(true)
 
+            if (advtName.length < 2 || advtName.length > 30) {
+                setError(`Довжина назви анонса повинна бути від 2 до 30 символів. Зараз:${advtName.length}`)
+                setreqLoading(false)
+                return
+            }
             if (desc.length < 5 || desc.length > 1000) {
                 setError(`Довжина тексту анонса повинна бути від 5 до 1000 символів. Зараз:${desc.length}`)
                 setreqLoading(false)
@@ -101,7 +108,7 @@ export default function AdminPanel({ projectInfo }) {
                 setreqLoading(false)
                 return
             }
-            if(!finishDate || finishTime === null){
+            if (!finishDate || finishTime === null) {
                 setError(`Введіть дату і час закінчення анонса`)
                 setreqLoading(false)
                 return
@@ -111,57 +118,48 @@ export default function AdminPanel({ projectInfo }) {
             const dateFinish = new Date(finishDate)
             if (dateStart.getTime() <= dateNow.getTime()) {
                 setError("Будь ласка, введіть правильну дату початку анонса");
+                setreqLoading(false)
                 return
             }
-            if (dateFinish.getTime() <= dateStart.getTime()) {
+            if (dateFinish.getTime() < dateStart.getTime()) {
                 setError("Будь ласка, введіть правильну дату закінчення анонса");
-                return
-            }
-
-            setreqLoading(false)
-            return
-            const data = new FormData();
-
-            data.append('projectId', projectInfo._id)
-            data.append('projectLogo', projectInfo.logoUrl[0])
-            data.append('projectName', projectInfo.projectName)
-            data.append('publisherId', userData.user.id)
-            data.append('storyType', "news")
-            data.append('text', desc)
-            data.append('location', Location)
-            data.append('locationString', locationString)
-            data.append('secret', signature);
-
-            let AreExtsSuitable = true
-            for (let i = 0; i < selectedFiles.length; i++) {
-                if (i < 4) {
-                    if (!(/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
-                        AreExtsSuitable = false
-                    }
-                }
-            }
-            if (!AreExtsSuitable) {
-                setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .mov, .mp4');
                 setreqLoading(false)
                 return
             }
 
+            const data = {
+                projectId: projectInfo._id,
+                projectLogo: projectInfo.logoUrl[0],
+                projectName: projectInfo.projectName,
+                publisherId: userData.user.id,
+                storyType: "announcement",
+                text: desc,
+                location: Location,
+                locationString: locationString,
+                announcementName: advtName,
+                finishTime: finishTime,
+                finishDate: finishDate,
+                startTime: startTime,
+                startDate: startDate,
+                secret: signature
+            }
+
             let token = localStorage.getItem("auth-token")
-            const publishRes = await axios.post('/story/create-story', data, {
+            const publishRes = await axios.post('/story/create-announcement', data, {
                 headers: {
-                    'accept': 'application/json',
-                    'Accept-Language': 'en-US,en;q=0.8',
-                    'Content-Type': 'multipart/form-data',
-                    'location': `images/projects/story`,
                     "x-auth-token": token,
                 }
             })
             if (publishRes.status === 200) {
                 setreqLoading(false)
                 setSuccessMessage("Ви успішно опублікували новину")
+                setDesc("")
                 setTimeout(() => {
                     close()
                 }, 1500);
+            } else {
+                setreqLoading(false)
+                setError("status !== 200. Error occured")
             }
             console.log(publishRes.data)
         } catch (error) {
@@ -235,11 +233,14 @@ export default function AdminPanel({ projectInfo }) {
             if (publishRes.status === 200) {
                 setreqLoading(false)
                 setSuccessMessage("Ви успішно опублікували новину")
+                setDesc("")
                 setTimeout(() => {
                     close()
                 }, 1500);
+            } else {
+                setreqLoading(false)
+                setError("status !== 200. Error occured")
             }
-            console.log(publishRes.data)
 
         } catch (error) {
             console.log(error)
@@ -248,19 +249,41 @@ export default function AdminPanel({ projectInfo }) {
         }
     }
 
+    useEffect(() => {
+        const preLoadOpps = async () => {
+            try {
+                const userRed = await axios.get("/users/get-all-users")
+                setAllUsers(userRed.data)
+
+                setIsLoading(false)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        preLoadOpps()
+    }, [])
+
     if (loadError) return "MapError";
     if (!isLoaded) return (
-        <div className="pt-16">
+        <div className="py-7">
             <SimpleLoader />
         </div>
     )
+
+    if (isLoading) {
+        return (
+            <div className="py-7">
+                <SimpleLoader />
+            </div>
+        )
+    }
 
     return (
         <>
             {members.includes(userData.user.id) ? (
                 <>
-                    <p className="text-center text-purple-850 font-medium text-xl bg-gray-100 rounded-t-3xl">Адміністрування проекту</p>
-                    <div className=" bg-gray-100 my-x flex justify-evenly flex-wrap rounded-b-3xl text-purple-950  p-4">
+                    <p className="text-center text-purple-850 font-medium pt-2 text-xl bg-gray-100 rounded-t-3xl">Адміністрування проекту</p>
+                    <div className=" bg-gray-100 flex justify-evenly flex-wrap rounded-b-3xl text-purple-950  p-4">
                         <Popup
                             trigger={
                                 <button className="px-3 py-2 bg-yellow-350 hover:bg-opacity-80 transition-all font-semibold rounded-3xl">Добавити новину</button>
@@ -279,7 +302,7 @@ export default function AdminPanel({ projectInfo }) {
 
                                     <div className="px-8 z-40">
                                         <div className="w-10/12 mt-3 m-auto">
-                                            <div className="px-2 m-auto">
+                                            <div className="px-2 pb-1 m-auto">
                                                 {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
                                                 {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
                                             </div>
@@ -333,6 +356,7 @@ export default function AdminPanel({ projectInfo }) {
                                 </div>
                             )}
                         </Popup>
+
                         <Popup
                             trigger={
                                 <button className="px-3 py-2 bg-yellow-350 hover:bg-opacity-80 transition-all font-semibold rounded-3xl">Добавить анонс</button>
@@ -346,7 +370,7 @@ export default function AdminPanel({ projectInfo }) {
                                         &times;
                                     </button>
                                     <div className="w-full bg-gray-100 px-4 py-2 text-black text-2xl font-bold rounded-t-xl">
-                                        Cтворити новину
+                                        Cтворити анонс
                                     </div>
 
                                     <div className="px-8 z-40">
@@ -407,7 +431,8 @@ export default function AdminPanel({ projectInfo }) {
                                 </div>
                             )}
                         </Popup>
-                        <button className="px-3 py-2 bg-yellow-350 hover:bg-opacity-80 transition-all font-semibold rounded-3xl">Редагувати проект</button>
+
+                        <EditProjectInAdminPanel project={projectInfo} allUsers={allUsers} setProjectFnc={setProjectFnc} />
                         <button className="px-3 py-2 bg-yellow-350 hover:bg-opacity-80 transition-all font-semibold rounded-3xl">Зв'язатись з послідовниками </button>
                     </div>
                 </>

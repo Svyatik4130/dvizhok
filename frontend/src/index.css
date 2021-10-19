@@ -368,6 +368,9 @@ code {
 .popup-content {
   width: 60%;
 }
+.edit-project-content{
+  width: 90% !important;
+}
 .modal > .actions {
   width: 100%;
   background-color: #f5f6f6;

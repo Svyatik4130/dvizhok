@@ -55,7 +55,7 @@ router.post('/create-story', (req, res) => {
             } else {
                 // If Success
                 console.log("good")
-                if (req.body.text.length < 5) {
+                if (req.body.text.length < 5 || req.body.text.length > 1000) {
                     return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}` })
                 }
                 if (!req.body.locationString || !req.body.location) {
@@ -102,6 +102,71 @@ router.post('/create-story', (req, res) => {
 router.get("/get-all-stories", async (req, res) => {
     const allStories = await Story.find({})
     res.json(allStories)
+})
+
+router.post("/create-announcement", async (req, res) => {
+    const {projectId, projectLogo, projectName, publisherId, storyType, text, location, locationString, announcementName, finishTime, finishDate, startTime, startDate, secret} = req.body
+    console.log(text)
+    if (text.length < 5 || text.length > 1000) {
+        return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}` })
+    }
+    if (!locationString || !location) {
+        return res.status(400).json({ msg: `Введіть локацію новиниfff` })
+    }
+
+    if (announcementName.length < 2 || announcementName.length > 30) {
+        setError(`Довжина назви анонса повинна бути від 2 до 30 символів. Зараз:${announcementName.length}`)
+        setreqLoading(false)
+        return
+    }
+
+    if (!startDate || startTime === null) {
+        setError(`Введіть дату і час початку анонса`)
+        setreqLoading(false)
+        return
+    }
+    if (!finishDate || finishTime === null) {
+        setError(`Введіть дату і час закінчення анонса`)
+        setreqLoading(false)
+        return
+    }
+    const dateNow = new Date()
+    const dateStart = new Date(startDate)
+    const dateFinish = new Date(finishDate)
+    if (dateStart.getTime() <= dateNow.getTime()) {
+        setError("Будь ласка, введіть правильну дату початку анонса");
+        return
+    }
+    if (dateFinish.getTime() <= dateStart.getTime()) {
+        setError("Будь ласка, введіть правильну дату закінчення анонса");
+        return
+    }
+
+    const token = req.header("x-auth-token")
+    if (!token) return res.status(400).json({ msg: "Ошибка" })
+    const verified = jwt.verify(token, process.env.JWT_SECRET)
+    if (verified.key !== secret) return res.status(400).json({ msg: "Ошибка" })
+
+    // save proj in mongodb
+    const newAdvrt = new Story({
+        projectId: projectId,
+        projectLogo: projectLogo,
+        projectName: projectName,
+        publisherId: publisherId,
+        storyType: storyType,
+        text: text,
+        location: location,
+        locationString: locationString,
+        announcementName: announcementName,
+        finishTime: finishTime,
+        finishDate: finishDate,
+        startTime: startTime,
+        startDate: startDate,
+    })
+
+
+    const savedAnnouncement = await newAdvrt.save()
+    res.json(savedAnnouncement);
 })
 
 module.exports = router

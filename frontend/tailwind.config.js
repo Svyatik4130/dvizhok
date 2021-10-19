@@ -41,7 +41,8 @@ module.exports = {
       },
       maxHeight: {
         "192": "48rem",
-        "138": "36rem"
+        "138": "36rem",
+        "90-screen": "95vh"
       }
     },
   },

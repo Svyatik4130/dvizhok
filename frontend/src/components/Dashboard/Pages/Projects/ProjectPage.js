@@ -17,7 +17,8 @@ import AdminPanel from './AdminPanel';
 export default function ProjectPage() {
     let { id } = useParams()
     const userData = useSelector(state => state.userData)
-    const [Project, setProject] = useState()
+    const allProjects = useSelector(state => state.allProjects)
+    const [Project, setProject] = useState(allProjects.filter(proj => proj._id === id)[0])
     const [ProjectLeader, setProjectLeader] = useState()
     const [isLoading, setisLoading] = useState(true)
     const [StyleForFundDiv, setStyleForFundDiv] = useState({})
@@ -29,6 +30,9 @@ export default function ProjectPage() {
     const [successMessage, setSuccessMessage] = useState()
     const [error, setError] = useState()
 
+    const members = Project.teamMembers.map(member => member)
+    members.push(Project.projectleaderId)
+
     const signature = getSignature()
     const dispatch = useDispatch()
 
@@ -36,10 +40,8 @@ export default function ProjectPage() {
         const receivingExactProject = async () => {
             try {
                 setisLoading(true)
-                const payload = { id }
-                const exactProject = await axios.post("/project/get-exact-projects", payload)
-                setProject(exactProject.data[0])
-                const date = new Date(exactProject.data[0].createdAt)
+                const exactProject = allProjects.filter(proj => proj._id === id)[0]
+                const date = new Date(exactProject.createdAt)
                 let year = date.getFullYear();
                 let month = date.getMonth() + 1;
                 let dt = date.getDate();
@@ -51,15 +53,15 @@ export default function ProjectPage() {
                     month = '0' + month;
                 }
                 setStartDate(year + '-' + month + '-' + dt)
-                if (!exactProject.data[0].isProjectInfinite) {
+                if (!exactProject.isProjectInfinite) {
                     const strtDate = new Date(year + '-' + month + '-' + dt)
-                    const finishDate = new Date(exactProject.data[0].finishDate)
+                    const finishDate = new Date(exactProject.finishDate)
                     const diffTime = Math.abs(finishDate - strtDate);
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                     setDateDifference(diffDays)
                 }
 
-                const getProjectLeader = await axios.post("/users/get-leader", { id: exactProject.data[0].projectleaderId })
+                const getProjectLeader = await axios.post("/users/get-leader", { id: exactProject.projectleaderId })
                 setProjectLeader(getProjectLeader.data)
                 setisLoading(false)
             } catch (error) {
@@ -242,7 +244,9 @@ export default function ProjectPage() {
                 </div>
 
                 <div className="bg-white order-1 rounded-3xl p-4">
-                    <AdminPanel projectInfo={Project} />
+                    {members.includes(userData.user.id) ? (
+                        <AdminPanel projectInfo={Project} setProjectFnc={setProject} />
+                    ) : (null)}
 
                     <p className="text-2xl font-bold truncate w-full text-purple-950 text-center">{Project.projectName}</p>
                     <div className="font-medium text-lg w-full lg:w-6/12">
