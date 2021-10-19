@@ -1,55 +1,53 @@
 import React, { useEffect, useState } from 'react'
+import SimpleLoader from '../../../Loaders/SimpleLoader';
 import EventCard from './EventCard';
 
 export default function NewsNearMe({ news }) {
     const [curPosition, setCurPosition] = useState();
     const [newsNear, setnewsNear] = useState()
-    // if (curPosition) {
-    //     const nearme = news.filter(news => {
-    //         let isLatSuitable = false
-    //         let isLngSuitable = false
-    //         if (news.location[0] > curPosition.lat - 1 && news.location[0] < curPosition.lat + 1) {
-    //             isLatSuitable = true
-    //         }
-    //         if (news.location[1] > curPosition.lng - 1 && news.location[1] < curPosition.lng + 1) {
-    //             isLngSuitable = true
-    //         }
-    //         if (isLatSuitable && isLngSuitable) {
-    //             return true
-    //         } else {
-    //             return false
-    //         }
-    //     })
-    //     setnewsNear(nearme)
-    // }
+    const [isLoading, setisLoading] = useState(true)
+
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                setCurPosition({
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                })
+        const preloadOpps = async () => {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    console.log(1)
+                    setCurPosition({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    })
 
-                const nearme = news.filter(news => {
-                    let isLatSuitable = false
-                    let isLngSuitable = false
-                    if (news.location[0] > position.coords.latitude - 1 && news.location[0] < position.coords.latitude + 1) {
-                        isLatSuitable = true
-                    }
-                    if (news.location[1] > position.coords.longitude - 1 && news.location[1] < position.coords.longitude + 1) {
-                        isLngSuitable = true
-                    }
-                    if (isLatSuitable && isLngSuitable) {
-                        return true
-                    } else {
-                        return false
-                    }
-                })
-                setnewsNear(nearme)
-            }, () => null
-        );
+                    const nearme = news.filter(news => {
+                        let isLatSuitable = false
+                        let isLngSuitable = false
+                        if (news.location[0] > position.coords.latitude - 1 && news.location[0] < position.coords.latitude + 1) {
+                            isLatSuitable = true
+                        }
+                        if (news.location[1] > position.coords.longitude - 1 && news.location[1] < position.coords.longitude + 1) {
+                            isLngSuitable = true
+                        }
+                        if (isLatSuitable && isLngSuitable) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+                    setnewsNear(nearme)
+                    setisLoading(false)
+                }, () => setisLoading(false)
+            );
+        }
+        preloadOpps()
     }, [])
-
+    if (isLoading) {
+        return (
+            <div className="w-full opacity-50">
+                <div className="pt-5">
+                    <SimpleLoader />
+                </div>
+            </div>
+        )
+    }
     if (!curPosition) {
         return (
             <div className="w-full opacity-50">
@@ -74,7 +72,11 @@ export default function NewsNearMe({ news }) {
     return (
         <>
             {newsNear.map(story => {
-                return <EventCard story={story} />
+                return (
+                    <div key={story._id}>
+                        <EventCard story={story} />
+                    </div>
+                )
             })}
         </>
     )

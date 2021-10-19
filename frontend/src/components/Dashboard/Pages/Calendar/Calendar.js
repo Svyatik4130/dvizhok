@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios';
+import { createPopper } from '@popperjs/core';
 
 export default function Calendar() {
     const [daysArr, setdaysArr] = useState([])
+    const [announcements, setAnnouncements] = useState()
     const [date, setDate] = useState(new Date())
     const [year, setYear] = useState(date.getFullYear())
     const [month, setMonth] = useState(date.getMonth() + 1)
@@ -119,7 +122,6 @@ export default function Calendar() {
                         nextmonth.push({ day: index + 1, month: 1, year: year + 1, thismonth: false })
                     }
                 } else {
-                    console.log(today.getMonth(), month)
                     if (today.getDate() === index + 1 && today.getFullYear() === year && today.getMonth() === month) {
                         nextmonth.push({ day: index + 1, month: month + 1, year, thismonth: false, istoday: true })
                     } else {
@@ -129,14 +131,56 @@ export default function Calendar() {
             }
         }
 
-        setdaysArr([...prevmonth, ...thismonth, ...nextmonth])
+        let calendarScreen = [...prevmonth, ...thismonth, ...nextmonth]
+
+        const preloadOpps = async () => {
+            const res = await axios.get("/story/get-all-stories")
+            const advts = res.data.filter(news => news.storyType === "announcement")
+            setAnnouncements(advts)
+            advts.forEach(story => {
+                const storyCreatedAt = new Date(story.createdAt)
+                const neededDate = calendarScreen.findIndex(date => date.day === storyCreatedAt.getDate() && date.month === storyCreatedAt.getMonth() + 1 && date.year === storyCreatedAt.getFullYear())
+                if (neededDate > -1) {
+                    calendarScreen[neededDate].events = []
+                    calendarScreen[neededDate].events.push(story)
+                }
+            })
+
+            setdaysArr(calendarScreen)
+        }
+        preloadOpps()
     }, [date])
+
+    const createTooltip = (index) => {
+        const actBtn = document.getElementsByClassName(`btn-${index}`)[0]
+        const tooltip = document.getElementsByClassName(`tooltip-${index}`)[0]
+        if (tooltip.classList.contains("tooltip-data-show")) {
+            tooltip.classList.remove("tooltip-data-show")
+        } else {
+            createPopper(actBtn, tooltip, {
+                placement: 'right',
+                modifiers: [
+                    {
+                        name: 'offset',
+                        options: {
+                            offset: [0, 8],
+                        },
+                    },
+                ],
+            });
+            tooltip.classList.add("tooltip-data-show")
+        }
+    }
 
     return (
         <div className='h-full'>
             <div style={{ height: window.innerHeight - 105 }} className='flex'>
                 <div className="w-9/12 pr-1 h-full">
-                    <div className="bg-white h-full rounded-3xl custom-shadow p-4">
+
+                    {/* parent - flex flex-col h-full
+                    child - flex-grow
+                    это див до the bottom родителя */}
+                    <div className="bg-white h-full flex flex-col rounded-3xl custom-shadow p-4">
                         <p className="text-2xl font-medium">{`${monthUkr[month - 1]} ${year}`}.</p>
                         <div className="w-full text-gray-400 text-center text-lg font-medium flex">
                             <div className="w-1/7">Пн</div>
@@ -147,14 +191,27 @@ export default function Calendar() {
                             <div className="w-1/7">Сб</div>
                             <div className="w-1/7">Нд</div>
                         </div>
-                        <div className="h-full flex flex-wrap transition-all overflow-y-scroll pt-2 pb-14">
-                            {daysArr.map(date => {
+                        <div className="flex flex-wrap flex-grow transition-all overflow-y-scroll pt-2">
+                            {daysArr.map((date, index) => {
                                 if (date.thismonth) {
                                     return (
-                                        <div className={`w-1/7 p-2`}>
+                                        <div className={`w-1/7 p-1`}>
                                             <div className={`${date.istoday ? ("bg-purple-950 bg-opacity-5 h-full ") : (null)}`}>
                                                 {date.istoday ? (<div className="w-full bg-purple-850 h-0.5 rounded-2xl"></div>) : (<div className="w-full bg-gray-300 h-0.5 rounded-2xl"></div>)}
                                                 <p className={`font-medium ${date.istoday ? (" text-purple-850") : (null)}`}>{date.day}</p>
+                                                {date.events ? (
+                                                    <div className="relative">
+                                                        <svg onClick={() => createTooltip(index)} className={`cursor-pointer btn-${index} hover:bg-gray-100 transition-all rounded-3xl`} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                                                        <div className={`tooltip-${index} transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-2`}>{
+                                                            date.events.map(event => {
+                                                                return (
+                                                                    <p className="font-medium text-xl text-purple-950">{event.announcementName}</p>
+                                                                )
+                                                            })
+                                                        }</div>
+
+                                                    </div>
+                                                ) : (console.log(date))}
                                             </div>
                                         </div>
                                     )

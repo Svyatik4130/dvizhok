@@ -368,7 +368,7 @@ code {
 .popup-content {
   width: 60%;
 }
-.edit-project-content{
+.edit-project-content {
   width: 90% !important;
 }
 .modal > .actions {
@@ -466,7 +466,7 @@ code {
   height: 2rem;
 }
 
-.rc-time-picker-input{
+.rc-time-picker-input {
   border-color: #48004b !important;
   border-width: 2px !important;
   padding-top: 1rem !important;
@@ -474,6 +474,14 @@ code {
   border-radius: 0.5rem;
   font-size: 18px !important;
   outline: none;
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+}
+.tooltip-data-show {
+  display: block !important;
 }
 
 /* @media for mob devices */
