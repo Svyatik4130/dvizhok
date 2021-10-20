@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { createPopper } from '@popperjs/core';
+import Popup from 'reactjs-popup';
+import CalendarEventAlert from '../News/CalendarEventAlert';
 
 export default function Calendar() {
     const [daysArr, setdaysArr] = useState([])
@@ -16,6 +18,9 @@ export default function Calendar() {
     const [yearNow, setyearNow] = useState(year)
     const monthUkr = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"]
     let daysInLastMonth = new Date(year, month - 1, 0).getDate()
+
+    const [error, setError] = useState()
+    const [successMessage, setSuccessMessage] = useState()
 
     const changeDate = (givenDate) => {
         setDate(givenDate)
@@ -202,13 +207,14 @@ export default function Calendar() {
                                                 {date.events ? (
                                                     <div className="relative">
                                                         <svg onClick={() => createTooltip(index)} className={`cursor-pointer btn-${index} hover:bg-gray-100 transition-all rounded-3xl`} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                                        <div className={`tooltip-${index} transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-2`}>{
-                                                            date.events.map(event => {
+                                                        <div className={`tooltip-${index} transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4`}>
+                                                            <div onClick={() => createTooltip(index)} className="absolute -top-2.5 -right-2 bg-white rounded-full hover:bg-opacity-90 transition-all"><svg className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
+                                                            {date.events.map(event => {
                                                                 return (
-                                                                    <p className="font-medium text-xl text-purple-950">{event.announcementName}</p>
+                                                                    <CalendarEventAlert announcement={event} />
                                                                 )
                                                             })
-                                                        }</div>
+                                                            }</div>
 
                                                     </div>
                                                 ) : (console.log(date))}
