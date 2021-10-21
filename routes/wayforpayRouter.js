@@ -9,12 +9,7 @@ const Message = require("../models/messageModel");
 
 router.post("/create-potential-invoice", async (req, res) => {
     try {
-        let { userId, amount, email, phone } = req.body
-        amount = 1
-        // if (amount < 100) {
-        //     return res.status(400).json({ msg: "Введіть коректну суму поповнення(більше 100 грн)" })
-        // }
-
+        const { userId, amount, email, phone } = req.body
         const date = Math.floor(new Date().getTime() / 1000)
         const orderName = `${userId}-${date}`
         let data = `freelance_user_6138863bab744;https://dvizhok.herokuapp.com;${orderName};${date};${amount};UAH;Поповнення внутрішнього балансу Dvizhok;1;${amount}`

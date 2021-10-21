@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSignature } from '../../../helpers/browser-key'
 import { loggedUser } from '../../../../actions/UserActions'
 import AdminPanel from './AdminPanel';
+import ProjectsNews from './ProjectsNews';
 
 export default function ProjectPage() {
     let { id } = useParams()
@@ -250,7 +251,7 @@ export default function ProjectPage() {
 
                     <p className="text-2xl font-bold truncate w-full text-purple-950 text-center">{Project.projectName}</p>
                     <div className="font-medium text-lg w-full lg:w-6/12">
-                        <p>Тип проекту: <strong className=" uppercase">{Project.category}</strong></p>
+                        <p>Тип проекту: <strong className=" uppercase">{Project.category.join(", ")}</strong></p>
                         <p>Місце реалізації: <strong className=" uppercase">{Project.locationString}</strong></p>
                         <Popup
                             trigger={
@@ -405,7 +406,7 @@ export default function ProjectPage() {
             </div>
             <div className="flex lg:flex-row flex-col my-5">
                 <div className="w-6/12 px-1">
-
+                    <ProjectsNews projId={id} />
                 </div>
                 <div className="w-6/12 px-1">
                     <ProjectsChat projectId={id} />

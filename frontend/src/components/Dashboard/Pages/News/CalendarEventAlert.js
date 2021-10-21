@@ -4,15 +4,18 @@ import SuccessNotice from '../../../misc/SuccessNotice';
 import ErrorNotice from '../../../misc/ErrorNotice';
 
 export default function CalendarEventAlert({ announcement }) {
-    const startTime = new Date(announcement.startTime)
-    const finishTime = new Date(announcement.finishTime)
+    const startDate = new Date(announcement.startDate)
+    const finishDate = new Date(announcement.finishDate)
     const [error, setError] = useState()
     const [successMessage, setSuccessMessage] = useState()
 
     return (
         <Popup
             trigger={
-                <p className="font-medium cursor-pointer text-xl text-purple-950 hover:shadow-lg transition-all p-1 rounded-lg">{announcement.announcementName}</p>
+                <div className="flex items-center p-1 hover:shadow-lg transition-all rounded-lg">
+                    <div className="w-1 h-1 bg-purple-950 rounded-full"></div>
+                    <p className=" pl-2 font-medium cursor-pointer text-xl text-purple-950 ">{announcement.announcementName}</p>
+                </div>
             }
             modal
             nested
@@ -46,12 +49,12 @@ export default function CalendarEventAlert({ announcement }) {
 
                             <p className="font-semibold text-lg mt-3">Початок:</p>
                             <div className="flex items-center">
-                                <p className="text-lg"><strong className="text-purple-850">{announcement.startDate}.</strong> О <strong className="text-purple-850">{startTime.getHours()}:{startTime.getMinutes()}</strong></p>
+                                <p className="text-lg"><strong className="text-purple-850">{`${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`}.</strong> О <strong className="text-purple-850">{startDate.getHours()}:{startDate.getMinutes()}</strong></p>
                             </div>
 
                             <p className="font-semibold text-lg mt-1">Завершення:</p>
                             <div className="flex items-center">
-                                <p className="text-lg"><strong className="text-purple-850">{announcement.finishDate}.</strong> O <strong className="text-purple-850">{finishTime.getHours()}:{finishTime.getMinutes()}</strong></p>
+                                <p className="text-lg"><strong className="text-purple-850">{`${finishDate.getDate()}/${finishDate.getMonth() + 1}/${finishDate.getFullYear()}`}.</strong> O <strong className="text-purple-850">{finishDate.getHours()}:{finishDate.getMinutes()}</strong></p>
                             </div>
                         </div>
                     </div>

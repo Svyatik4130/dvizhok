@@ -6,7 +6,11 @@ import { Doughnut, defaults } from 'react-chartjs-2'
 defaults.animation = false;
 
 export default function MyProjects() {
-    const myProjects = useSelector(state => state.myProjects)
+    const myProjects = useSelector(state => state.myProjects).sort((a, b) => {
+        const aDate = new Date(a.createdAt)
+        const bDate = new Date(b.createdAt)
+        return bDate.getTime() - aDate.getTime()
+    })
     const history = useHistory()
     const [searchText, setSearchText] = useState('')
     const [inputStyle, setInputStyle] = useState("rounded-3xl bg-gray-100")

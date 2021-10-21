@@ -19,9 +19,6 @@ export default function Calendar() {
     const monthUkr = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"]
     let daysInLastMonth = new Date(year, month - 1, 0).getDate()
 
-    const [error, setError] = useState()
-    const [successMessage, setSuccessMessage] = useState()
-
     const changeDate = (givenDate) => {
         setDate(givenDate)
         setYear(givenDate.getFullYear())
@@ -143,7 +140,7 @@ export default function Calendar() {
             const advts = res.data.filter(news => news.storyType === "announcement")
             setAnnouncements(advts)
             advts.forEach(story => {
-                const storyCreatedAt = new Date(story.createdAt)
+                const storyCreatedAt = new Date(story.startDate)
                 const neededDate = calendarScreen.findIndex(date => date.day === storyCreatedAt.getDate() && date.month === storyCreatedAt.getMonth() + 1 && date.year === storyCreatedAt.getFullYear())
                 if (neededDate > -1) {
                     calendarScreen[neededDate].events = []
@@ -206,8 +203,8 @@ export default function Calendar() {
                                                 <p className={`font-medium ${date.istoday ? (" text-purple-850") : (null)}`}>{date.day}</p>
                                                 {date.events ? (
                                                     <div className="relative">
-                                                        <svg onClick={() => createTooltip(index)} className={`cursor-pointer btn-${index} hover:bg-gray-100 transition-all rounded-3xl`} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                                        <div className={`tooltip-${index} transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4`}>
+                                                        <svg onClick={() => createTooltip(index)} className={`cursor-pointer z-20 btn-${index} hover:bg-gray-100 transition-all rounded-3xl`} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                                                        <div className={`tooltip-${index} z-40 transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4`}>
                                                             <div onClick={() => createTooltip(index)} className="absolute -top-2.5 -right-2 bg-white rounded-full hover:bg-opacity-90 transition-all"><svg className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
                                                             {date.events.map(event => {
                                                                 return (
@@ -217,7 +214,7 @@ export default function Calendar() {
                                                             }</div>
 
                                                     </div>
-                                                ) : (console.log(date))}
+                                                ) : (null)}
                                             </div>
                                         </div>
                                     )

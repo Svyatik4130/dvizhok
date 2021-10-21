@@ -116,6 +116,14 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
             const dateNow = new Date()
             const dateStart = new Date(startDate)
             const dateFinish = new Date(finishDate)
+            const timefinish = new Date(finishTime)
+            dateFinish.setHours(timefinish.getHours())
+            dateFinish.setMinutes(timefinish.getMinutes())
+
+            const timestart = new Date(startTime)
+            dateStart.setHours(timestart.getHours())
+            dateStart.setMinutes(timestart.getMinutes())
+
             if (dateStart.getTime() <= dateNow.getTime()) {
                 setError("Будь ласка, введіть правильну дату початку анонса");
                 setreqLoading(false)
@@ -137,10 +145,8 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
                 location: Location,
                 locationString: locationString,
                 announcementName: advtName,
-                finishTime: finishTime,
-                finishDate: finishDate,
-                startTime: startTime,
-                startDate: startDate,
+                finishDate: dateFinish,
+                startDate: dateStart,
                 secret: signature
             }
 
@@ -153,9 +159,15 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
             if (publishRes.status === 200) {
                 setreqLoading(false)
                 setSuccessMessage("Ви успішно опублікували новину")
-                setDesc("")
                 setTimeout(() => {
                     close()
+                    setSuccessMessage("")
+                    setDesc("")
+                    setfinishDate()
+                    setstartDate()
+                    setadvtName()
+                    setLocation()
+                    setLocationString()
                 }, 1500);
             } else {
                 setreqLoading(false)
@@ -236,6 +248,13 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
                 setDesc("")
                 setTimeout(() => {
                     close()
+                    setSuccessMessage("")
+                    setDesc("")
+                    setfinishDate()
+                    setstartDate()
+                    setadvtName()
+                    setLocation()
+                    setLocationString()
                 }, 1500);
             } else {
                 setreqLoading(false)

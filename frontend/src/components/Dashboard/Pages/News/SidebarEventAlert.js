@@ -4,8 +4,8 @@ import SuccessNotice from '../../../misc/SuccessNotice';
 import ErrorNotice from '../../../misc/ErrorNotice';
 
 export default function SidebarEventAlert({ announcement }) {
-    const startTime = new Date(announcement.startTime)
-    const finishTime = new Date(announcement.finishTime)
+    const startDate = new Date(announcement.startDate)
+    const finishDate = new Date(announcement.finishDate)
     const [error, setError] = useState()
     const [successMessage, setSuccessMessage] = useState()
 
@@ -13,7 +13,7 @@ export default function SidebarEventAlert({ announcement }) {
         <Popup
             trigger={
                 <div className="bg-white rounded-3xl custom-shadow hover:bg-gray-50 transition-all cursor-pointer hover:shadow-inner p-2 my-1">
-                    <p className="font-semibold text-2xl">{`${startTime.getHours()}:${startTime.getMinutes()}`}</p>
+                    <p className="font-semibold text-2xl">{`${startDate.getHours()}:${startDate.getMinutes()}`}</p>
                     <p className="font-medium text-sm pb-5">{announcement.announcementName}</p>
                     <div className="flex">
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-2/12" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3" /><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z" /></svg>
@@ -53,12 +53,12 @@ export default function SidebarEventAlert({ announcement }) {
 
                             <p className="font-semibold text-lg mt-3">Початок:</p>
                             <div className="flex items-center">
-                                <p className="text-lg"><strong className="text-purple-850">{announcement.startDate}.</strong> О <strong className="text-purple-850">{startTime.getHours()}:{startTime.getMinutes()}</strong></p>
+                                <p className="text-lg"><strong className="text-purple-850">{`${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`}.</strong> О <strong className="text-purple-850">{startDate.getHours()}:{startDate.getMinutes()}</strong></p>
                             </div>
 
                             <p className="font-semibold text-lg mt-1">Завершення:</p>
                             <div className="flex items-center">
-                                <p className="text-lg"><strong className="text-purple-850">{announcement.finishDate}.</strong> O <strong className="text-purple-850">{finishTime.getHours()}:{finishTime.getMinutes()}</strong></p>
+                                <p className="text-lg"><strong className="text-purple-850">{`${finishDate.getDate()}/${finishDate.getMonth() + 1}/${finishDate.getFullYear()}`}.</strong> O <strong className="text-purple-850">{finishDate.getHours()}:{finishDate.getMinutes()}</strong></p>
                             </div>
                         </div>
                     </div>

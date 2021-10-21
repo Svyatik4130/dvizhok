@@ -35,38 +35,44 @@ export default function TeamMember({ userId }) {
         )
     }
     return (
-        <div onClick={() => { history.push(`/dashboard/userpage/${user._id}/created-projects`) }} className="flex cursor-pointer w-full mt-2 hover:shadow-inner p-2 shadow-none hover:bg-gray-100 rounded-3xl transition-all">
-            <div className="h-12 w-12 rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${user.avatarUrl})` }}></div>
-            <div className="ml-2">
-                <p className="font-semibold  text-gray-700">{user.name}</p>
-                <div className="flex">
-                    {user.roleId === 0 ? (
-                        <div className="flex gap-1 items-center">
-                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
-                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-5" />
-                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-5" />
-                            <p className=" ml-3 font-bold inline-block text-purple-850">ОКтивіст</p>
+        <>
+            {user ? (
+                <div onClick={() => {
+                    history.push(`/dashboard/userpage/${user._id}/created-projects`)
+                }} className="flex cursor-pointer w-full mt-2 hover:shadow-inner p-2 shadow-none hover:bg-gray-100 rounded-3xl transition-all" >
+                    <div className="h-12 w-12 rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${user.avatarUrl})` }}></div>
+                    <div className="ml-2">
+                        <p className="font-semibold  text-gray-700">{user.name}</p>
+                        <div className="flex">
+                            {user.roleId === 0 ? (
+                                <div className="flex gap-1 items-center">
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-5" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-5" />
+                                    <p className=" ml-3 font-bold inline-block text-purple-850">ОКтивіст</p>
+                                </div>
+                            ) : user.roleId === 1 ? (
+                                <div className="flex gap-1 items-center">
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-5" />
+                                    <p className=" ml-3 font-bold inline-block text-purple-850">Творець</p>
+                                </div>
+                            ) : user.roleId === 2 ? (
+                                <div className="flex gap-1 items-center">
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
+                                    <p className=" ml-3 font-bold inline-block text-purple-850">Лідер</p>
+                                </div>
+                            ) : (
+                                null
+                            )
+                            }
                         </div>
-                    ) : user.roleId === 1 ? (
-                        <div className="flex gap-1 items-center">
-                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
-                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
-                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-5" />
-                            <p className=" ml-3 font-bold inline-block text-purple-850">Творець</p>
-                        </div>
-                    ) : user.roleId === 2 ? (
-                        <div className="flex gap-1 items-center">
-                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
-                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
-                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-5" />
-                            <p className=" ml-3 font-bold inline-block text-purple-850">Лідер</p>
-                        </div>
-                    ) : (
-                        null
-                    )
-                    }
-                </div>
-            </div>
-        </div>
+                    </div>
+                </div >
+            ) : (null)}
+        </>
     )
 }

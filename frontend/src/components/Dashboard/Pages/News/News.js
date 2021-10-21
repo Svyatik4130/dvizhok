@@ -173,9 +173,31 @@ export default function News() {
         const preloadOpps = async () => {
             try {
                 const res = await axios.get("/story/get-all-stories")
-                setNews(res.data.filter(story => story.storyType === "news"))
-                setAdvrts(res.data.filter(announcement => announcement.storyType === "announcement"))
+                setNews(res.data.filter(story => story.storyType === "news").sort((a, b) => {
+                    const aDate = new Date(a.createdAt)
+                    const bDate = new Date(b.createdAt)
+                    return bDate.getTime() - aDate.getTime()
+                }))
+                let sortedAdvrts = []
 
+                const Advts = res.data.filter(announcement => announcement.storyType === "announcement").sort((a, b) => {
+                    const aDate = new Date(a.startDate)
+                    const bDate = new Date(b.startDate)
+                    return aDate.getTime() - bDate.getTime()
+                })
+                console.log(Advts)
+                Advts.forEach(advrt => {
+                    const startDate = new Date(advrt.startDate)
+                    const name_date = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`
+                    const alreadyExistsINdex = sortedAdvrts.findIndex(dateWithEvents => dateWithEvents.dateString === name_date)
+                    console.log(alreadyExistsINdex)
+                    if (alreadyExistsINdex === -1) {
+                        sortedAdvrts.push({ dateString: name_date, events: [] })
+                    }
+                    sortedAdvrts[sortedAdvrts.length - 1].events.push(advrt)
+                });
+                console.log(sortedAdvrts)
+                setAdvrts(sortedAdvrts)
                 setisLodaing(false)
             } catch (error) {
                 console.log(error)
@@ -190,7 +212,7 @@ export default function News() {
             <SimpleLoader />
         </div>
     )
-
+    // console.log(advrts)
     return (
         <div className='w-full'>
             <div className="flex mt-6 mb-2">
@@ -204,14 +226,21 @@ export default function News() {
             <div className="flex">
                 <div className="w-2/12 p-0.5">
                     <div className=" border rounded-3xl border-purple-950">
-                        <p className="font-semibold text-lg text-center text-purple-950 p-2">Сьогодні</p>
                         {advrts ? (
-                            advrts.map(announcement => {
+                            advrts.map(date => {
                                 return (
-                                    <SidebarEventAlert announcement={announcement} />
+                                    <div className="px-1">
+                                        <p className="font-semibold text-lg text-purple-950 text-center pt-2">{date.dateString}</p>
+                                        {date.events.map(announcement => {
+                                            return (
+                                                <SidebarEventAlert announcement={announcement} />
+                                            )
+                                        })}
+                                    </div>
                                 )
                             })
                         ) : (null)}
+
                     </div>
                 </div>
                 <div className="w-6/12 p-0.5 pl-2">

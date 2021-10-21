@@ -103,9 +103,13 @@ router.get("/get-all-stories", async (req, res) => {
     const allStories = await Story.find({})
     res.json(allStories)
 })
+router.get("/get-stories/:id", async (req, res) => {
+    const Stories = await Story.find({ projectId: req.params.id })
+    res.json(Stories)
+})
 
 router.post("/create-announcement", async (req, res) => {
-    const {projectId, projectLogo, projectName, publisherId, storyType, text, location, locationString, announcementName, finishTime, finishDate, startTime, startDate, secret} = req.body
+    const { projectId, projectLogo, projectName, publisherId, storyType, text, location, locationString, announcementName, finishTime, finishDate, startTime, startDate, secret } = req.body
     console.log(text)
     if (text.length < 5 || text.length > 1000) {
         return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}` })
@@ -133,12 +137,22 @@ router.post("/create-announcement", async (req, res) => {
     const dateNow = new Date()
     const dateStart = new Date(startDate)
     const dateFinish = new Date(finishDate)
+    const timefinish = new Date(finishTime)
+    dateFinish.setHours(timefinish.getHours())
+    dateFinish.setMinutes(timefinish.getMinutes())
+
+    const timestart = new Date(startTime)
+    dateStart.setHours(timestart.getHours())
+    dateStart.setMinutes(timestart.getMinutes())
+
     if (dateStart.getTime() <= dateNow.getTime()) {
         setError("Будь ласка, введіть правильну дату початку анонса");
+        setreqLoading(false)
         return
     }
-    if (dateFinish.getTime() <= dateStart.getTime()) {
+    if (dateFinish.getTime() < dateStart.getTime()) {
         setError("Будь ласка, введіть правильну дату закінчення анонса");
+        setreqLoading(false)
         return
     }
 
