@@ -86,6 +86,7 @@ router.post('/create-story', (req, res) => {
                     publisherId: req.body.publisherId,
                     storyType: req.body.storyType,
                     text: req.body.text,
+                    likedIds: [],
                     photosNvideos: galleryImgLocationArray,
                     location: latNlng,
                     locationString: req.body.locationString,
@@ -106,6 +107,26 @@ router.get("/get-all-stories", async (req, res) => {
 router.get("/get-stories/:id", async (req, res) => {
     const Stories = await Story.find({ projectId: req.params.id })
     res.json(Stories)
+})
+router.post("/like-event", async (req, res) => {
+    const { idsWhoLiked, userId, eventId } = req.body
+    if (idsWhoLiked.includes(userId)) {
+        const filteredArr = idsWhoLiked.filter(id => id !== userId)
+        await Story.updateOne({ _id: eventId }, {
+            $set: {
+                "likedIds": filteredArr
+            }
+        })
+        res.json(filteredArr)
+    } else {
+        idsWhoLiked.push(userId)
+        await Story.updateOne({ _id: eventId }, {
+            $set: {
+                "likedIds": idsWhoLiked
+            }
+        })
+        res.json(idsWhoLiked)
+    }
 })
 
 router.post("/create-announcement", async (req, res) => {

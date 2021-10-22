@@ -127,7 +127,7 @@ export default function ProjectList() {
                                             </div>
                                             <div className="w-6/12 border-l">
                                                 <Doughnut {...KalendarOps} />
-                                                <p className="text-sm text-center">{project.isProjectInfinite ? (<>Постійний<br /> проект</>) : (<> Днів до <br /> закінчення </>)}</p>
+                                                <p className="text-sm text-center">{project.isProjectInfinite ? (<>Постійний<br /> проект</>) : (passedTime === 100 ? ("Закінчено") : (<> Днів до <br /> закінчення </>))}</p>
                                             </div>
                                         </div>
                                     </div>

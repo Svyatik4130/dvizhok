@@ -20,6 +20,7 @@ export default function ProjectPage() {
     const userData = useSelector(state => state.userData)
     const allProjects = useSelector(state => state.allProjects)
     const [Project, setProject] = useState(allProjects.filter(proj => proj._id === id)[0])
+    const [followers, setFollowers] = useState(allProjects.filter(proj => proj._id === id)[0].followers)
     const [ProjectLeader, setProjectLeader] = useState()
     const [isLoading, setisLoading] = useState(true)
     const [StyleForFundDiv, setStyleForFundDiv] = useState({})
@@ -116,6 +117,15 @@ export default function ProjectPage() {
         }
     }
 
+    const Follow = async () => {
+        try {
+            const payload = { followers, userId: userData.user.id, projectId: id }
+            const res = await axios.post("/project/follow", payload)
+            setFollowers(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     if (isLoading) {
         return (
             <div className="h-screen">
@@ -253,53 +263,56 @@ export default function ProjectPage() {
                     <div className="font-medium text-lg w-full lg:w-6/12">
                         <p>Тип проекту: <strong className=" uppercase">{Project.category.join(", ")}</strong></p>
                         <p>Місце реалізації: <strong className=" uppercase">{Project.locationString}</strong></p>
-                        <Popup
-                            trigger={
-                                <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
-                            }
-                            modal
-                            nested
-                        >
-                            {close => (
-                                <div className="modal bg-white rounded-xl">
-                                    <button className="close" onClick={close}>
-                                        &times;
-                                    </button>
-                                    <div className="w-full bg-purple-850 px-4 py-2 text-white text-2xl font-bold rounded-t-xl">
-                                        Вікно підтримки проекту
-                                    </div>
+                        <div className="flex justify-evenly">
+                            <button onClick={() => Follow()} className={`w-5/12 mt-3 ${followers.includes(userData.user.id) ? ("bg-white") : ("bg-yellow-350")} hover:bg-yellow-350 hover:bg-opacity-50 border-2 transition-all border-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center`}>{followers.includes(userData.user.id) ? ("Відписатися") : ("Підписатися")}</button>
+                            <Popup
+                                trigger={
+                                    <button className="w-5/12 mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
+                                }
+                                modal
+                                nested
+                            >
+                                {close => (
+                                    <div className="modal bg-white rounded-xl">
+                                        <button className="close" onClick={close}>
+                                            &times;
+                                        </button>
+                                        <div className="w-full bg-purple-850 px-4 py-2 text-white text-2xl font-bold rounded-t-xl">
+                                            Вікно підтримки проекту
+                                        </div>
 
-                                    <div className="w-10/12 mt-3 m-auto">
-                                        <div className="px-2 m-auto">
-                                            {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
-                                            {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
+                                        <div className="w-10/12 mt-3 m-auto">
+                                            <div className="px-2 m-auto">
+                                                {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
+                                                {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
+                                            </div>
+                                        </div>
+
+                                        <p className="font-medium text-lg px-5 mt-4 text-gray-600">Будь ласка, виберіть суму оплати</p>
+                                        <div className="w-full m-auto flex items-center p-6">
+                                            <input value={amount} onChange={(e) => handleAmountInputChange(e.target.value)} type="number" min="0" max={userData.user.balance} className="h-8 w-6/12 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" /><br />
+                                            <p className=" pl-2 font-medium text-xl">грн</p>
+                                        </div>
+                                        <div className="w-full rounded-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
+                                            {reqLoading ? (
+                                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
+                                            ) : (
+                                                null
+                                            )}
+                                            <button onClick={() => Support(close)} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-yellow-350 text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Підтримати</button>
+                                            <button
+                                                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                                onClick={() => {
+                                                    close();
+                                                }}
+                                            >
+                                                Закрити
+                                            </button>
                                         </div>
                                     </div>
-
-                                    <p className="font-medium text-lg px-5 mt-4 text-gray-600">Будь ласка, виберіть суму оплати</p>
-                                    <div className="w-full m-auto flex items-center p-6">
-                                        <input value={amount} onChange={(e) => handleAmountInputChange(e.target.value)} type="number" min="0" max={userData.user.balance} className="h-8 w-6/12 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" /><br />
-                                        <p className=" pl-2 font-medium text-xl">грн</p>
-                                    </div>
-                                    <div className="w-full rounded-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
-                                        {reqLoading ? (
-                                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
-                                        ) : (
-                                            null
-                                        )}
-                                        <button onClick={() => Support(close)} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-yellow-350 text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Підтримати</button>
-                                        <button
-                                            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                            onClick={() => {
-                                                close();
-                                            }}
-                                        >
-                                            Закрити
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </Popup>
+                                )}
+                            </Popup>
+                        </div>
                     </div>
                     <p className="hidden lg:block font-medium text-lg mt-3 w-full whitespace-normal break-words">
                         <div className="float-right w-6/12 -mt-28">

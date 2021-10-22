@@ -26,6 +26,7 @@ export default function News() {
     const [desc, setDesc] = useState("")
 
     const [news, setNews] = useState()
+    const [followedNews, setfollowedNews] = useState()
     const [advrts, setAdvrts] = useState()
 
     const [selectedFiles, setselectedFiles] = useState("")
@@ -156,6 +157,11 @@ export default function News() {
             if (publishRes.status === 200) {
                 setreqLoading(false)
                 setSuccessMessage("Ви успішно опублікували новину")
+                setSuccessMessage()
+                setDesc()
+                setselectedFiles()
+                setLocation()
+                setLocationString()
                 setTimeout(() => {
                     close()
                 }, 1500);
@@ -173,11 +179,16 @@ export default function News() {
         const preloadOpps = async () => {
             try {
                 const res = await axios.get("/story/get-all-stories")
-                setNews(res.data.filter(story => story.storyType === "news").sort((a, b) => {
+                const sortedNews = res.data.filter(story => story.storyType === "news").sort((a, b) => {
                     const aDate = new Date(a.createdAt)
                     const bDate = new Date(b.createdAt)
                     return bDate.getTime() - aDate.getTime()
-                }))
+                })
+                setNews(sortedNews)
+                console.log(sortedNews)
+                const resFollowed = await axios.get(`/project/get-followed-ids/${userData.user.id}`)
+                const onlyFollowedNews = sortedNews.filter(news => resFollowed.data.includes(news.projectId))
+                setfollowedNews(onlyFollowedNews)
                 let sortedAdvrts = []
 
                 const Advts = res.data.filter(announcement => announcement.storyType === "announcement").sort((a, b) => {
@@ -185,19 +196,22 @@ export default function News() {
                     const bDate = new Date(b.startDate)
                     return aDate.getTime() - bDate.getTime()
                 })
-                console.log(Advts)
                 Advts.forEach(advrt => {
                     const startDate = new Date(advrt.startDate)
                     const name_date = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`
                     const alreadyExistsINdex = sortedAdvrts.findIndex(dateWithEvents => dateWithEvents.dateString === name_date)
                     console.log(alreadyExistsINdex)
                     if (alreadyExistsINdex === -1) {
-                        sortedAdvrts.push({ dateString: name_date, events: [] })
+                        sortedAdvrts.push({ dateString: name_date, events: [], startDate })
                     }
                     sortedAdvrts[sortedAdvrts.length - 1].events.push(advrt)
-                });
-                console.log(sortedAdvrts)
-                setAdvrts(sortedAdvrts)
+                })
+                const futureOnlyEvents = sortedAdvrts.filter(event => {
+                    const dateNow = new Date()
+                    const eventDate = new Date(event.startDate)
+                    return dateNow.getTime() <= eventDate.getTime()
+                })
+                setAdvrts(futureOnlyEvents)
                 setisLodaing(false)
             } catch (error) {
                 console.log(error)
@@ -354,8 +368,8 @@ export default function News() {
                     ) : (null)}
                     <Switch>
                         <Route path="/dashboard/news/all">
-                            {news ? (
-                                news.map(story => {
+                            {followedNews ? (
+                                followedNews.map(story => {
                                     return <EventCard story={story} />
                                 })
                             ) : (null)}

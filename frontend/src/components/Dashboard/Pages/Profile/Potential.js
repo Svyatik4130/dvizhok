@@ -104,7 +104,7 @@ export default function Potential() {
                                     &times;
                                 </button>
                                 <div className="w-full bg-purple-850 px-4 py-2 text-white text-2xl font-bold rounded-t-xl">
-                                    Вікно зміни аватара
+                                    Вікно поповнення потенціалу
                                 </div>
 
                                 <div className="w-10/12 mt-3 m-auto">
@@ -171,7 +171,7 @@ export default function Potential() {
                                             &times;
                                         </button>
                                         <div className="w-full bg-purple-850 px-4 py-2 text-white text-2xl font-bold rounded-t-xl">
-                                            Вікно зміни аватара
+                                            Вікно поповнення потенціалу
                                         </div>
 
                                         <div className="w-10/12 mt-3 m-auto">

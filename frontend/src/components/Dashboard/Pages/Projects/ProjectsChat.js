@@ -22,6 +22,8 @@ export default function ProjectsChat({ projectId }) {
         inputForm: ""
     })
 
+    const [areMessLoaded, setareMessLoaded] = useState(false)
+
     useEffect(() => {
         if (currProject.teamMembers.includes(user.id) || currProject.projectleaderId === user.id) {
             setLayout({
@@ -106,9 +108,12 @@ export default function ProjectsChat({ projectId }) {
     }
 
     useEffect(() => {
-        document.body.style.position = "fixed"
-        scrollRef.current?.scrollIntoView();
-        document.body.style.position = ""
+        if (!areMessLoaded) {
+            document.body.style.position = "fixed"
+            scrollRef.current?.scrollIntoView();
+            document.body.style.position = ""
+            setareMessLoaded(true)
+        }
     }, [messages, newMessage, error]);
 
     useEffect(() => {

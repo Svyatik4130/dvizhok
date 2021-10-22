@@ -597,6 +597,33 @@ router.post("/change-info", async (req, res) => {
     const updatedProject = await Project.findById(projId)
     res.json(updatedProject)
 })
+router.post("/follow", async (req, res) => {
+    const { followers, userId, projectId } = req.body
+    if (followers.includes(userId)) {
+        const filteredArr = followers.filter(id => id !== userId)
+        await Project.updateOne({ _id: projectId }, {
+            $set: {
+                "followers": filteredArr
+            }
+        })
+        res.json(filteredArr)
+    } else {
+        followers.push(userId)
+        await Project.updateOne({ _id: projectId }, {
+            $set: {
+                "followers": followers
+            }
+        })
+        res.json(followers)
+    }
+})
+router.get("/get-followed-ids/:id", async (req, res) => {
+    const followedProjects = await Project.find({
+        followers: { $in: [req.params.id] },
+    })
+    const onlyIds = followedProjects.map(project => { return  project._id.toString() })
+    res.json(onlyIds)
+})
 
 
 module.exports = router;
