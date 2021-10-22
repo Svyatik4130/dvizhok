@@ -226,7 +226,8 @@ export default function News() {
             <SimpleLoader />
         </div>
     )
-    // console.log(advrts)
+    console.log(followedNews)
+
     return (
         <div className='w-full'>
             <div className="flex mt-6 mb-2">
@@ -368,11 +369,18 @@ export default function News() {
                     ) : (null)}
                     <Switch>
                         <Route path="/dashboard/news/all">
-                            {followedNews ? (
+                            {followedNews.length > 0 ? (
                                 followedNews.map(story => {
                                     return <EventCard story={story} />
                                 })
-                            ) : (null)}
+                            ) : (
+                                <div className="w-full opacity-50">
+                                    <div className="">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
+                                        <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Новин немає</p>
+                                    </div>
+                                </div>
+                            )}
                         </Route>
                         <Route path="/dashboard/news/gps">
                             <NewsNearMe news={news} />

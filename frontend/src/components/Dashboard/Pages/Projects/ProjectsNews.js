@@ -33,7 +33,14 @@ export default function ProjectsNews({ projId }) {
 
                         )
                     })
-                ) : (null)}
+                ) : (
+                    <div className="w-full opacity-50">
+                        <div className="">
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
+                            <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">У цьому проекті ще немає новин</p>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )

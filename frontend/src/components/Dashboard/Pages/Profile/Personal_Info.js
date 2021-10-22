@@ -74,7 +74,6 @@ export default function Personal_Info() {
                 setError("Будь ласка, введіть дійсний номер телефону");
                 return
             }
-            console.log(PhoneNumbersArray, phoneNumbers)
 
             if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || occupation !== userData.user.occupationTown || !equals(phoneNumbers, defaultNumbers) || selections !== userData.user.sex) {
 
