@@ -176,8 +176,8 @@ export default function Calendar() {
 
     return (
         <div className='h-full'>
-            <div style={{ height: window.innerHeight - 105 }} className='flex'>
-                <div className="w-9/12 pr-1 h-full">
+            <div style={{ height: window.innerHeight - 105 }} className='flex lg:flex-row flex-col'>
+                <div className="lg:w-9/12 w-full px-1 lg:pr-1 h-full">
 
                     {/* parent - flex flex-col h-full
                     child - flex-grow
@@ -232,7 +232,7 @@ export default function Calendar() {
                         </div>
                     </div>
                 </div>
-                <div className="w-3/12 pr-1">
+                <div className="lg:w-3/12 w-full my-2 lg:my-0 px-1 lg:pr-1">
                     <div className="bg-white w-full custom-shadow rounded-3xl py-2">
                         <div className="m-auto pb-2 text-center text-purple-950 font-medium text-lg justify-center flex items-center">
                             <p onClick={() => setyearNow(yearNow - 1)} className="cursor-pointer hover:opacity-100 opacity-70 transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg></p>

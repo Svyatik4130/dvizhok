@@ -145,8 +145,8 @@ export default function Potential() {
             <div className="h-full text-purple-950 lg:w-5/7 w-full p-5 pb-10 flex flex-col">
                 <p className="font-semibold mb-4 text-2xl">Ваш Потенціал: {userData.user.balance} грн</p>
                 <div className="text-purple-950">
-                    <div className="flex">
-                        <div className="w-3/6">
+                    <div className="flex lg:flex-row flex-col">
+                        <div className="lg:w-3/6 w-full">
                             <p className="font-medium text-lg">Попереднє поповнення: {lastPayment ? (new Date(lastPayment.createdAt).toISOString().substring(0, 10)) : (null)}</p>
                             <p className={`font-medium text-lg ${stylesForPayment}`}>Наступне поповнення (від 100 грн):  {lastPayment ? (
                                 function () {
@@ -157,7 +157,7 @@ export default function Potential() {
                             ) : (null)}</p>
                             {WFPresponse ? (<img src={WFPresponse.qrCode} className=" w-44" alt="qr" />) : (null)}
                         </div>
-                        <div className="mt-4 pb-6 lg:pb-0 w-3/6">
+                        <div className="mt-4 pb-6 lg:pb-0 w-full lg:w-3/6">
                             <Popup
                                 trigger={
                                     <a className="bg-yellow-350 cursor-pointer font-semibold text-xl text-purple-950 rounded-full px-7 py-3">Поповнити Потенціал</a>

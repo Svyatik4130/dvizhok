@@ -196,7 +196,7 @@ export default function GPSLocation() {
         };
 
         return (
-            <div className="absolute top-4 left-4 shadow-2xl w-full max-w-md z-10">
+            <div className="absolute top-5 lg:left-4 left-2 shadow-2xl lg:w-full w-8/12 max-w-md z-10">
                 <Combobox onSelect={handleSelect}>
                     <ComboboxInput
                         className={" p-2 text-lg outline-none w-full rounded-lg"}

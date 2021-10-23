@@ -57,6 +57,10 @@ export default function MyProjects() {
                                 raised = 0
                                 rqrd = 100
                             }
+                            let fundsLeft = Number(rqrd) - Number(raised)
+                            if (fundsLeft < 0) {
+                                fundsLeft = 0
+                            }
                             const createdAt = new Date(project.createdAt?.substring(0, 10)).getTime()
                             const dateNow = new Date().getTime()
                             const finishDate = new Date(project.finishDate).getTime()
@@ -75,7 +79,7 @@ export default function MyProjects() {
                                     labels: ['Зібрано', 'Залишилося'],
                                     datasets: [
                                         {
-                                            data: [raised, Number(rqrd) - Number(raised)],
+                                            data: [raised, fundsLeft],
                                             backgroundColor: ['#48004B', '#B8B8B8'],
                                         },
                                     ]

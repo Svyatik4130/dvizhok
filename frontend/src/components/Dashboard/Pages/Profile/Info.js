@@ -168,7 +168,7 @@ export default function Info() {
 
     return (
         <div className="flex w-full lg:flex-row flex-col">
-            <p className="text-3xl text-purple-950 mb-2 font-bold lg:hidden block">{userData.user.name}</p>
+            <p className="text-3xl truncate text-purple-950 mb-2 font-bold lg:hidden block">{userData.user.name}</p>
 
             <div className="lg:w-8/12 w-full flex">
                 <div className="mb-1 lg:w-44 lg:h-44 h-28 w-28 mx-8 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}>

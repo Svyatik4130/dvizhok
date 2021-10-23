@@ -238,8 +238,9 @@ export default function News() {
                     Проекти поблизу
                 </NavLink>
             </div>
-            <div className="flex">
-                <div className="w-2/12 p-0.5">
+            <div className="flex lg:flex-row flex-col">
+                {/* тут сделать карусель */}
+                <div className="lg:w-2/12 w-full order-2 p-0.5">
                     <div className=" border rounded-3xl border-purple-950">
                         {advrts ? (
                             advrts.map(date => {
@@ -258,7 +259,7 @@ export default function News() {
 
                     </div>
                 </div>
-                <div className="w-6/12 p-0.5 pl-2">
+                <div className="lg:w-6/12 w-full order-3 p-0.5 lg:pl-2">
                     {myProjects.length > 0 ? (
                         <div className="w-full bg-white rounded-3xl custom-shadow p-4 mb-4">
                             <Popup
@@ -390,7 +391,7 @@ export default function News() {
                         </Route>
                     </Switch>
                 </div>
-                <div className="w-4/12 p-0.5">
+                <div className="lg:w-4/12 w-full order-1 p-0.5">
                     <div className=" border rounded-3xl border-purple-950">
                         <p className="font-semibold text-lg text-center text-purple-950 p-2">ТОП 10 Проектів ОК</p>
                         <div className="w-full flex flex-wrap">
