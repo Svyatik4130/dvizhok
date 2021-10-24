@@ -124,12 +124,12 @@ export default function ProjectList() {
                                                 <p className="font-medium text-xs overflow-y-scroll break-words h-32">{project.description}</p>
                                             </div>
                                         </div>
-                                        <div className="w-full flex pb-2">
-                                            <div className="w-6/12 border-r">
+                                        <div className="w-full flex justify-evenly pb-2">
+                                            <div className="lg:w-6/12 w-5/12 lg:border-r">
                                                 <Doughnut {...FundsOps} />
                                                 <p className="text-sm text-center">{project.isFundsInfinite ? (<>Необмежений збір</>) : (<> Зібрано </>)}</p>
                                             </div>
-                                            <div className="w-6/12 border-l">
+                                            <div className="lg:w-6/12 w-5/12 lg:border-l">
                                                 <Doughnut {...KalendarOps} />
                                                 <p className="text-sm text-center">{project.isProjectInfinite ? (<>Постійний<br /> проект</>) : (passedTime === 100 ? ("Закінчено") : (<> Днів до <br /> закінчення </>))}</p>
                                             </div>
@@ -144,8 +144,7 @@ export default function ProjectList() {
                 <div className="lg:w-3/12 w-full lg:pl-3 pl-0 pb-4 lg:pb-0 order-1 lg:order-2">
                     <div className="relative">
                         <input value={searchText} onChange={e => setSearchText(e.target.value)} type="text" className={`${inputStyle} w-full transition-all text-lg relative z-20 font-medium p-3 px-4 rounded-full outline-none focus:bg-white`} placeholder="Пошук проектів" />
-                        {/* <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} transition-all relative z-20 px-3 py-2 w-full outline-none focus:bg-white`} placeholder="Пошук ваших чатів та користувачів" /> */}
-                        <div className="rounded-3xl drop-shadow-lg mt-1.5 max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-9 top-0 w-full bg-white">
+                        <div className="rounded-3xl custom-shadow drop-shadow-lg mt-1.5 max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-9 top-0 w-full bg-white">
                             {findedProjects ? (
                                 findedProjects.map(({ item }) => {
                                     return (

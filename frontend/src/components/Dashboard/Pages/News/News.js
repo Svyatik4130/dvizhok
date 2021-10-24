@@ -15,6 +15,7 @@ import SimpleLoader from '../../../Loaders/SimpleLoader';
 import "@reach/combobox/styles.css";
 import { getSignature } from '../../../helpers/browser-key'
 import { Switch, Route, NavLink, Redirect } from "react-router-dom";
+import { Carousel } from 'react-responsive-carousel';
 
 export default function News() {
     const userData = useSelector(state => state.userData)
@@ -28,6 +29,7 @@ export default function News() {
     const [news, setNews] = useState()
     const [followedNews, setfollowedNews] = useState()
     const [advrts, setAdvrts] = useState()
+    const [advrtForMob, setadvrtForMob] = useState()
 
     const [selectedFiles, setselectedFiles] = useState("")
     const [htmlImages, sethtmlImages] = useState([])
@@ -185,7 +187,6 @@ export default function News() {
                     return bDate.getTime() - aDate.getTime()
                 })
                 setNews(sortedNews)
-                console.log(sortedNews)
                 const resFollowed = await axios.get(`/project/get-followed-ids/${userData.user.id}`)
                 const onlyFollowedNews = sortedNews.filter(news => resFollowed.data.includes(news.projectId))
                 setfollowedNews(onlyFollowedNews)
@@ -200,7 +201,6 @@ export default function News() {
                     const startDate = new Date(advrt.startDate)
                     const name_date = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`
                     const alreadyExistsINdex = sortedAdvrts.findIndex(dateWithEvents => dateWithEvents.dateString === name_date)
-                    console.log(alreadyExistsINdex)
                     if (alreadyExistsINdex === -1) {
                         sortedAdvrts.push({ dateString: name_date, events: [], startDate })
                     }
@@ -211,7 +211,23 @@ export default function News() {
                     const eventDate = new Date(event.startDate)
                     return dateNow.getTime() <= eventDate.getTime()
                 })
+                const advrForMobile = []
+                const advrForMobile3together = []
+                futureOnlyEvents.forEach(date => {
+                    date.events.map(announcement => {
+                        advrForMobile.push({ announcement, date: date.dateString })
+                    })
+                })
+                for (let index = 0; advrForMobile3together?.[advrForMobile3together.length - 1]?.[advrForMobile3together?.[advrForMobile3together.length - 1].length - 1]?.announcement?._id !== advrForMobile?.[advrForMobile.length - 1]?.announcement?._id; index += 3) {
+                    const together3 = []
+                    together3.push(advrForMobile[index])
+                    if (advrForMobile[index + 1]) together3.push(advrForMobile[index + 1])
+                    if (advrForMobile[index + 2]) together3.push(advrForMobile[index + 2])
+                    advrForMobile3together.push(together3)
+                }
                 setAdvrts(futureOnlyEvents)
+                console.log(advrForMobile3together)
+                setadvrtForMob(advrForMobile3together)
                 setisLodaing(false)
             } catch (error) {
                 console.log(error)
@@ -226,7 +242,6 @@ export default function News() {
             <SimpleLoader />
         </div>
     )
-    console.log(followedNews)
 
     return (
         <div className='w-full'>
@@ -240,7 +255,7 @@ export default function News() {
             </div>
             <div className="flex lg:flex-row flex-col">
                 {/* тут сделать карусель */}
-                <div className="lg:w-2/12 w-full order-2 p-0.5">
+                <div className="w-2/12 hidden lg:block order-1 p-0.5">
                     <div className=" border rounded-3xl border-purple-950">
                         {advrts ? (
                             advrts.map(date => {
@@ -256,10 +271,32 @@ export default function News() {
                                 )
                             })
                         ) : (null)}
-
                     </div>
+
                 </div>
-                <div className="lg:w-6/12 w-full order-3 p-0.5 lg:pl-2">
+                <div className="block lg:hidden w-full order-2 p-0.5">
+                    <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns">
+                        {advrtForMob ? (
+                            advrtForMob.map(announcements3 => {
+                                return (
+                                    <div className="flex pb-9">
+                                        {announcements3.map(advrt => {
+                                            return (
+                                                <div>
+                                                    <div className="px-1">
+                                                        <p className="font-semibold text-lg text-purple-950 text-center pt-2">{advrt.date}</p>
+                                                        <SidebarEventAlert announcement={advrt.announcement} />
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                )
+                            })
+                        ) : (null)}
+                    </Carousel>
+                </div>
+                <div className="lg:w-6/12 w-full order-3 lg:order-2 p-0.5 lg:pl-2">
                     {myProjects.length > 0 ? (
                         <div className="w-full bg-white rounded-3xl custom-shadow p-4 mb-4">
                             <Popup
@@ -290,13 +327,13 @@ export default function News() {
                                                     {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
                                                 </div>
                                             </div>
-                                            <div className="px-8">
+                                            <div className="lg:px-8">
                                                 {myProjects.length > 1 ? (
                                                     <div className="relative">
                                                         <div onClick={() => toggleMyProjectsList()} className="flex cursor-pointer hover:bg-gray-50 transition-all relative z-30 items-center justify-between custom-shadow bg-white rounded-3xl p-2 mb-5">
-                                                            <div className="flex items-center">
-                                                                <div className="lg:w-16 lg:h-16 h-14 w-14 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${selectedProject.logoUrl[0]})` }}></div>
-                                                                <p className="font-semibold text-xl pl-3 text-purple-950">{selectedProject.projectName}</p>
+                                                            <div className="flex w-9/12 items-center">
+                                                                <div className="lg:w-16 lg:h-16 h-14 flex-shrink-0 w-14 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${selectedProject.logoUrl[0]})` }}></div>
+                                                                <p className="font-semibold text-xl pl-3 projectName-text text-purple-950 break-words">{selectedProject.projectName}</p>
                                                             </div>
                                                             <svg className={`transition-all transform rotate-${listIconDegree}`} xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
                                                         </div>
@@ -306,8 +343,8 @@ export default function News() {
                                                                     {myProjects.map(project => {
                                                                         return (
                                                                             <div onClick={() => { setselectedProject(project); setisListExpanded(false); setlistIconDegree("0") }} className="flex items-center hover:bg-gray-200 bg-white cursor-pointer transition-all hover:shadow-xl custom-shadow rounded-3xl p-2 mb-2">
-                                                                                <div className="lg:w-16 lg:h-16 h-14 w-14 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}></div>
-                                                                                <p className="font-semibold text-xl pl-3 text-purple-950">{project.projectName}</p>
+                                                                                <div className="lg:w-16 lg:h-16 h-14 w-3/12 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}></div>
+                                                                                <p className="font-semibold w-9/12 text-xl pl-3 text-purple-950">{project.projectName}</p>
                                                                             </div>
                                                                         )
                                                                     })}
@@ -391,7 +428,7 @@ export default function News() {
                         </Route>
                     </Switch>
                 </div>
-                <div className="lg:w-4/12 w-full order-1 p-0.5">
+                <div className="lg:w-4/12 w-full order-1 lg:order-3 p-0.5">
                     <div className=" border rounded-3xl border-purple-950">
                         <p className="font-semibold text-lg text-center text-purple-950 p-2">ТОП 10 Проектів ОК</p>
                         <div className="w-full flex flex-wrap">

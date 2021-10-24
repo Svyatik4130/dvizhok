@@ -302,7 +302,7 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
             {members.includes(userData.user.id) ? (
                 <>
                     <p className="text-center text-purple-850 font-medium pt-2 text-xl bg-gray-100 rounded-t-3xl">Адміністрування проекту</p>
-                    <div className=" bg-gray-100 flex justify-evenly flex-wrap rounded-b-3xl text-purple-950  p-4">
+                    <div className=" bg-gray-100 flex justify-evenly flex-wrap gap-2 rounded-b-3xl text-purple-950  p-4">
                         <Popup
                             trigger={
                                 <button className="px-3 py-2 flex items-center bg-yellow-350 hover:bg-opacity-80 transition-all font-semibold rounded-3xl"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg>Добавити новину</button>
@@ -326,7 +326,7 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
                                                 {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
                                             </div>
                                         </div>
-                                        <div className="px-8">
+                                        <div className="lg:px-8">
                                             <div className="flex items-center custom-shadow rounded-3xl p-2">
                                                 <div className="lg:w-16 lg:h-16 h-14 w-14 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${projectInfo.logoUrl[0]})` }}></div>
                                                 <p className="font-semibold text-xl pl-3 text-purple-950">{projectInfo.projectName}</p>
@@ -399,7 +399,7 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
                                                 {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
                                             </div>
                                         </div>
-                                        <div className="px-8">
+                                        <div className="lg:px-8">
                                             <div className="w-full">
                                                 <textarea value={advtName} onChange={e => setadvtName(e.target.value)} placeholder="Назва " className="focus:outline-none focus:border-pink-450 w-full resize-none text-xl px-2 py-1 rounded-lg border-2 border-purple-950" rows='1' ></textarea>
                                             </div>

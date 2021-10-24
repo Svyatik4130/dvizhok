@@ -254,7 +254,7 @@ export default function ProjectPage() {
                     ))}
                 </div>
 
-                <div className="bg-white order-1 rounded-3xl p-4">
+                <div className="bg-white order-1 mt-2 lg:mt-0 rounded-3xl p-4">
                     {members.includes(userData.user.id) ? (
                         <AdminPanel projectInfo={Project} setProjectFnc={setProject} />
                     ) : (null)}
@@ -263,11 +263,11 @@ export default function ProjectPage() {
                     <div className="font-medium text-lg w-full lg:w-6/12">
                         <p>Тип проекту: <strong className=" uppercase">{Project.category.join(", ")}</strong></p>
                         <p>Місце реалізації: <strong className=" uppercase">{Project.locationString}</strong></p>
-                        <div className="flex justify-evenly">
-                            <button onClick={() => Follow()} className={`w-5/12 mt-3 ${followers.includes(userData.user.id) ? ("bg-white") : ("bg-yellow-350")} hover:bg-yellow-350 hover:bg-opacity-50 border-2 transition-all border-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center`}>{followers.includes(userData.user.id) ? ("Відписатися") : ("Підписатися")}</button>
+                        <div className="flex lg:flex-row flex-col justify-evenly">
+                            <button onClick={() => Follow()} className={`lg:w-5/12 w-full mt-3 ${followers.includes(userData.user.id) ? ("bg-white") : ("bg-yellow-350")} hover:bg-yellow-350 hover:bg-opacity-50 border-2 transition-all border-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center`}>{followers.includes(userData.user.id) ? ("Відписатися") : ("Підписатися")}</button>
                             <Popup
                                 trigger={
-                                    <button className="w-5/12 mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
+                                    <button className="lg:w-5/12 w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
                                 }
                                 modal
                                 nested
@@ -408,20 +408,18 @@ export default function ProjectPage() {
                             <strong className=" font-semibold text-xl">Плани витрат</strong><br />
                             {Project.spendingPlans}
                         </div>
-                        <div className="flex relative text-right">
-                            <div className="absolute inline-block">
-                                <a href={Project.fileXLS} download className="px-3 py-2 mr-3 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl inline-flex text-lg font-medium text-purple-950">Завантажити презентацію Проекту</a>
-                                <a href={Project.filePDF} download className="px-3 py-2 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl inline-flex text-lg font-medium text-purple-950">Завантажити бюджет Проекту</a>
-                            </div>
+                        <div className="relative flex flex-col gap-2 text-center">
+                            <a href={Project.fileXLS} download className="px-3 py-2 mr-3 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl flex text-lg font-medium text-purple-950">Завантажити презентацію <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5" /></svg></a>
+                            <a href={Project.filePDF} download className="px-3 py-2 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl flex text-lg font-medium text-purple-950">Завантажити бюджет Проекту <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5" /></svg></a>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="flex lg:flex-row flex-col my-5">
-                <div className="w-6/12 px-1">
+                <div className="lg:w-6/12 w-full order-2 lg:order-1 mt-1 lg:mt-0 px-1">
                     <ProjectsNews projId={id} />
                 </div>
-                <div className="w-6/12 px-1">
+                <div className="lg:w-6/12 w-full order-1 lg:order-2  px-1">
                     <ProjectsChat projectId={id} />
                 </div>
             </div>
