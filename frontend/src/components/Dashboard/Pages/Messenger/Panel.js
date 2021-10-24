@@ -20,10 +20,11 @@ export default function Panel() {
     const scrollRef = useRef();
     const [friend, setFriend] = useState(null)
     const history = useHistory()
-    console.log(friend)
     const [btnColor, setbtnColor] = useState("bg-gray-500 cursor-default")
     const [btnFunction, setbtnFunction] = useState("button")
     const [error, setError] = useState()
+    const [isOnlineUsersListExpandedMob, setisOnlineUsersListExpandedMob] = useState(false)
+    const [mobileStylesForOnlineUsers, setmobileStylesForOnlineUsers] = useState("fixed -right-80")
 
     useEffect(() => {
         const getCurrConv = async () => {
@@ -47,6 +48,10 @@ export default function Panel() {
     }, [id])
 
     useEffect(() => {
+        if (window.screen.width > 1023) {
+            setisOnlineUsersListExpandedMob(true)
+            setmobileStylesForOnlineUsers("relative")
+        }
         socket.current = io("/");
         socket.current.on("getMessage", (data) => {
             setArrivalMessage({
@@ -115,7 +120,7 @@ export default function Panel() {
                 const res = await axios.post("/messages/add", message);
                 setMessages([...messages, res.data]);
                 setNewMessage("");
-                console.log(res.data.createdAt)
+
             } catch (err) {
                 console.log(err);
             }
@@ -140,13 +145,19 @@ export default function Panel() {
         return <SimpleLoader />
     }
 
+    console.log(isOnlineUsersListExpandedMob)
     return (
-        <div className="w-8/12 pt-2">
-            <div className="bg-white relative rounded-l-3xl p-4" style={{ height: window.innerHeight - 105 }}>
-
+        <div className="lg:w-8/12 w-full pt-2">
+            <div className="lg:hidden mb-3">
+                <p onClick={() => { history.push("/dashboard/messages") }} className="font-medium flex items-center text-lg text-purple-950"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>Назад до бесід</p>
+            </div>
+            <div className="bg-white relative rounded-3xl lg:rounded-l-3xl p-4" style={{ height: window.innerHeight - 105 }}>
                 <div className="h-full">
                     <div className="w-full h-full flex">
-                        <div className="h-full w-8/12 relative border-r-2 pb-12 ">
+                        <div className="h-full lg:w-8/12 w-full relative lg:border-r-2 lg:pb-12 ">
+                            <div className="w-full flex pb-8 lg:hidden">
+                                <svg onClick={() => { setisOnlineUsersListExpandedMob(true); setmobileStylesForOnlineUsers("absolute right-0") }} className='absolute right-0' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                            </div>
                             <div className="overflow-y-scroll h-full" ref={scrollRef}>
                                 {messages.map((m) => (
                                     <div ref={scrollRef} key={m._id}>
@@ -171,15 +182,20 @@ export default function Panel() {
                             )}
                         </div>
 
-                        <div className="w-4/12 p-4 overflow-y-scroll h-full">
-                            <p className="font-medium text-gray-700 ">Люди в чаті</p>
-                            {currentChat.members.map(member => {
-                                return <OnlineSidebar member={member} onlineUsers={onlineUsers} />
-                            })}
-                        </div>
+                        {isOnlineUsersListExpandedMob ? (
+                            <div className={`lg:w-4/12 w-10/12 ${mobileStylesForOnlineUsers} transition-all lg:relative top-0 rounded-l-3xl bg-gray-50 lg:bg-transparent p-4 overflow-y-scroll h-full`}>
+                                <div className="flex justify-between items-center ">
+                                    <p className="font-medium text-gray-700 ">Люди в чаті</p>
+                                    <div onClick={() => { setisOnlineUsersListExpandedMob(false); setmobileStylesForOnlineUsers("fixed -right-80") }} className="bg-white lg:hidden rounded-full "><svg className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
+                                </div>
+                                {currentChat.members.map(member => {
+                                    return <OnlineSidebar member={member} onlineUsers={onlineUsers} />
+                                })}
+                            </div>
+                        ) : (null)}
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

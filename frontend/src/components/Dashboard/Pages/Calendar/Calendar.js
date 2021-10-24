@@ -204,7 +204,7 @@ export default function Calendar() {
                                                 {date.events ? (
                                                     <div className="relative">
                                                         <svg onClick={() => createTooltip(index)} className={`cursor-pointer z-20 btn-${index} hover:bg-gray-100 transition-all rounded-3xl`} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                                        <div className={`tooltip-${index} z-40 transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4`}>
+                                                        <div className={`tooltip-${index} z-40 w-32 transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4`}>
                                                             <div onClick={() => createTooltip(index)} className="absolute -top-2.5 -right-2 bg-white rounded-full hover:bg-opacity-90 transition-all"><svg className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
                                                             {date.events.map(event => {
                                                                 return (
@@ -212,7 +212,6 @@ export default function Calendar() {
                                                                 )
                                                             })
                                                             }</div>
-
                                                     </div>
                                                 ) : (null)}
                                             </div>
@@ -224,6 +223,19 @@ export default function Calendar() {
                                             <div className={`${date.istoday ? ("bg-purple-950 bg-opacity-10 h-full ") : (null)}`}>
                                                 <div className="w-full bg-gray-300 h-0.5 rounded-2xl"></div>
                                                 <p className={`font-medium`}>{date.day}</p>
+                                                {date.events ? (
+                                                    <div className="relative">
+                                                        <svg onClick={() => createTooltip(index)} className={`cursor-pointer z-20 btn-${index} hover:bg-gray-100 transition-all rounded-3xl`} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                                                        <div className={`tooltip-${index} z-40 transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4`}>
+                                                            <div onClick={() => createTooltip(index)} className="absolute -top-2.5 -right-2 bg-white rounded-full hover:bg-opacity-90 transition-all"><svg className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
+                                                            {date.events.map(event => {
+                                                                return (
+                                                                    <CalendarEventAlert announcement={event} />
+                                                                )
+                                                            })
+                                                            }</div>
+                                                    </div>
+                                                ) : (null)}
                                             </div>
                                         </div>
                                     )

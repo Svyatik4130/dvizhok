@@ -85,8 +85,8 @@ export default function Messenger() {
     }
 
     return (
-        <div className="flex w-full pt-4 pl-2 flex-row flex-wrap">
-            <div style={{ height: window.innerHeight - 105 }} className="w-4/12 p-2 overflow-y-scroll">
+        <div className="flex w-full pt-4 lg:pl-2 px-1 lg:px-0 flex-row flex-wrap">
+            <div style={{ height: window.innerHeight - 105 }} className="w-4/12 hidden lg:block p-2 overflow-y-scroll">
                 <div className="relative">
                     <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} transition-all relative z-20 px-3 py-2 w-full outline-none focus:bg-white`} placeholder="Пошук ваших чатів та користувачів" />
                     <div className="rounded-3xl mt-0.5 drop-shadow-lg max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-7 top-0 w-full bg-white">
@@ -111,10 +111,39 @@ export default function Messenger() {
                     </div>
                 ))}
             </div>
+            <div className="w-full block lg:hidden overflow-y-scroll">
+                <Switch>
+                    <Route exact path="/dashboard/messages">
+                        <div className="relative">
+                            <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} transition-all relative z-20 px-3 py-2 w-full outline-none focus:bg-white`} placeholder="Пошук ваших чатів та користувачів" />
+                            <div className="rounded-3xl mt-0.5 drop-shadow-lg max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-7 top-0 w-full bg-white">
+                                {findedUsers.map(({ item }) => {
+                                    return (
+                                        <div onClick={() => CreateConversation(item._id)} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
+                                            <div className="flex items-center">
+                                                <div className="w-14 h-14 rounded-full relative responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${item.avatarUrl})` }}>
+                                                </div>
+                                                <div className="ml-2 ">
+                                                    <a className="font-semibold text-lg block">{item.name}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                        {conversations.map((c) => (
+                            <div key={c._id}>
+                                <Conversation conversation={c} />
+                            </div>
+                        ))}
+                    </Route>
+                </Switch>
+            </div>
             <Switch>
                 <Route path="/dashboard/messages/:id" children={<Panel />} />
                 <Route exact path="/dashboard/messages">
-                    <div className="w-8/12 h-full pt-2">
+                    <div className="w-8/12 hidden lg:block h-full pt-2">
                         <div className="bg-white flex flex-col justify-center relative rounded-l-3xl p-4" style={{ height: window.innerHeight - 105 }}>
                             <div className="m-auto opacity-40 w-8/12 text-center">
                                 <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/send.png" alt="send" className=" h-48 m-auto block" />

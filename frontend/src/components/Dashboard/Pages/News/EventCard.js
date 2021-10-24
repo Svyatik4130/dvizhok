@@ -73,7 +73,7 @@ export default function EventCard({ story }) {
         <div className="bg-white rounded-3xl p-3 mb-2">
             <div className="flex items-center mb-2">
                 <div className="lg:w-16 lg:h-16 h-14 w-14 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${story.projectLogo})` }}></div>
-                <p className="font-medium text-xl pl-3"><strong onClick={() => history.push(`/dashboard/projects/${story.projectId}`)} className="text-purple-950 hover:text-purple-850 transition-all cursor-pointer">{story.projectName}</strong> додав(-ла) {story.photosNvideos.length} нових фото</p>
+                <p className="font-medium text-xl pl-3"><strong onClick={() => history.push(`/dashboard/projects/${story.projectId}`)} className="text-purple-950 hover:text-purple-850 transition-all cursor-pointer">{story.projectName}</strong> додав(-ла) {story.photosNvideos.length} фото</p>
             </div>
             <p className="font-medium text-lg">{story.text}</p>
             <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns pl-3">

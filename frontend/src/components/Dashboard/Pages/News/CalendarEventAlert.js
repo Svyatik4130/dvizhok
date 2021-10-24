@@ -13,7 +13,7 @@ export default function CalendarEventAlert({ announcement }) {
         <Popup
             trigger={
                 <div className="flex items-center p-1 hover:shadow-lg transition-all rounded-lg">
-                    <div className="w-1 h-1 bg-purple-950 rounded-full"></div>
+                    <div className="w-1 h-1 flex-shrink-0 bg-purple-950 rounded-full"></div>
                     <p className=" pl-2 font-medium cursor-pointer text-xl text-purple-950 ">{announcement.announcementName}</p>
                 </div>
             }
