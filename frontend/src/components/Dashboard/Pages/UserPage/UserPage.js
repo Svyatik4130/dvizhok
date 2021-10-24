@@ -53,8 +53,8 @@ export default function UserPage() {
     }
 
     return (
-        <div className="w-full flex">
-            <div className="w-6/12 p-10">
+        <div className="w-full flex lg:flex-row flex-col">
+            <div className="lg:w-6/12 w-full lg:p-10 p-4">
                 <div className="flex">
                     <div className="mb-1 lg:w-44 lg:h-44 h-28 w-28 mx-8 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${UserInfo.avatarUrl})` }}></div>
                     <div className="flex flex-col justify-between">
@@ -104,7 +104,7 @@ export default function UserPage() {
 
                 <UserInformation UserInfo={UserInfo} />
             </div>
-            <div className="w-6/12 pt-10 pr-8">
+            <div className="lg:w-6/12 w-full pt-10 lg:pr-8 px-2 lg:px-0">
                 <div className="w-full text-sm items-stretch flex rounded-t-xl font-medium lg:text-lg" style={{ backgroundColor: "#DDDDDD" }}>
                     <NavLink activeClassName="bg-white" to={`/dashboard/userpage/${id}/created-projects`} className="w-4/12 text-center py-2 rounded-tl-xl border-r-2">
                         Створив

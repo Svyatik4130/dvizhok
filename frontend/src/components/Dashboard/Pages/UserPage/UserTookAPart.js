@@ -44,6 +44,10 @@ export default function UserTookAPart() {
                     raised = 0
                     rqrd = 100
                 }
+                let fundsLeft = Number(rqrd) - Number(raised)
+                if (fundsLeft < 0) {
+                    fundsLeft = 0
+                }
                 const createdAt = new Date(project.createdAt?.substring(0, 10)).getTime()
                 const dateNow = new Date().getTime()
                 const finishDate = new Date(project.finishDate).getTime()
@@ -52,13 +56,17 @@ export default function UserTookAPart() {
                 if (!project.isProjectInfinite) {
                     remainTime = finishDate - dateNow
                     passedTime = finishDate - createdAt - remainTime
+                    if (remainTime < 0) {
+                        remainTime = 0
+                        passedTime = 100
+                    }
                 }
                 const FundsOps = {
                     data: {
                         labels: ['Зібрано', 'Залишилося'],
                         datasets: [
                             {
-                                data: [raised, Number(rqrd) - Number(raised)],
+                                data: [raised, fundsLeft],
                                 backgroundColor: ['#48004B', '#B8B8B8'],
                             },
                         ]
@@ -105,12 +113,12 @@ export default function UserTookAPart() {
                                         <p className="font-medium text-xs overflow-y-scroll break-words h-32">{project.description}</p>
                                     </div>
                                 </div>
-                                <div className="w-full flex pb-2">
-                                    <div className="w-6/12 border-r">
+                                <div className="w-full flex justify-evenly pb-2">
+                                    <div className="lg:w-6/12 w-5/12 lg:border-r">
                                         <Doughnut {...FundsOps} />
                                         <p className="text-sm text-center">{project.isFundsInfinite ? (<>Необмежений збір</>) : (<> Зібрано </>)}</p>
                                     </div>
-                                    <div className="w-6/12 border-l">
+                                    <div className="lg:w-6/12 w-5/12 lg:border-l">
                                         <Doughnut {...KalendarOps} />
                                         <p className="text-sm text-center">{project.isProjectInfinite ? (<>Постійний<br /> проект</>) : (<> Днів до <br /> закінчення </>)}</p>
                                     </div>
