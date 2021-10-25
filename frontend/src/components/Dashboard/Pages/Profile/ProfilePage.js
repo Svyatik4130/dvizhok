@@ -17,8 +17,8 @@ export default function ProfilePage() {
     const userData = useSelector(state => state.userData)
 
     useEffect(() => {
-        if (window.screen.width >= 1024) {
-            setresponsiveStyles({ height: window.innerHeight - 350 })
+        if (document.documentElement.clientWidth >= 1024) {
+            setresponsiveStyles({ height: document.documentElement.clientHeight - 350 })
         }
 
         const preloadOpps = async () => {

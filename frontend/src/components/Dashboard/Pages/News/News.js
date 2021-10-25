@@ -279,7 +279,7 @@ export default function News() {
                         {advrtForMob ? (
                             advrtForMob.map(announcements3 => {
                                 return (
-                                    <div className="flex pb-9">
+                                    <div className="flex justify-evenly pb-9">
                                         {announcements3.map(advrt => {
                                             return (
                                                 <div>
@@ -296,7 +296,7 @@ export default function News() {
                         ) : (null)}
                     </Carousel>
                 </div>
-                <div className="lg:w-6/12 w-full order-3 lg:order-2 p-0.5 lg:pl-2">
+                <div className="lg:w-6/12 w-full order-3 lg:order-2 p-1 lg:pl-2">
                     {myProjects.length > 0 ? (
                         <div className="w-full bg-white rounded-3xl custom-shadow p-4 mb-4">
                             <Popup

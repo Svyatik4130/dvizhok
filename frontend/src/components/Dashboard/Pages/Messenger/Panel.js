@@ -145,7 +145,6 @@ export default function Panel() {
         return <SimpleLoader />
     }
 
-    console.log(document.documentElement.clientWidth)
     return (
         <div className="lg:w-8/12 w-full pt-2">
             <div className="lg:hidden mb-3">
