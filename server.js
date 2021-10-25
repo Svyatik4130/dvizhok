@@ -68,7 +68,7 @@ const getUser = (userId) => {
 
 io.on("connection", (socket) => {
     //when ceonnect
-    console.log(socket.id + " connected.");
+    // console.log(socket.id + " connected.");
 
     //take userId and socketId from user
     socket.on("addUser", (userId) => {
@@ -90,7 +90,7 @@ io.on("connection", (socket) => {
     socket.on("sendMessageToProjects", ({ senderId, receiverIds, text, createdAt, userAvatar, userName }) => {
         receiverIds.map(id => {
             const user = getUser(id);
-            console.log(user?.socketId)
+            // console.log(user?.socketId)
             io.to(user?.socketId).emit("getProjectsMessage", {
                 senderId,
                 text,
@@ -103,7 +103,7 @@ io.on("connection", (socket) => {
 
     //when disconnect
     socket.on("disconnect", () => {
-        console.log("a user disconnected!");
+        // console.log("a user disconnected!");
         removeUser(socket.id);
         io.emit("getUsers", users);
     });

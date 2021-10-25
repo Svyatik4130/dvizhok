@@ -48,7 +48,7 @@ export default function Panel() {
     }, [id])
 
     useEffect(() => {
-        if (window.screen.width > 1023) {
+        if (document.documentElement.clientWidth > 1023) {
             setisOnlineUsersListExpandedMob(true)
             setmobileStylesForOnlineUsers("relative")
         }
@@ -145,7 +145,7 @@ export default function Panel() {
         return <SimpleLoader />
     }
 
-    console.log(isOnlineUsersListExpandedMob)
+    console.log(document.documentElement.clientWidth)
     return (
         <div className="lg:w-8/12 w-full pt-2">
             <div className="lg:hidden mb-3">
@@ -154,11 +154,11 @@ export default function Panel() {
             <div className="bg-white relative rounded-3xl lg:rounded-l-3xl p-4" style={{ height: window.innerHeight - 105 }}>
                 <div className="h-full">
                     <div className="w-full h-full flex">
-                        <div className="h-full lg:w-8/12 w-full relative lg:border-r-2 lg:pb-12 ">
+                        <div className="h-full lg:w-8/12 w-full flex flex-col relative lg:border-r-2 lg:pb-12 ">
                             <div className="w-full flex pb-8 lg:hidden">
                                 <svg onClick={() => { setisOnlineUsersListExpandedMob(true); setmobileStylesForOnlineUsers("absolute right-0") }} className='absolute right-0' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
                             </div>
-                            <div className="overflow-y-scroll pb-20 lg:pb-0 h-full" ref={scrollRef}>
+                            <div className="overflow-y-scroll h-full mb-12 lg:mb-0" ref={scrollRef}>
                                 {messages.map((m) => (
                                     <div ref={scrollRef} key={m._id}>
                                         <Message message={m} own={m.sender === user.id} friend={friend} />
