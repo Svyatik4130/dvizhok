@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  background: #ebebeb;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, "Montserrat", BlinkMacSystemFont, "Segoe UI",
