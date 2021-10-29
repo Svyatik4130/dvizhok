@@ -3,8 +3,11 @@ import axios from 'axios';
 import { createPopper } from '@popperjs/core';
 import Popup from 'reactjs-popup';
 import CalendarEventAlert from '../News/CalendarEventAlert';
+import { useSelector } from 'react-redux'
 
 export default function Calendar() {
+    const userData = useSelector(state => state.userData)
+
     const [daysArr, setdaysArr] = useState([])
     const [announcements, setAnnouncements] = useState()
     const [date, setDate] = useState(new Date())
@@ -137,13 +140,16 @@ export default function Calendar() {
 
         const preloadOpps = async () => {
             const res = await axios.get("/story/get-all-stories")
-            const advts = res.data.filter(news => news.storyType === "announcement")
+            const resFollowed = await axios.get(`/project/get-followed-ids/${userData.user.id}`)
+            const advts = res.data.filter(news => news.storyType === "announcement").filter(announcement => resFollowed.data.includes(announcement.projectId))
             setAnnouncements(advts)
             advts.forEach(story => {
                 const storyCreatedAt = new Date(story.startDate)
                 const neededDate = calendarScreen.findIndex(date => date.day === storyCreatedAt.getDate() && date.month === storyCreatedAt.getMonth() + 1 && date.year === storyCreatedAt.getFullYear())
                 if (neededDate > -1) {
-                    calendarScreen[neededDate].events = []
+                    if (!calendarScreen[neededDate].events) {
+                        calendarScreen[neededDate].events = []
+                    }
                     calendarScreen[neededDate].events.push(story)
                 }
             })
@@ -204,14 +210,16 @@ export default function Calendar() {
                                                 {date.events ? (
                                                     <div className="relative">
                                                         <svg onClick={() => createTooltip(index)} className={`cursor-pointer z-20 btn-${index} hover:bg-gray-100 transition-all rounded-3xl`} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                                        <div className={`tooltip-${index} z-40 w-32 transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4`}>
+                                                        <div className={`tooltip-${index} z-40 w-32 lg:w-80 transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4`}>
                                                             <div onClick={() => createTooltip(index)} className="absolute -top-2.5 -right-2 bg-white rounded-full hover:bg-opacity-90 transition-all"><svg className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
-                                                            {date.events.map(event => {
-                                                                return (
-                                                                    <CalendarEventAlert announcement={event} />
-                                                                )
-                                                            })
-                                                            }</div>
+                                                            <div className="max-h-96 overflow-y-scroll">
+                                                                {date.events.map(event => {
+                                                                    return (
+                                                                        <CalendarEventAlert announcement={event} />
+                                                                    )
+                                                                })}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 ) : (null)}
                                             </div>

@@ -305,7 +305,7 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
                     <div className=" bg-gray-100 flex justify-evenly flex-wrap gap-2 rounded-b-3xl text-purple-950  p-4">
                         <Popup
                             trigger={
-                                <button className="px-3 py-2 flex items-center bg-yellow-350 hover:bg-opacity-80 transition-all font-semibold rounded-3xl"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg>Добавити новину</button>
+                                <button className="px-3 py-2 flex items-center bg-yellow-350 hover:bg-opacity-80 transition-all font-semibold rounded-3xl"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg>Додати новину</button>
                             }
                             modal
                             nested
@@ -316,7 +316,7 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
                                         &times;
                                     </button>
                                     <div className="w-full bg-gray-100 px-4 py-2 text-black text-2xl font-bold rounded-t-xl">
-                                        Cтворити новину
+                                        Додати новину
                                     </div>
 
                                     <div className="px-8 z-40">

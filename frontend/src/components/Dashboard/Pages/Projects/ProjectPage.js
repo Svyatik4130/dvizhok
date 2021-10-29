@@ -14,6 +14,7 @@ import { getSignature } from '../../../helpers/browser-key'
 import { loggedUser } from '../../../../actions/UserActions'
 import AdminPanel from './AdminPanel';
 import ProjectsNews from './ProjectsNews';
+import { addAllProjects } from '../../../../actions/ProjectActions'
 
 export default function ProjectPage() {
     let { id } = useParams()
@@ -122,6 +123,10 @@ export default function ProjectPage() {
             const payload = { followers, userId: userData.user.id, projectId: id }
             const res = await axios.post("/project/follow", payload)
             setFollowers(res.data)
+            let Projects = allProjects
+            const index = allProjects.findIndex(project => project._id === id)
+            allProjects[index].followers = res.data
+            dispatch(addAllProjects(Projects))
         } catch (error) {
             console.log(error)
         }
@@ -212,9 +217,9 @@ export default function ProjectPage() {
                             </div>
                         )}
                     </Popup>
-                    <p className="font-medium text-lg text-gray-500 mt-3">Лідери проекту</p>
+                    <p className="font-medium hidden lg:block text-lg text-gray-500 mt-3">Лідери проекту</p>
                     {/* leader profile */}
-                    <div onClick={() => { history.push(`/dashboard/userpage/${ProjectLeader._id}/created-projects`) }} className="flex cursor-pointer w-full hover:shadow-inner p-2 shadow-none hover:bg-gray-100 rounded-3xl transition-all">
+                    <div onClick={() => { history.push(`/dashboard/userpage/${ProjectLeader._id}/created-projects`) }} className="hidden lg:flex cursor-pointer w-full hover:shadow-inner p-2 shadow-none hover:bg-gray-100 rounded-3xl transition-all">
                         <div className="h-14  w-14 rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${ProjectLeader.avatarUrl})` }}></div>
                         <div className="ml-2">
                             <p className="font-semibold text-lg text-gray-700">{ProjectLeader.name}</p>
@@ -248,14 +253,14 @@ export default function ProjectPage() {
                         </div>
                     </div>
                     {Project.teamMembers.map(memberId => (
-                        <div key={memberId}>
+                        <div className="hidden lg:block" key={memberId}>
                             <TeamMember userId={memberId} />
                         </div>
                     ))}
                 </div>
 
                 <div className="bg-white order-1 mt-2 lg:mt-0 rounded-3xl p-4">
-                    {members.includes(userData.user.id) ? (
+                    {members.includes(userData.user.id) && userData.user.role >= 1 ? (
                         <AdminPanel projectInfo={Project} setProjectFnc={setProject} />
                     ) : (null)}
 
@@ -371,9 +376,9 @@ export default function ProjectPage() {
                     </p>
 
                     {/* responsive mob design */}
-                    <div className="w-full lg:hidden">
+                    <div className="w-full lg:hidden ">
                         <div>
-                            <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns pl-3">
+                            <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns pt-3 pl-3">
                                 {Project.photosNvideos.map((source) => {
                                     const ext = source.split('.')[source.split('.').length - 1]
                                     if (ext == "jpeg" || ext == 'jpg' || ext == 'png') {
@@ -414,6 +419,48 @@ export default function ProjectPage() {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="lg:hidden p-4 bg-white rounded-3xl mt-3 lg:mt-0 lg:rounded-r-3xl rounded-l-3xl overflow-y-scroll top-0 right-0 w-full lg:w-1/5">
+                <p className="font-medium lg:hidden text-lg text-gray-500 mt-3">Лідери проекту</p>
+                {/* leader profile */}
+                <div onClick={() => { history.push(`/dashboard/userpage/${ProjectLeader._id}/created-projects`) }} className="flex lg:hidden cursor-pointer w-full hover:shadow-inner p-2 shadow-none hover:bg-gray-100 rounded-3xl transition-all">
+                    <div className="h-14  w-14 rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${ProjectLeader.avatarUrl})` }}></div>
+                    <div className="ml-2">
+                        <p className="font-semibold text-lg text-gray-700">{ProjectLeader.name}</p>
+                        <div className="flex">
+                            {ProjectLeader.roleId === 0 ? (
+                                <div className="flex gap-1 items-center">
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-7" />
+                                    <p className="text-lg ml-3 font-bold inline-block text-purple-850">ОКтивіст</p>
+                                </div>
+                            ) : ProjectLeader.roleId === 1 ? (
+                                <div className="flex gap-1 items-center">
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/star.png" alt="star" className="w-7" />
+                                    <p className="text-lg ml-3 font-bold inline-block text-purple-850">Творець</p>
+                                </div>
+                            ) : ProjectLeader.roleId === 2 ? (
+                                <div className="flex gap-1 items-center">
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />
+                                    <p className="text-lg ml-3 font-bold inline-block text-purple-850">Лідер</p>
+                                </div>
+                            ) : (
+                                null
+                            )
+                            }
+                        </div>
+                    </div>
+                </div>
+                {Project.teamMembers.map(memberId => (
+                    <div key={memberId}>
+                        <TeamMember userId={memberId} />
+                    </div>
+                ))}
             </div>
             <div className="flex lg:flex-row flex-col my-5">
                 <div className="lg:w-6/12 w-full order-2 lg:order-1 mt-1 lg:mt-0 px-1">

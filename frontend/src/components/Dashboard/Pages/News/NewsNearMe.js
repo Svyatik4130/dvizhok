@@ -11,7 +11,6 @@ export default function NewsNearMe({ news }) {
         const preloadOpps = async () => {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    console.log(1)
                     setCurPosition({
                         lat: position.coords.latitude,
                         lng: position.coords.longitude,

@@ -17,7 +17,6 @@ function App() {
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true);
   const signature = getSignature()
-  const history = useHistory()
 
   useEffect(() => {
     const PreLoadOpps = async () => {

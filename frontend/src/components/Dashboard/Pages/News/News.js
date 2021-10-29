@@ -16,6 +16,7 @@ import "@reach/combobox/styles.css";
 import { getSignature } from '../../../helpers/browser-key'
 import { Switch, Route, NavLink, Redirect } from "react-router-dom";
 import { Carousel } from 'react-responsive-carousel';
+import AnnouncementsNearMe from './AnnouncementsNearMe';
 
 export default function News() {
     const userData = useSelector(state => state.userData)
@@ -30,6 +31,7 @@ export default function News() {
     const [followedNews, setfollowedNews] = useState()
     const [advrts, setAdvrts] = useState()
     const [advrtForMob, setadvrtForMob] = useState()
+    const [allAdvrts, setallAdvrts] = useState()
 
     const [selectedFiles, setselectedFiles] = useState("")
     const [htmlImages, sethtmlImages] = useState([])
@@ -190,13 +192,19 @@ export default function News() {
                 const resFollowed = await axios.get(`/project/get-followed-ids/${userData.user.id}`)
                 const onlyFollowedNews = sortedNews.filter(news => resFollowed.data.includes(news.projectId))
                 setfollowedNews(onlyFollowedNews)
-                let sortedAdvrts = []
 
-                const Advts = res.data.filter(announcement => announcement.storyType === "announcement").sort((a, b) => {
+                let sortedAdvrts = []
+                const Advts = res.data.filter(announcement => announcement.storyType === "announcement").filter(announcement => resFollowed.data.includes(announcement.projectId)).sort((a, b) => {
                     const aDate = new Date(a.startDate)
                     const bDate = new Date(b.startDate)
                     return aDate.getTime() - bDate.getTime()
                 })
+                const AllAdvrts = res.data.filter(announcement => announcement.storyType === "announcement").sort((a, b) => {
+                    const aDate = new Date(a.startDate)
+                    const bDate = new Date(b.startDate)
+                    return aDate.getTime() - bDate.getTime()
+                })
+                setallAdvrts(AllAdvrts)
                 Advts.forEach(advrt => {
                     const startDate = new Date(advrt.startDate)
                     const name_date = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`
@@ -226,7 +234,6 @@ export default function News() {
                     advrForMobile3together.push(together3)
                 }
                 setAdvrts(futureOnlyEvents)
-                console.log(advrForMobile3together)
                 setadvrtForMob(advrForMobile3together)
                 setisLodaing(false)
             } catch (error) {
@@ -255,47 +262,69 @@ export default function News() {
             </div>
             <div className="flex lg:flex-row flex-col">
                 {/* тут сделать карусель */}
-                <div className="w-2/12 hidden lg:block order-1 p-0.5">
-                    <div className=" border rounded-3xl border-purple-950">
-                        {advrts ? (
-                            advrts.map(date => {
-                                return (
-                                    <div className="px-1">
-                                        <p className="font-semibold text-lg text-purple-950 text-center pt-2">{date.dateString}</p>
-                                        {date.events.map(announcement => {
-                                            return (
-                                                <SidebarEventAlert announcement={announcement} />
-                                            )
-                                        })}
+                <Switch>
+                    <Route path="/dashboard/news/all">
+                        <div className="w-2/12 hidden lg:block order-1 p-0.5">
+                            <div className=" border rounded-3xl border-purple-950">
+                                {advrts.length > 0 ? (
+                                    advrts.map(date => {
+                                        return (
+                                            <div className="px-1">
+                                                <p className="font-semibold text-lg text-purple-950 text-center pt-2">{date.dateString}</p>
+                                                {date.events.map(announcement => {
+                                                    return (
+                                                        <SidebarEventAlert announcement={announcement} />
+                                                    )
+                                                })}
+                                            </div>
+                                        )
+                                    })
+                                ) : (
+                                    <div className="w-full opacity-50">
+                                        <div className="">
+                                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="h-64 block m-auto" />
+                                        </div>
                                     </div>
-                                )
-                            })
-                        ) : (null)}
-                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="block lg:hidden w-full order-2 p-0.5">
+                            <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns">
+                                {advrtForMob.length > 0 ? (
+                                    advrtForMob.map(announcements3 => {
+                                        return (
+                                            <div className="flex justify-evenly pb-9">
+                                                {announcements3.map(advrt => {
+                                                    return (
+                                                        <div>
+                                                            <div className="px-1">
+                                                                <p className="font-semibold text-lg text-purple-950 text-center pt-2">{advrt.date}</p>
+                                                                <SidebarEventAlert announcement={advrt.announcement} />
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })}
+                                            </div>
+                                        )
+                                    })
+                                ) : (
+                                    <div className="w-full opacity-50">
+                                        <div className=" pb-4">
+                                            <div className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36 opacity-100 transition-all" style={{ backgroundImage: `url(https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png)` }}></div>
+                                        </div>
+                                    </div>
+                                )}
+                            </Carousel>
+                        </div>
+                    </Route>
+                    <Route path="/dashboard/news/gps">
+                        <AnnouncementsNearMe announcements={allAdvrts} />
+                    </Route>
+                    <Route path="/dashboard/news/">
+                        <Redirect to="/dashboard/news/all" />
+                    </Route>
+                </Switch>
 
-                </div>
-                <div className="block lg:hidden w-full order-2 p-0.5">
-                    <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns">
-                        {advrtForMob ? (
-                            advrtForMob.map(announcements3 => {
-                                return (
-                                    <div className="flex justify-evenly pb-9">
-                                        {announcements3.map(advrt => {
-                                            return (
-                                                <div>
-                                                    <div className="px-1">
-                                                        <p className="font-semibold text-lg text-purple-950 text-center pt-2">{advrt.date}</p>
-                                                        <SidebarEventAlert announcement={advrt.announcement} />
-                                                    </div>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                )
-                            })
-                        ) : (null)}
-                    </Carousel>
-                </div>
                 <div className="lg:w-6/12 w-full order-3 lg:order-2 p-1 lg:pl-2">
                     {myProjects.length > 0 ? (
                         <div className="w-full bg-white rounded-3xl custom-shadow p-4 mb-4">
@@ -415,7 +444,7 @@ export default function News() {
                                 <div className="w-full opacity-50">
                                     <div className="">
                                         <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
-                                        <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Новин немає</p>
+                                        <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Ви ще не стежите за жодним проектом або проект не опублікував жодної новини. Підписуйтесь та підтримуйте проекти, і ви будете бачити їхні новини</p>
                                     </div>
                                 </div>
                             )}
