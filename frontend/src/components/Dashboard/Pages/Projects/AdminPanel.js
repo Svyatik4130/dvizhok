@@ -33,6 +33,7 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
     const [advtName, setadvtName] = useState("")
     const [desc, setDesc] = useState("")
     const [reqLoading, setreqLoading] = useState(false)
+    const [messageToAll, setMessageToAll] = useState("")
 
     const [selectedFiles, setselectedFiles] = useState("")
     const [htmlImages, sethtmlImages] = useState([])
@@ -268,6 +269,46 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
         }
     }
 
+    const sentMesg = async (close) => {
+        try {
+            setError('')
+            setreqLoading(true)
+
+            const membersWithoutSender = members.filter(memberId => memberId !== userData.user.id)
+            const payload = {
+                projectMembers: membersWithoutSender,
+                senderId: userData.user.id.toString(),
+                text: messageToAll,
+                userAvatar: userData.user.avaUrl,
+                userName: userData.user.name
+            }
+            const res = await axios.post("/project/sent-mesg-members", payload)
+            console.log(
+                res
+            )
+            if (res.status === 200) {
+                setreqLoading(false)
+                setSuccessMessage("Ви успішно надіслати повідомлення")
+                setTimeout(() => {
+                    close()
+                    setMessageToAll("")
+                    setSuccessMessage("")
+                    setDesc("")
+                    setfinishDate()
+                    setstartDate()
+                    setadvtName()
+                    setLocation()
+                    setLocationString()
+                }, 1500);
+            } else {
+                setreqLoading(false)
+                setError("Error occured")
+            }
+        } catch (error) {
+
+        }
+    }
+
     useEffect(() => {
         const preLoadOpps = async () => {
             try {
@@ -452,7 +493,56 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
                         </Popup>
 
                         <EditProjectInAdminPanel project={projectInfo} allUsers={allUsers} setProjectFnc={setProjectFnc} />
-                        <button className="px-3 py-2 bg-yellow-350 hover:bg-opacity-80 transition-all font-semibold rounded-3xl">Зв'язатись з послідовниками </button>
+                        <Popup
+                            trigger={
+                                <button className="px-3 flex items-center py-2 bg-yellow-350 hover:bg-opacity-80 transition-all font-semibold rounded-3xl"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#48004b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Зв'язатись з послідовниками </button>
+                            }
+                            modal
+                            nested
+                        >
+                            {close => (
+                                <div className="modal bg-white rounded-xl overflow-y-scroll max-h-screen">
+                                    <button className="close" onClick={close}>
+                                        &times;
+                                    </button>
+                                    <div className="w-full bg-gray-100 px-4 py-2 text-black text-2xl font-bold rounded-t-xl">
+                                        Надіслати повідомлення всім послідовникам
+                                    </div>
+
+                                    <div className="px-8 z-40">
+                                        <div className="w-10/12 mt-3 m-auto">
+                                            <div className="px-2 m-auto">
+                                                {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
+                                                {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
+                                            </div>
+                                        </div>
+                                        <div className="lg:px-8">
+                                            <div className="w-full mt-1">
+                                                <textarea value={messageToAll} onChange={e => setMessageToAll(e.target.value)} placeholder="Повідомлення" className="focus:outline-none focus:border-pink-450 w-full resize-none text-xl px-2 py-1 rounded-lg border-2 border-purple-950" rows='4' ></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="w-full rounded-b-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
+                                        {reqLoading ? (
+                                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
+                                        ) : (
+                                            null
+                                        )}
+                                        <button onClick={() => sentMesg(close)} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-white text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Надіслати</button>
+                                        <button
+                                            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                            onClick={() => {
+                                                close();
+                                            }}
+                                        >
+                                            Закрити
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </Popup>
                     </div>
                 </>
             ) : (null)}

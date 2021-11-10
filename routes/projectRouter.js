@@ -9,6 +9,8 @@ const jwt = require("jsonwebtoken")
 
 const Project = require("../models/projectModel")
 const User = require("../models/userModel")
+const Conversation = require("../models/conversationModel");
+const Message = require("../models/messageModel");
 
 const s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -621,9 +623,46 @@ router.get("/get-followed-ids/:id", async (req, res) => {
     const followedProjects = await Project.find({
         followers: { $in: [req.params.id] },
     })
-    const onlyIds = followedProjects.map(project => { return  project._id.toString() })
+    const onlyIds = followedProjects.map(project => { return project._id.toString() })
     res.json(onlyIds)
 })
-
+router.post("/sent-mesg-members", async (req, res) => {
+    try {
+        const { text, userAvatar, userName, senderId, projectMembers } = req.body
+        projectMembers.forEach(async (memberId, index) => {
+            const newConversation = new Conversation({
+                members: [senderId, memberId],
+            });
+            const isConversationUnique = await Conversation.findOne({ members: { $all: [senderId, memberId] } })
+            if (isConversationUnique) {
+                const newMessage = new Message({
+                    userAvatar,
+                    text,
+                    userName,
+                    sender: senderId,
+                    conversationId: isConversationUnique._id.toString()
+                })
+                await newMessage.save();
+            } else {
+                const savedConversation = await newConversation.save();
+                const newMessage = new Message(
+                    {
+                        userAvatar,
+                        text,
+                        userName,
+                        sender: senderId,
+                        conversationId: savedConversation._id.toString()
+                    }
+                )
+                await newMessage.save();
+            }
+            if (index === projectMembers.length - 1) {
+                res.status(200).json()
+            }
+        })
+    } catch (err) {
+        res.status(500).json(err);
+    }
+})
 
 module.exports = router;
