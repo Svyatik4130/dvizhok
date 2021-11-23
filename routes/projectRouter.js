@@ -107,11 +107,19 @@ router.post('/upload-xlsANDpdf', (req, res) => {
                     return res.status(400).json({ msg: "Назва проекту має бути меншим за 50 символів" })
                 }
                 if (req.body.category === "") {
-                    return res.status(400).json({ msg: "Будь ласка, виберіть категорію проекту" })
+                    return res.status(400).json({ msg: "Будь ласка, виберіть 44444категорію проекту" })
                 }
                 // change categories here
-                if (req.body.category !== "Культура" && req.body.category !== "Екологія") {
-                    return res.status(400).json({ msg: "Будь ласка, виберіть категорію проекту" })
+                const arrCtgr = req.body.category.split(",")
+                let areSelectionsCorrect = true
+                arrCtgr.forEach(selection => {
+                    // add new categories here
+                    if (selection !== "Культура" && selection !== "Екологія") {
+                        areSelectionsCorrect = false
+                    }
+                })
+                if (!areSelectionsCorrect) {
+                    return res.status(400).json({ msg: "Будь ласка, виберіть333 категорію проекту" })
                 }
                 if (!req.body.Location) {
                     return res.status(400).json({ msg: "Введіть місце розташування проекту та виберіть його зі списку" })
@@ -187,7 +195,6 @@ router.post('/create-project', (req, res) => {
                 res.status(400).json({ msg: "Error: No File Selected" })
             } else {
                 // If Success
-
                 if (req.body.projName.length < 5) {
                     return res.status(400).json({ msg: "Назва проекту має містити принаймні 5 символів" })
                 } else if (req.body.projName.includes('/')) {
@@ -199,8 +206,16 @@ router.post('/create-project', (req, res) => {
                     return res.status(400).json({ msg: "Будь ласка, виберіть категорію проекту" })
                 }
                 // change categories here
-                if (req.body.category !== "Культура" && req.body.category !== "Екологія") {
-                    return res.status(400).json({ msg: "Будь ласка, виберіть категорію проекту" })
+                const arrCtgr = req.body.category.split(",")
+                let areSelectionsCorrect = true
+                arrCtgr.forEach(selection => {
+                    // add new categories here
+                    if (selection !== "Культура" && selection !== "Екологія") {
+                        areSelectionsCorrect = false
+                    }
+                })
+                if (!areSelectionsCorrect) {
+                    return res.status(400).json({ msg: "Будь ласка, виберіть333 категорію проекту" })
                 }
                 if (!req.body.Location) {
                     return res.status(400).json({ msg: "Введіть місце розташування проекту та виберіть його зі списку" })
@@ -214,7 +229,7 @@ router.post('/create-project', (req, res) => {
                     return res.status(400).json({ msg: "Будь ласка, введіть скільки необхідно коштів" })
                 }
                 if (req.body.fundsReqrd.length > 15) {
-                    return res.status(400).json({ msg: "сума необхідних коштів занадто велика" })
+                    return res.status(400).json({ msg: "Сума необхідних коштів занадто велика" })
                 }
                 const dateNow1 = new Date()
                 const dateFinish = new Date(req.body.finishDate)
@@ -286,7 +301,7 @@ router.post('/create-project', (req, res) => {
                     projectleaderId: req.body.userId,
                     description: req.body.description,
                     photosNvideos: galleryImgLocationArray,
-                    category: req.body.category,
+                    category: arrCtgr,
                     location: latNlng,
                     locationString: req.body.locationString,
                     logoUrl: logo,
@@ -307,7 +322,7 @@ router.post('/create-project', (req, res) => {
                 })
 
                 const savedProject = await newProj.save()
-                console.log('1', savedProject)
+                console.log(savedProject)
                 res.json(savedProject);
             }
         }

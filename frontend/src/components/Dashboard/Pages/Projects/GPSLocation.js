@@ -142,7 +142,7 @@ export default function GPSLocation() {
                                     </div>
                                 </div>
                             </div>
-                            <button onClick={() => { history.push(`/dashboard/projects/${selected._id}`) }} className="rounded-lg w-full py-1 px-1 text-center hover:bg-yellow-300 bg-yellow-350 ">Перейти на стрінцу проекту</button>
+                            <button onClick={() => { history.push(`/dashboard/projects/${selected._id}`) }} className="rounded-lg w-full py-1 px-1 text-center hover:bg-yellow-300 bg-yellow-350 ">Перейти на сторінку проекту</button>
                             {CheckAndShowProjectsAtThisLocation(selected._id, selected.location[0], selected.location[1])}
                         </div>
                     </InfoWindow>

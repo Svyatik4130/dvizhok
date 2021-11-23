@@ -151,7 +151,7 @@ export default function CreateProject() {
         if (selectedFiles) {
             const data = new FormData();
 
-
+            console.log(selections)
             const onlyMembersIds = teamMembers.map((member, index) => {
                 if (index === teamMembers.length - 1) return true
                 return member._id
@@ -270,7 +270,7 @@ export default function CreateProject() {
                 setreqLoading(false)
             } catch (err) {
                 console.log(err)
-                if (err.response.data.msg) {
+                if (err.response?.data?.msg) {
                     if (err.response.data.msg.code === "LIMIT_FILE_SIZE") {
                         setError('Max size: 20MB')
                     } else if (err.response.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
@@ -316,6 +316,7 @@ export default function CreateProject() {
             setError(`Назва проекту має бути меншим за 50 символів. Зараз:${Name.length}`);
             return
         }
+        console.log(selections)
         if (selections === "") {
             setError('Будь ласка, виберіть категорію проекту');
             return
