@@ -127,7 +127,7 @@ export default function ProjectList() {
                                         <div className="w-full flex justify-evenly pb-2">
                                             <div className="lg:w-6/12 w-5/12 lg:border-r">
                                                 <Doughnut {...FundsOps} />
-                                                <p className="text-sm text-center">{project.isFundsInfinite ? (<>Необмежений збір</>) : (<> Зібрано </>)}</p>
+                                                <p className="text-sm text-center">{project.isFundsInfinite ? (<>Необмежений <br /> збір</>) : (<> Зібрано </>)}</p>
                                             </div>
                                             <div className="lg:w-6/12 w-5/12 lg:border-l">
                                                 <Doughnut {...KalendarOps} />

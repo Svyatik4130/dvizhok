@@ -34,7 +34,7 @@ export default function Footer() {
                     <p className="font-semibold text-xl mb-3">Контакти</p>
 
                     <p className="font-medium text-lg">Україна, Київ, вул. Предславинська, 39</p>
-                    <p className="font-medium text-lg">+38 050 46 20 597 (Україна), </p>
+                    <p className="font-medium text-lg">+38 044 240 05 97 (Україна), </p>
                     <p className="font-medium text-lg">Info@dvizhok.org.ua</p>
                 </div>
             </div>

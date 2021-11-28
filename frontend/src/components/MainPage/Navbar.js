@@ -6,7 +6,7 @@ import { loggedUser } from '../../actions/UserActions'
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    
+
     const history = useHistory()
     const dispatch = useDispatch()
     const userData = useSelector(state => state.userData)
@@ -28,26 +28,26 @@ export default function Navbar() {
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
                         <div className="flex-shrink-0">
-                            <a href="#"><img
-                                className="h-8"
+                            <a onClick={() => history.push("/")}><img
+                                className="h-8 cursor-pointer"
                                 src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/logo.png"
                                 alt="Workflow"
                             /></a>
                         </div>
-                        <div className="hidden xl:block">
+                        <div className="hidden 2xl:block">
                             <div className="ml-10 text-purple-950 text-xl font-semibold flex items-baseline">
-                                <a style={{ marginRight: "0px" }} className="flex" href="#">Головна</a>
-                                <a className="flex mx-6" href="#idea">Ідея</a>
-                                <a className="flex mx-6" href="#plans">Плани</a>
+                                <a style={{ marginRight: "0px" }} className="flex cursor-pointer" onClick={() => history.push("/")}>Головна</a>
+                                <a className="flex mx-6" href="#idea" onClick={() => history.push("/#idea")}>Ідея</a>
+                                <a className="flex mx-6" href="#plans" onClick={() => history.push("/#plans")}>Плани</a>
                                 <a className="flex mx-6 cursor-pointer" onClick={() => history.push("/guest/projects/")}>Проекти</a>
-                                <a className="flex mx-6" href="#team">Команда</a>
-                                <a className="flex mx-6" href="#white_paper">White paper</a>
-                                <a className="flex mx-6" href="#blog">Блог</a>
-                                <a className="flex mx-6" href="#slack">Slack</a>
+                                <a className="flex mx-6" href="#team" onClick={() => history.push("/#team")}>Команда</a>
+                                <a className="flex mx-6" href="#white_paper" onClick={() => history.push("/#white_paper")}>White paper</a>
+                                <a className="flex mx-6" href="#blog" onClick={() => history.push("/#blog")}>Блог</a>
+                                <a className="flex mx-6" href="#invest" onClick={() => history.push("/#invest")}>Инвесторам</a>
                             </div>
                         </div>
                     </div>
-                    <div className="items-center hidden xl:block">
+                    <div className="items-center hidden 2xl:block">
                         {userData.user ? (
                             // <div>
                             //     <h1 className=" font-semibold">Вітаю, {userData.user.name}</h1>
@@ -65,7 +65,7 @@ export default function Navbar() {
                         )
                         }
                     </div>
-                    <div className="-mr-2 flex xl:hidden">
+                    <div className="-mr-2 flex 2xl:hidden">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
                             type="button"
@@ -122,44 +122,40 @@ export default function Navbar() {
                 leaveTo="opacity-0 scale-95"
             >
                 {(ref) => (
-                    <div className="xl:hidden" id="mobile-menu">
+                    <div className="2xl:hidden" id="mobile-menu">
                         <div ref={ref} className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                            <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
+                            <a onClick={() => history.push("/")} className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
                                 Головна
                             </a>
-                            <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
+                            <a href="#idea" onClick={() => history.push("/#idea")} className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
                                 Ідея
                             </a>
-                            <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
+                            <a href="#plans" onClick={() => history.push("/#plans")} className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
                                 Плани
                             </a>
-                            <a onClick={() => history.push("/guest/projects/")} className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
+                            <a onClick={() => history.push("/guest/projects/")} className="text-purple-950 cursor-pointer block px-3 py-2 rounded-md text-base font-medium">
                                 Проекти
                             </a>
-                            <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
+                            <a href="#team" onClick={() => history.push("/#team")} className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
                                 Команда
                             </a>
-                            <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
+                            <a href="#white_paper" onClick={() => history.push("/#white_paper")} className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
                                 White paper
                             </a>
-                            <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
+                            <a href="#blog" onClick={() => history.push("/#blog")} className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
                                 Блог
                             </a>
-                            <a href="#" className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
-                                Slack
+                            <a href="#invest" onClick={() => history.push("/#invest")} className="text-purple-950 block px-3 py-2 rounded-md text-base font-medium">
+                                Инвесторам
                             </a>
                             {userData.user ? (
-                                // <div>
-                                //     <h1 className=" font-semibold">Вітаю, {userData.user.name}</h1>
-                                //     <button onClick={logout} className="rounded-lg bg-red-600 text-white w-full">Вийти</button>
-                                // </div>
-                                <div className="flex pr-4 items-center">
+                                <div className="flex 2xl:pr-4 items-center">
                                     <div className="w-14 h-14 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
-                                    <div className="ml-2 w-10/12">
+                                    <div className="ml-2 2xl:w-10/12">
                                         <p className=" w-full font-bold text-lg text-purple-850">{userData.user.name}</p>
                                         <div className="flex justify-between">
-                                            <p onClick={() => { history.push("/dashboard") }} className=" bg-yellow-350 hover:bg-yellow-400 transition-all whitespace-nowrap text-black font-medium px-2 cursor-pointer rounded-lg py-2">Особистий кабінет</p>
-                                            <button onClick={logout} className="rounded-lg py-2 bg-red-600 text-white w-full font-medium ml-2">Вийти</button>
+                                            <button onClick={() => { history.push("/dashboard") }} className=" bg-yellow-350 hover:bg-yellow-400 transition-all whitespace-nowrap text-black font-medium px-2 cursor-pointer rounded-lg py-2">Особистий кабінет</button>
+                                            <button onClick={logout} className="rounded-lg py-2 px-2 ml-2 bg-red-600 whitespace-nowrap text-white font-medium">Вийти</button>
 
                                         </div>
 

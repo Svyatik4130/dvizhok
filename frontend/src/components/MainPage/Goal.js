@@ -49,6 +49,7 @@ export default function Goal() {
                     </div>
                 </div>
             </div>
+            <div id="plans" className='w-full mb-16 h-0.5'></div>
         </div>
     )
 }
