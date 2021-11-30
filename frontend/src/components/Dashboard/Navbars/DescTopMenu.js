@@ -245,9 +245,9 @@ export default function DescTopMenu() {
                 </div>
                 <div className="w-6/12">
                     <div className="flex justify-end pr-4">
-                        <div className="mb-1 w-14 h-14 mr-2 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
+                        <div onClick={() => history.push("/dashboard/profile/personal_info")} className="mb-1 w-14 h-14 mr-2 relative rounded-full hover:opacity-80 transition-all cursor-pointer overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
                         <div>
-                            <p className="inline-block font-bold text-lg text-purple-850">{userData.user.name}</p>
+                            <p onClick={() => history.push("/dashboard/profile/personal_info")} className="inline-block font-bold text-lg text-purple-850 cursor-pointer hover:opacity-80 transition-all">{userData.user.name}</p>
                             {userData.user.role === 0 ? (
                                 <div className="flex gap-1 items-center">
                                     <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/users/filled_star.png" alt="filled_star" className="w-7" />

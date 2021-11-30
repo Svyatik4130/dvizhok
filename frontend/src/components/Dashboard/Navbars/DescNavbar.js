@@ -27,14 +27,14 @@ export default function DescNavbar() {
                 {/* menu */}
                 <div>
                     <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/mini_logo.png" className=" w-16 m-auto pt-4" alt="dvizhok_logo" />
-                    <NavLink to={"/dashboard/profile"} className="transition-all z-50" activeClassName="active_desc_menu">
+                    {/* <NavLink to={"/dashboard/profile"} className="transition-all z-50" activeClassName="active_desc_menu">
                         <div className="element_wrapper pretty-shadow-noBg transition-all left-0 p-2 mt-7 mb-2 rounded-3xl">
                             <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/main.png" alt="lazy" className="element_main_image w-9 m-auto" />
                             <p className="element_text text-center text-purple-950 font-medium">Головна</p>
                         </div>
-                    </NavLink>
+                    </NavLink> */}
                     <NavLink to={"/dashboard/news"} activeClassName="active_desc_menu">
-                        <div className="element_wrapper pretty-shadow-noBg transition-all left-0 p-2 my-2 rounded-3xl">
+                        <div className="element_wrapper pretty-shadow-noBg transition-all left-0 p-2 mt-7 my-2 rounded-3xl">
                             <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/news.png" alt="lazy" className="element_news_image w-9 m-auto" />
                             <p className="element_text text-center text-purple-950 font-medium">Стрічка новин</p>
                         </div>

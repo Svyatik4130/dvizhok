@@ -17,10 +17,12 @@ import { getSignature } from '../../../helpers/browser-key'
 import { Switch, Route, NavLink, Redirect } from "react-router-dom";
 import { Carousel } from 'react-responsive-carousel';
 import AnnouncementsNearMe from './AnnouncementsNearMe';
+import TopPeaceOfNews from './TopPeaceOfNews';
 
 export default function News() {
     const userData = useSelector(state => state.userData)
     const myProjects = useSelector(state => state.myProjects)
+    const allProjects = useSelector(state => state.allProjects)
     const [error, setError] = useState()
     const [isLodaing, setisLodaing] = useState(true)
     const [successMessage, setSuccessMessage] = useState()
@@ -58,6 +60,8 @@ export default function News() {
             setlistIconDegree("180")
         }
     }
+
+    const [randomProjects, setRandomProjects] = useState(allProjects.sort(() => Math.random() - Math.random()).slice(0, 10))
 
     const multipleFileChangedHandler = (event) => {
         setselectedFiles(event.target.files)
@@ -333,7 +337,7 @@ export default function News() {
                                     <div className="flex items-center">
                                         <div className=" cursor-pointer lg:w-14 lg:h-14 h-12 w-12 hover:opacity-80 transition-all mr-2 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
                                         <div className=" cursor-pointer w-full bg-gray-200 hover:bg-gray-300 transition-all py-2 px-3 outline-none rounded-full font-medium text-xl">
-                                            <p className="text-gray-400">{`Що у вас нового, ${userData.user.name}`}</p>
+                                            <p className="text-gray-400">Що нового у вашого проекту</p>
                                         </div>
                                     </div>
                                 }
@@ -461,29 +465,9 @@ export default function News() {
                     <div className=" border rounded-3xl border-purple-950">
                         <p className="font-semibold text-lg text-center text-purple-950 p-2">ТОП 10 Проектів ОК</p>
                         <div className="w-full flex flex-wrap">
-
-                            <div className="w-3/6 p-1">
-                                <div className="bg-white rounded-2xl h-52">
-                                    <div className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}>
-                                        <div className="w-full text-center absolute bottom-0">
-                                            <div className="absolute w-full h-full bg-purple-950 opacity-50 top-0"></div>
-                                            <p className="font-medium z-10 relative text-white py-1">Література, Фестиваль</p>
-                                        </div>
-                                    </div>
-                                    <p className="font-semibold text-sm projectName-text truncate-text-3 px-2">Книжковий фестиваль "Book Space" у Дніпрі Книжковий фестиваль Книжковий фестиваль Книжковий фестиваль</p>
-                                </div>
-                            </div>
-                            <div className="w-3/6 p-1">
-                                <div className="bg-white rounded-2xl h-52">
-                                    <div className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}>
-                                        <div className="w-full text-center absolute bottom-0">
-                                            <div className="absolute w-full h-full bg-purple-950 opacity-50 top-0"></div>
-                                            <p className="font-medium z-10 relative text-white py-1">Література, Фестиваль</p>
-                                        </div>
-                                    </div>
-                                    <p className="font-semibold text-sm projectName-text truncate-text-3 px-2">Книжковий фестиваль "Book Space" у Дніпрі Книжковий фестиваль Книжковий фестиваль Книжковий фестиваль</p>
-                                </div>
-                            </div>
+                            {randomProjects.map(project => {
+                                return (<TopPeaceOfNews project={project} />)
+                            })}
                         </div>
                     </div>
                 </div>
