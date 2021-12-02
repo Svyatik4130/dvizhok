@@ -23,7 +23,6 @@ export default function DescNavbar() {
     return (
         <div className="hide-scrollbar h-screen overflow-y-scroll fixed w-1/9">
             <div className="relative bg-white min-h-screen rounded-r-3xl w-11/12 flex flex-col justify-between">
-
                 {/* menu */}
                 <div>
                     <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/mini_logo.png" className=" w-16 m-auto pt-4" alt="dvizhok_logo" />

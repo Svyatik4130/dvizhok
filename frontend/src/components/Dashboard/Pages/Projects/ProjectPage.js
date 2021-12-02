@@ -15,6 +15,7 @@ import { loggedUser } from '../../../../actions/UserActions'
 import AdminPanel from './AdminPanel';
 import ProjectsNews from './ProjectsNews';
 import { addAllProjects } from '../../../../actions/ProjectActions'
+import { ReactPhotoCollage } from "react-photo-collage";
 
 export default function ProjectPage() {
     let { id } = useParams()
@@ -108,6 +109,11 @@ export default function ProjectPage() {
                     token: res.data.token,
                     user: res.data.user
                 }))
+
+                let projetsWithNewBalance = allProjects
+                projetsWithNewBalance[allProjects.findIndex(project => project._id === id)].raised += amount
+                dispatch(addAllProjects(projetsWithNewBalance))
+
                 setTimeout(() => {
                     closeFnc()
                 }, 1500);
@@ -324,10 +330,24 @@ export default function ProjectPage() {
                             <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns pl-3">
                                 {Project.photosNvideos.map((source) => {
                                     const ext = source.split('.')[source.split('.').length - 1]
+
+                                    const setting = {
+                                        width: '600',
+                                        height: ['250px', '170px'],
+                                        layout: [1],
+                                        photos: [
+                                            { source }
+                                        ],
+                                        showNumOfRemainingPhotos: true
+                                    };
                                     if (ext == "jpeg" || ext == 'jpg' || ext == 'png') {
                                         return (
-                                            <div className="mb-9 mx-8 h-56 responsive-image-bgImgUrl" style={{ backgroundImage: `url(${source})` }}>
-                                            </div>
+                                            <>
+                                                <div className="px-8" >
+                                                    <ReactPhotoCollage {...setting} />
+                                                </div>
+                                                <div className="mb-9"></div>
+                                            </>
                                         )
                                     } else {
                                         return (
@@ -346,23 +366,23 @@ export default function ProjectPage() {
                             <strong className=" font-semibold text-2xl">Короткий опис</strong><br />
                             {Project.description}
                         </div>
-                        <div className="mt-5">
+                        <div className="mt-5 whitespace-pre-line">
                             <strong className=" font-semibold text-2xl">Актуальність Проекту</strong><br />
                             {Project.projectRelevance}
                         </div>
-                        <div className="mt-5">
+                        <div className="mt-5 whitespace-pre-line">
                             <strong className=" font-semibold text-2xl">Передісторія</strong><br />
                             {Project.preHistory}
                         </div>
-                        <div className="mt-5">
+                        <div className="mt-5 whitespace-pre-line">
                             <strong className=" font-semibold text-2xl">План реалізації Проекту</strong><br />
                             {Project.projectPlan}
                         </div>
-                        <div className="mt-5">
+                        <div className="mt-5 whitespace-pre-line">
                             <strong className=" font-semibold text-2xl">Очікування</strong><br />
                             {Project.expectations}
                         </div>
-                        <div className="mt-5">
+                        <div className="mt-5 whitespace-pre-line">
                             <strong className=" font-semibold text-2xl">Плани витрат</strong><br />
                             {Project.spendingPlans}
                         </div>
@@ -381,10 +401,24 @@ export default function ProjectPage() {
                             <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns pt-3 pl-3">
                                 {Project.photosNvideos.map((source) => {
                                     const ext = source.split('.')[source.split('.').length - 1]
+                                    const setting = {
+                                        width: '600',
+                                        height: ['250px', '170px'],
+                                        layout: [1],
+                                        photos: [
+                                            { source }
+                                        ],
+                                        showNumOfRemainingPhotos: true
+                                    };
+
                                     if (ext == "jpeg" || ext == 'jpg' || ext == 'png') {
                                         return (
-                                            <div className="mb-9 mx-8 h-56 responsive-image-bgImgUrl" style={{ backgroundImage: `url(${source})` }}>
-                                            </div>
+                                            <>
+                                                <div className="px-8" >
+                                                    <ReactPhotoCollage {...setting} />
+                                                </div>
+                                                <div className="mb-9"></div>
+                                            </>
                                         )
                                     } else {
                                         return (
@@ -400,18 +434,18 @@ export default function ProjectPage() {
                             </Carousel>
                         </div>
                         <div className="break-words">
-                            <strong className=" font-semibold text-xl">Короткий опис</strong><br />
-                            {Project.description}<br/><br/>
-                            <strong className=" font-semibold text-xl">Актуальність Проекту</strong><br />
-                            {Project.projectRelevance}<br/><br/>
-                            <strong className=" font-semibold text-xl">Передісторія</strong><br />
-                            {Project.preHistory}<br/><br/>
-                            <strong className=" font-semibold text-xl">План реалізації Проекту</strong><br />
-                            {Project.projectPlan}<br/><br/>
-                            <strong className=" font-semibold text-xl">Очікування</strong><br />
-                            {Project.expectations}<br/><br/>
-                            <strong className=" font-semibold text-xl">Плани витрат</strong><br />
-                            {Project.spendingPlans}<br/><br/>
+                            <strong className=" font-semibold text-xl whitespace-pre-line">Короткий опис</strong><br />
+                            {Project.description}<br /><br />
+                            <strong className=" font-semibold text-xl whitespace-pre-line">Актуальність Проекту</strong><br />
+                            {Project.projectRelevance}<br /><br />
+                            <strong className=" font-semibold text-xl whitespace-pre-line">Передісторія</strong><br />
+                            {Project.preHistory}<br /><br />
+                            <strong className=" font-semibold text-xl whitespace-pre-line">План реалізації Проекту</strong><br />
+                            {Project.projectPlan}<br /><br />
+                            <strong className=" font-semibold text-xl whitespace-pre-line">Очікування</strong><br />
+                            {Project.expectations}<br /><br />
+                            <strong className=" font-semibold text-xl whitespace-pre-line">Плани витрат</strong><br />
+                            {Project.spendingPlans}<br /><br />
                         </div>
                         <div className="relative flex flex-col gap-2 text-center">
                             <a href={Project.fileXLS} download className="px-3 py-2 mr-3 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl flex text-lg font-medium text-purple-950">Завантажити презентацію <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5" /></svg></a>

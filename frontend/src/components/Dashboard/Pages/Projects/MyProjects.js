@@ -87,6 +87,7 @@ export default function MyProjects() {
                                 options: {
                                     responsive: true,
                                     cutoutPercentage: 80,
+                                    events: [],
                                 },
                                 legend: {
                                     display: false,
@@ -105,6 +106,7 @@ export default function MyProjects() {
                                 options: {
                                     responsive: true,
                                     cutoutPercentage: 80,
+                                    events: [],
                                 },
                                 legend: {
                                     display: false,

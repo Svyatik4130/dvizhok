@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { createPopper } from '@popperjs/core';
-import Popup from 'reactjs-popup';
 import CalendarEventAlert from '../News/CalendarEventAlert';
 import { useSelector } from 'react-redux'
 

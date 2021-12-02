@@ -54,9 +54,9 @@ export default function ProjectList() {
                         if (project.isFundsInfinite) {
                             raised = 0
                             rqrd = 100
-                        } 
+                        }
                         let fundsLeft = Number(rqrd) - Number(raised)
-                        if (fundsLeft < 0 ) {
+                        if (fundsLeft < 0) {
                             fundsLeft = 0
                         }
                         const createdAt = new Date(project.createdAt?.substring(0, 10)).getTime()
@@ -85,6 +85,7 @@ export default function ProjectList() {
                             options: {
                                 responsive: true,
                                 cutoutPercentage: 80,
+                                events: [],
                             },
                             legend: {
                                 display: false,
@@ -103,6 +104,7 @@ export default function ProjectList() {
                             options: {
                                 responsive: true,
                                 cutoutPercentage: 80,
+                                events: [],
                             },
                             legend: {
                                 display: false,
@@ -113,18 +115,19 @@ export default function ProjectList() {
                                 <div className="w-full h-full bg-white rounded-xl relative">
                                     <div className="flex h-full flex-col justify-between">
                                         <div>
-                                            <div onClick={() => sentToProjectPage(project._id)} className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
+                                            {/* use responsive-image-bgImgUrl for not bg image covering */}
+                                            <div onClick={() => sentToProjectPage(project._id)} className="responsive-image-bgImgUrl-cover cursor-pointer relative rounded-t-xl h-36 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
                                                 <div className="w-full text-center absolute bottom-0">
                                                     <div className="absolute w-full h-full bg-purple-950 opacity-50 top-0"></div>
                                                     <p className="font-medium z-10 relative text-white py-1">{project.category}</p>
                                                 </div>
                                             </div>
                                             <div className="p-2">
-                                                <a onClick={() => sentToProjectPage(project._id)} className="font-semibold projectName-text cursor-pointer underline text-sm mb-1 break-words">{project.projectName}</a>
-                                                <p className="font-medium text-xs overflow-y-scroll break-words h-32">{project.description}</p>
+                                                <a onClick={() => sentToProjectPage(project._id)} className="font-semibold projectName-text cursor-pointer underline text-base mb-1 break-words">{project.projectName}</a>
+                                                <p className="font-medium text-sm overflow-y-scroll break-words h-32">{project.description}</p>
                                             </div>
                                         </div>
-                                        <div className="w-full flex justify-evenly pb-2">
+                                        <div className={`w-full flex justify-evenly pb-2 ${!project.isFundsInfinite && passedTime === 100 ? ("mb-4") : ("")}`}>
                                             <div className="lg:w-6/12 w-5/12 lg:border-r">
                                                 <Doughnut {...FundsOps} />
                                                 <p className="text-sm text-center">{project.isFundsInfinite ? (<>Необмежений <br /> збір</>) : (<> Зібрано </>)}</p>

@@ -99,8 +99,9 @@ export default function DescTopMenu() {
         <div className="lg:w-8/9 w-full lg:fixed mt-12 lg:mt-0 pt-5 flex lg:flex-row flex-col items-center lg:pl-5 pl-0 bg-blur">
             <div className="flex lg:w-6/12 w-full items-center">
                 <div className="relative xl:w-8/12 w-7/12">
-                    <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} w-full transition-all relative z-20 text-lg font-medium p-3 rounded-full outline-none focus:bg-white`} placeholder="Пошук людей чи проектів" />
+                    <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} w-full transition-all relative z-30 text-lg font-medium p-3 rounded-full outline-none focus:bg-white`} placeholder="Пошук людей чи проектів" />
                     {/* <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} transition-all relative z-20 px-3 py-2 w-full outline-none focus:bg-white`} placeholder="Пошук ваших чатів та користувачів" /> */}
+                    {findedUsers?.length > 0 || findedProjects?.length > 0 ? (<div className="relative z-auto" onClick={() => { setFindedProjects(); setFindedUsers() }}><div className="h-screen w-screen fixed top-0 left-0"></div></div>) : (null)}
                     <div className="rounded-3xl mt-1.5 shadow-xl max-h-138 p-2 overflow-y-scroll absolute h-auto transition-all pt-9 top-0 w-full bg-white">
                         {findedUsers?.length > 0 ? (<p className="text-xl font-bold pt-2">Користувачі:</p>) : (null)}
                         {findedUsers ? (
@@ -118,7 +119,6 @@ export default function DescTopMenu() {
                                 )
                             })
                         ) : (null)}
-
                         {findedProjects?.length > 0 ? (<p className="text-xl font-bold pt-2">Проекти:</p>) : (null)}
                         {findedProjects ? (findedProjects.map(({ item }) => {
                             return (

@@ -463,6 +463,8 @@ export default function CreateProject() {
         Array.from(e.target.files).map(file => URL.revokeObjectURL(file))
     }
 
+    console.log(shortDesc)
+
     if (loadError) return "MapError";
     if (!isLoaded) return (
         <div className="pt-16">
@@ -504,7 +506,7 @@ export default function CreateProject() {
 
                     <input value={Name} placeholder="Назва проекту" onChange={e => setName(e.target.value)} type="text" className="w-full h-8 mt-4 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
 
-                    <div className="relative mt-4">
+                    <div className="relative my-4">
                         <div onClick={toggleExpanded}>
                             <div
                                 className={`font-semibold border-2 border-purple-950 rounded-xl inline-block px-2 py-1 cursor-pointer ${expanded ? "up-arrow" : "down-arrow"
@@ -543,7 +545,7 @@ export default function CreateProject() {
                     <p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>
 
                     <div className="w-full mt-4">
-                        <textarea value={shortDesc} onChange={e => setshortDesc(e.target.value)} placeholder="Короткий опис проекту" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
+                        <textarea value={shortDesc} onChange={e => setshortDesc(e.target.value)} placeholder="Короткий опис проекту. Максимальна кількість символів: 300" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
                     </div>
 
                     <div className="relative mt-4">
@@ -628,14 +630,14 @@ export default function CreateProject() {
                         <p className="font-bold text-2xl">Актуальність Проекту</p>
                     </div>
                     <div className="w-full mt-1">
-                        <textarea value={projectRelevance} onChange={e => setProjectRelevance(e.target.value)} placeholder="Обґрунтування доцільності. Навіщо вам потрібен проект? Що за проблема" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
+                        <textarea value={projectRelevance} onChange={e => setProjectRelevance(e.target.value)} placeholder="Обґрунтування доцільності. Навіщо вам потрібен проект? Що за проблема. Максимальна кількість символів: 2000" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
                     </div>
 
                     <div className="w-full mt-4 p-2">
                         <p className="font-bold text-2xl">Передісторія</p>
                     </div>
                     <div className="w-full mt-1">
-                        <textarea value={preHistory} onChange={e => setPreHistory(e.target.value)} placeholder="Що вже зроблено? Яка підготовча робота проведена?" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
+                        <textarea value={preHistory} onChange={e => setPreHistory(e.target.value)} placeholder="Що вже зроблено? Яка підготовча робота проведена? Максимальна кількість символів: 2000" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
                     </div>
                 </div>
                 <div className="lg:w-5/12 w-full lg:pl-9 pl-0">
@@ -644,21 +646,21 @@ export default function CreateProject() {
                         <p className="font-bold text-2xl">План реалізації Проекту</p>
                     </div>
                     <div className="w-full mt-1">
-                        <textarea value={projectPlan} onChange={e => setProjectPlan(e.target.value)} placeholder="Що планується зробити?" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
+                        <textarea value={projectPlan} onChange={e => setProjectPlan(e.target.value)} placeholder="Що планується зробити? Максимальна кількість символів: 2000" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
                     </div>
 
                     <div className="w-full mt-4 p-2">
                         <p className="font-bold text-2xl">Очікування</p>
                     </div>
                     <div className="w-full mt-1">
-                        <textarea value={expectations} onChange={e => setExpectations(e.target.value)} placeholder="Яким буде результат реалізації проекту? На кого і як він вплине?" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
+                        <textarea value={expectations} onChange={e => setExpectations(e.target.value)} placeholder="Яким буде результат реалізації проекту? На кого і як він вплине? Максимальна кількість символів: 2000" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
                     </div>
 
                     <div className="w-full mt-4 p-2">
                         <p className="font-bold text-2xl">Плани витрат</p>
                     </div>
                     <div className="w-full mt-1">
-                        <textarea value={spendingPlans} onChange={e => setSpendingPlans(e.target.value)} placeholder="Обгрунтування необхідності витрат" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
+                        <textarea value={spendingPlans} onChange={e => setSpendingPlans(e.target.value)} placeholder="Обгрунтування необхідності витрат. Максимальна кількість символів: 2000" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>
                     </div>
 
                     <div className="flex items-center mt-4 space-x-1">

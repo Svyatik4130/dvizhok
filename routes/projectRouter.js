@@ -294,6 +294,8 @@ router.post('/create-project', (req, res) => {
                 let latNlng = req.body.Location.split(',').map(Number)
                 const teamMemeberIds = req.body.teamMembers.split(",")
 
+                console.log(req.body.description)
+
                 const files_pdf_xls = req.body.XlsAndPdfFilesLocations.split(',')
                 // save proj in mongodb
                 const newProj = new Project({

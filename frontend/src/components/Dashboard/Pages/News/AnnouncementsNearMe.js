@@ -74,29 +74,62 @@ export default function AnnouncementsNearMe({ announcements }) {
     }, [])
     if (isLoading) {
         return (
-            <div className="w-full opacity-50">
-                <div className="pt-5">
-                    <SimpleLoader />
+            <>
+                <div className="w-2/12 hidden lg:block order-1 p-0.5">
+                    <div className="w-full opacity-50">
+                        <div className="pt-5">
+                            <SimpleLoader />
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div className="block lg:hidden w-full order-2 p-0.5">
+                    <div className="w-full opacity-50">
+                        <div className="pt-5">
+                            <SimpleLoader />
+                        </div>
+                    </div>
+                </div>
+            </>
         )
     }
     if (!curPosition) {
         return (
-            <div className="w-full opacity-50">
-                <div className="">
-                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="h-64 block m-auto" />
+            <>
+                <div className="w-2/12 hidden lg:block order-1 p-0.5">
+                    <div className="w-full opacity-50">
+                        <div className="">
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="h-64 block m-auto" />
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div className="block lg:hidden w-full order-2 p-0.5">
+                    <div className="w-full opacity-50">
+                        <div className="">
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="h-64 block m-auto" />
+                        </div>
+                    </div>
+                </div>
+            </>
         )
     }
     if (advrtsNear.length === 0) {
         return (
-            <div className="w-full opacity-50">
-                <div className="">
-                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="h-64 block m-auto" />
+            <>
+                <div className="w-2/12 hidden lg:block order-1 p-0.5">
+                    <div className="w-full opacity-50">
+                        <div className="">
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="h-64 block m-auto" />
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div className="block lg:hidden w-full order-2 p-0.5">
+                    <div className="w-full opacity-50">
+                        <div className="">
+                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="h-64 block m-auto" />
+                        </div>
+                    </div>
+                </div>
+            </>
         )
     }
 
