@@ -30,6 +30,7 @@ app.use("/conversations", require("./routes/conversationRouter"))
 app.use("/messages", require("./routes/messageRouter"))
 app.use("/payments", require("./routes/wayforpayRouter"))
 app.use("/story", require("./routes/storyRouter"))
+app.use("/comments", require("./routes/commentRouter"))
 
 // Passport middleware
 app.use(passport.initialize());

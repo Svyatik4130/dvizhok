@@ -13,6 +13,7 @@ import {
     useLoadScript
 } from "@react-google-maps/api";
 import "@reach/combobox/styles.css";
+import mergeFileLists from "merge-file-lists";
 
 export default function CreateProject() {
     const userData = useSelector(state => state.userData)
@@ -140,7 +141,18 @@ export default function CreateProject() {
     };
 
     const multipleFileChangedHandler = (event) => {
-        setselectedFiles(event.target.files)
+        if (selectedFiles.length === 0) {
+            if (event.target.files.length > 4) {
+                let newArr = event.target.files.slice(0, 4)
+                setselectedFiles(newArr)
+            } else {
+                setselectedFiles([...event.target.files])
+            }
+        } else if (selectedFiles.length < 4) {
+            let newFileList = [...mergeFileLists(selectedFiles, event.target.files)]
+            if (newFileList.length > 4) { newFileList = newFileList.slice(0, 4) }
+            setselectedFiles(newFileList)
+        }
     }
 
     const multipleFileUploadHandler = async (location) => {
@@ -151,7 +163,6 @@ export default function CreateProject() {
         if (selectedFiles) {
             const data = new FormData();
 
-            console.log(selections)
             const onlyMembersIds = teamMembers.map((member, index) => {
                 if (index === teamMembers.length - 1) return true
                 return member._id
@@ -316,7 +327,6 @@ export default function CreateProject() {
             setError(`Назва проекту має бути меншим за 50 символів. Зараз:${Name.length}`);
             return
         }
-        console.log(selections)
         if (selections === "") {
             setError('Будь ласка, виберіть категорію проекту');
             return
@@ -418,13 +428,22 @@ export default function CreateProject() {
         multipleFileUploadHandler(location)
     }
 
+    const deleteFile = (blob, index) => {
+        const newArray = htmlImages
+        newArray.splice(htmlImages.findIndex(source => source === blob), 1)
+        sethtmlImages(newArray)
+        let newSelectedFiles = selectedFiles.filter((file, i) => i !== index)
+        setselectedFiles(newSelectedFiles)
+    }
+
     const renderPhotos = (source) => {
         return source.map((photo, index) => {
             if (index > 3) return null
             if (photo.includes("video")) {
                 const video = photo.slice(0, -5)
                 return (
-                    <div key={index} >
+                    <div className="video-wrapper relative" key={index} >
+                        <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-white hover:bg-gray-200 transition-all border cursor-pointer rounded-full text-red-700 p-0.5 px-2">X</div>
                         <video id={`video-element-${index}`} controls>
                             <source src={video}></source>
                             Your browser does not support HTML5 video.
@@ -433,14 +452,26 @@ export default function CreateProject() {
                 )
             } else {
                 return (
-                    <img src={photo} key={photo} />
+                    <div className="img-wrapper relative">
+                        <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-white hover:bg-gray-200 transition-all border cursor-pointer rounded-full text-red-700 p-0.5 px-2">X</div>
+                        <img className="img" src={photo} key={photo} />
+                    </div>
                 )
             }
         })
     }
+    const renderLogo = (source) => {
+        return source.map((photo, index) => {
+            return (
+                <div className="img-wrapper relative">
+                    <img className="img" src={photo} key={photo} />
+                </div>
+            )
+        })
+    }
 
     function ProcessFiles(e) {
-        sethtmlImages([])
+        // sethtmlImages([])
         if (e.target.files) {
             const fileArr = Array.from(e.target.files).map((file) => {
                 if (file.type.includes("video")) {
@@ -463,8 +494,6 @@ export default function CreateProject() {
         Array.from(e.target.files).map(file => URL.revokeObjectURL(file))
     }
 
-    console.log(shortDesc)
-
     if (loadError) return "MapError";
     if (!isLoaded) return (
         <div className="pt-16">
@@ -480,6 +509,7 @@ export default function CreateProject() {
         )
     }
 
+
     return (
         <div>
             <form onSubmit={handleSubmit} className="flex lg:flex-row flex-col">
@@ -491,7 +521,7 @@ export default function CreateProject() {
 
                     <div className="flex mt-4 items-center">
                         <div className="logo-preview mr-1.5">
-                            {renderPhotos(logo)}
+                            {renderLogo(logo)}
                         </div>
                         <div className="relative">
                             <label htmlFor="upload-logo" className="cursor-pointer font-medium text-lg">

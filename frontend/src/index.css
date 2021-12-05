@@ -251,14 +251,14 @@ code {
   align-items: center;
   justify-content: space-evenly;
 }
-.img-preview img {
+.img-preview > .img-wrapper {
   width: 22%;
   height: 30%;
   max-height: 300px;
   margin: 9px;
   border: 1px solid #a25db8;
 }
-.img-preview div {
+.img-preview > .video-wrapper {
   width: 22%;
   height: 30%;
   max-height: 300px;
