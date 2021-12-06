@@ -508,8 +508,7 @@ export default function CreateProject() {
             </div>
         )
     }
-
-
+    
     return (
         <div>
             <form onSubmit={handleSubmit} className="flex lg:flex-row flex-col">

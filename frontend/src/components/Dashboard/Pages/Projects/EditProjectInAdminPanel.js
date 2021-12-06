@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom"
 import { addMyProjects, addAllProjects } from '../../../../actions/ProjectActions'
 import Fuse from 'fuse.js'
-
+import mergeFileLists from "merge-file-lists";
 
 export default function EditProjectInAdminPanel({ project, allUsers, setProjectFnc }) {
     const userData = useSelector(state => state.userData)
@@ -26,7 +26,7 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
 
     const [error, setError] = useState()
     const [successMessage, setSuccessMessage] = useState()
-    const [htmlImages, sethtmlImages] = useState([])
+    const [htmlImages, sethtmlImages] = useState(project.photosNvideos)
     const [logo, setLogo] = useState([])
     const [reqLoading, setreqLoading] = useState(false)
     const [findedUsers, setFindedUsers] = useState()
@@ -125,7 +125,20 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
     };
 
     const multipleFileChangedHandler = (event) => {
-        setselectedFiles(event.target.files)
+        if (selectedFiles.length + htmlImages.filter(src => src.split(":")[0] !== "blob").length === 0) {
+            if (event.target.files.length > 4) {
+                let newArr = event.target.files.slice(0, 4)
+                setselectedFiles(newArr)
+            } else {
+                setselectedFiles([...event.target.files])
+            }
+        } else if (selectedFiles.length + htmlImages.filter(src => src.split(":")[0] !== "blob").length < 4) {
+            const countAlreadyUploadedImages = htmlImages.filter(src => src.split(":")[0] !== "blob").length
+            console.log(countAlreadyUploadedImages)
+            let newFileList = [...mergeFileLists(selectedFiles, event.target.files)]
+            if (newFileList.length + countAlreadyUploadedImages > 4) { newFileList = newFileList.slice(0, 4 - countAlreadyUploadedImages) }
+            setselectedFiles(newFileList)
+        }
     }
 
     const multipleFileUploadHandler = async (location, close) => {
@@ -133,10 +146,11 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
         setreqLoading(true)
         try {
             // If file selected
-            if (selectedFiles) {
+            if (selectedFiles.length > 0) {
                 const data = new FormData();
                 data.append('secret', signature);
                 data.append('projId', project._id);
+                data.append('oldVidNphotos', JSON.stringify(htmlImages.filter(src => src.split(":")[0] !== "blob")));
 
                 let AreExtsSuitable = true
                 for (let i = 0; i < selectedFiles.length; i++) {
@@ -154,7 +168,7 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
                 let token = localStorage.getItem("auth-token")
 
                 for (let i = 0; i < selectedFiles.length; i++) {
-                    if (i < 4) {
+                    if (i + htmlImages.filter(src => src.split(":")[0] !== "blob").length < 4) {
                         data.append('galleryImage', selectedFiles[i]);
                     }
                 }
@@ -374,9 +388,9 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
             setError("сума необхідних коштів занадто велика");
             return
         }
-        const dateNow1 = new Date()
+        const dateCreated = new Date(project.createdAt)
         const dateFinish = new Date(finishDate)
-        if (dateFinish.getTime() <= dateNow1.getTime()) {
+        if (dateFinish.getTime() <= dateCreated.getTime()) {
             setError("Будь ласка, введіть правильну дату закінчення проекту");
             return
         }
@@ -448,24 +462,67 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
         multipleFileUploadHandler(location, close)
     }
 
+    const deleteFile = (src, index) => {
+        const newArray = htmlImages.filter((file, i) => i !== index)
+        sethtmlImages(newArray)
+        if (src.split(":")[0] === "blob") {
+            let newSelectedFiles = selectedFiles.filter((file, i) => i !== index)
+            setselectedFiles(newSelectedFiles)
+        }
+    }
+
     const renderPhotos = (source) => {
         return source.map((photo, index) => {
-            if (index > 3) return null
-            if (photo.includes("video")) {
-                const video = photo.slice(0, -5)
-                return (
-                    <div key={index} >
-                        <video id={`video-element-${index}`} controls>
-                            <source src={video}></source>
-                            Your browser does not support HTML5 video.
-                        </video>
-                    </div>
-                )
+            if (photo.split(":")[0] === "blob") {
+                if (index > 3) return null
+                if (photo.includes("video")) {
+                    const video = photo.slice(0, -5)
+                    return (
+                        <div className="video-wrapper relative" key={index} >
+                            <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-white hover:bg-gray-200 transition-all border cursor-pointer rounded-full text-red-700 p-0.5 px-2">X</div>
+                            <video id={`video-element-${index}`} controls>
+                                <source src={video}></source>
+                                Your browser does not support HTML5 video.
+                            </video>
+                        </div>
+                    )
+                } else {
+                    return (
+                        <div className="img-wrapper relative">
+                            <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-white hover:bg-gray-200 transition-all border cursor-pointer rounded-full text-red-700 p-0.5 px-2">X</div>
+                            <img className="img" src={photo} key={photo} />
+                        </div>
+                    )
+                }
             } else {
-                return (
-                    <img src={photo} key={photo} />
-                )
+                if (photo.match(/\.(jpeg|jpg|png)$/)) {
+                    return (
+                        <div className="img-wrapper relative">
+                            <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-white hover:bg-gray-200 transition-all border cursor-pointer rounded-full text-red-700 p-0.5 px-2">X</div>
+                            <img className="img" src={photo} key={photo} />
+                        </div>
+                    )
+                } else {
+                    return (
+                        <div className="video-wrapper relative" key={index} >
+                            <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-white hover:bg-gray-200 transition-all border cursor-pointer rounded-full text-red-700 p-0.5 px-2">X</div>
+                            <video id={`video-element-${index}`} controls>
+                                <source src={photo}></source>
+                                Your browser does not support HTML5 video.
+                            </video>
+                        </div>
+                    )
+                }
             }
+        })
+    }
+    const renderLogo = (source) => {
+        return source.map((photo, index) => {
+            return (
+                <div className="img-wrapper relative">
+                    <img className="img" src={photo} key={photo} />
+                </div>
+            )
         })
     }
     const defaultRenderPhotos = (source) => {
@@ -475,25 +532,28 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
                     <img src={url} key={url} />
                 )
             } else {
-                <div key={index} >
-                    <video id={`video-element-${index}`} controls>
-                        <source src={url}></source>
-                        Your browser does not support HTML5 video.
-                    </video>
-                </div>
+                return (
+                    <div key={index} >
+                        <video id={`video-element-${index}`} controls>
+                            <source src={url}></source>
+                            Your browser does not support HTML5 video.
+                        </video>
+                    </div>
+                )
             }
         })
     }
 
     function ProcessFiles(e) {
-        sethtmlImages([])
+        // sethtmlImages([])
         if (e.target.files) {
-            const fileArr = Array.from(e.target.files).map((file) => {
+            let fileArr = Array.from(e.target.files).map((file) => {
                 if (file.type.includes("video")) {
                     return URL.createObjectURL(file) + "video"
                 }
                 return URL.createObjectURL(file)
             })
+            if (fileArr.length + htmlImages.length > 4) { fileArr = fileArr.slice(0, 4 - htmlImages.length) }
             sethtmlImages((prevImages) => prevImages.concat(fileArr))
         }
         Array.from(e.target.files).map(file => URL.revokeObjectURL(file))
@@ -515,6 +575,8 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
             <SimpleLoader />
         </div>
     )
+
+    console.log(selectedFiles)
 
     return (
         <Popup
@@ -551,7 +613,7 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
                                             {logoFile === "" ? (
                                                 defaultRenderPhotos(project.logoUrl)
                                             ) : (null)}
-                                            {renderPhotos(logo)}
+                                            {renderLogo(logo)}
                                         </div>
                                         <div className="relative">
                                             <label htmlFor="upload-logo" className="cursor-pointer font-medium text-lg">
@@ -623,9 +685,6 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
                                     </div>
                                     {/* img-preview */}
                                     <div className="img-preview mb-4 flex">
-                                        {selectedFiles === "" ? (
-                                            defaultRenderPhotos(project.photosNvideos)
-                                        ) : (null)}
                                         {renderPhotos(htmlImages)}
                                     </div>
 

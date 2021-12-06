@@ -467,9 +467,11 @@ router.post("/change-vidNphotos", async (req, res) => {
                     galleryImgLocationArray.push(fileLocation)
                 }
 
+                const NewNOldVidNPhotos = [...JSON.parse(req.body.oldVidNphotos), ...galleryImgLocationArray]
+
                 await Project.updateOne({ _id: req.body.projId }, {
                     $set: {
-                        "photosNvideos": galleryImgLocationArray,
+                        "photosNvideos": NewNOldVidNPhotos,
                     }
                 })
                 const updatedProject = await Project.findById(req.body.projId)
