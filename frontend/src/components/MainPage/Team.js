@@ -21,7 +21,7 @@ export default function Team() {
                     <div className="w-3/12 px-4">
                         <div className="bg-white h-144  rounded-3xl">
                             <div className="bg-cover h-86 filter grayscale">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/fedorenko.png" alt="Svyatoslav Leonov" className="object-cover h-full rounded-t-3xl" />
+                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/fedorenko.png" alt="Олександр Лєйкін" className="object-cover h-full rounded-t-3xl" />
                             </div>
                             <p className="font-semibold text-purple-950 text-2xl mt-4">Олександр Лєйкін</p>
                             <p className="font-regular text-gray-400 text-lg mt-1">Польща<br /> Chief Software Architect</p>
@@ -29,8 +29,8 @@ export default function Team() {
                     </div>
                     <div className="w-3/12 px-4">
                         <div className="bg-white h-144 rounded-3xl">
-                            <div className="bg-cover h-86 filter grayscale">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/svyatoslav.jpeg" alt="Alex Tolkachov" className="object-cover h-full rounded-t-3xl" />
+                            <div className="bg-cover h-86 filter rounded-t-3xl grayscale" style={{ backgroundImage: `url(https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/svyatoslav.jpeg)`, backgroundPosition: "50% 35%", backgroundSize: "140%"}}>
+                                {/* <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/svyatoslav.jpeg" alt="Svyatoslav Leonov" className="object-cover h-full rounded-t-3xl" /> */}
                             </div>
                             <p className="font-semibold text-purple-950 text-2xl mt-4">Святослав Леонов</p>
                             <p className="font-regular text-gray-400 text-lg mt-1">Чехія <br /> UI/UX designer/developer</p>
@@ -38,8 +38,8 @@ export default function Team() {
                     </div>
                     <div className="w-3/12 px-4">
                         <div className="bg-white h-144  rounded-3xl">
-                            <div className="bg-cover h-86 filter grayscale">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/leykin.png" alt="Svyatoslav Leonov" className="object-cover h-full rounded-t-3xl" />
+                            <div className="bg-cover h-86 rounded-t-3xl filter grayscale" style={{ backgroundImage: `url(https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/leykin.png)`, backgroundPosition: "50% 30%", backgroundSize: "140%"}}>
+                                {/* <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/leykin.png" alt="Юрій Федоренко" className="object-cover h-full rounded-t-3xl" /> */}
                             </div>
                             <p className="font-semibold text-purple-950 text-2xl mt-4">Юрій Федоренко</p>
                             <p className="font-regular text-gray-400 text-lg mt-1">Україна<br /> PR/GR, chief analytics officer</p>
@@ -65,7 +65,7 @@ export default function Team() {
                     <div className="w-full">
                         <div className="bg-white h-144 rounded-3xl">
                             <div className="bg-cover h-86 filter grayscale">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/fedorenko.png" alt="Svyatoslav Leonov" className="object-cover h-full rounded-t-3xl" />
+                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/fedorenko.png" alt="Олександр Лєйкін" className="object-cover h-full rounded-t-3xl" />
                             </div>
                             <p className="font-semibold text-purple-950 text-2xl mt-4">Олександр Лєйкін</p>
                             <p className="font-regular text-gray-400 text-lg mt-1">Польща<br /> Chief Software Architect</p>
@@ -75,8 +75,8 @@ export default function Team() {
                 <div className="px-5 w-11/12 flex flex-row m-auto pb-12">
                     <div className="w-full">
                         <div className="bg-white h-144 rounded-3xl">
-                            <div className="bg-cover h-86 filter grayscale">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/svyatoslav.jpeg" alt="Alex Tolkachov" className="object-cover h-full rounded-t-3xl" />
+                            <div className="bg-cover h-86 rounded-t-3xl filter grayscale" style={{ backgroundImage: `url(https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/svyatoslav.jpeg)`, backgroundPosition: "50% 35%", backgroundSize: "170%"}}>
+                                {/* <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/svyatoslav.jpeg" alt="Svyatoslav Leonov" className="object-cover h-full rounded-t-3xl" /> */}
                             </div>
                             <p className="font-semibold text-purple-950 text-2xl mt-4">Святослав Леонов</p>
                             <p className="font-regular text-gray-400 text-lg mt-1">Чехія <br /> UI/UX designer/developer</p>
@@ -86,8 +86,8 @@ export default function Team() {
                 <div className="px-5 w-11/12 flex flex-row m-auto pb-12">
                     <div className="w-full">
                         <div className="bg-white h-144 rounded-3xl">
-                            <div className="bg-cover h-86 filter grayscale">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/leykin.png" alt="Svyatoslav Leonov" className="object-cover h-full rounded-t-3xl" />
+                            <div className="bg-cover h-86 rounded-t-3xl filter grayscale" style={{ backgroundImage: `url(https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/leykin.png)`, backgroundPosition: "50% 30%", backgroundSize: "170%"}}>
+                                {/* <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/leykin.png" alt="Юрій Федоренко" className="object-cover h-full rounded-t-3xl" /> */}
                             </div>
                             <p className="font-semibold text-purple-950 text-2xl mt-4">Юрій Федоренко</p>
                             <p className="font-regular text-gray-400 text-lg mt-1">Україна<br /> PR/GR, chief analytics officer</p>

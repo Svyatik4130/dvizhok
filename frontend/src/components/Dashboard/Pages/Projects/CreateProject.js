@@ -443,7 +443,7 @@ export default function CreateProject() {
                 const video = photo.slice(0, -5)
                 return (
                     <div className="video-wrapper relative" key={index} >
-                        <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-white hover:bg-gray-200 transition-all border cursor-pointer rounded-full text-red-700 p-0.5 px-2">X</div>
+                        <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-red-600 hover:bg-red-500 transition-all cursor-pointer rounded-full text-white font-semibold p-0.5 px-2">X</div>
                         <video id={`video-element-${index}`} controls>
                             <source src={video}></source>
                             Your browser does not support HTML5 video.
@@ -453,7 +453,7 @@ export default function CreateProject() {
             } else {
                 return (
                     <div className="img-wrapper relative">
-                        <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-white hover:bg-gray-200 transition-all border cursor-pointer rounded-full text-red-700 p-0.5 px-2">X</div>
+                        <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-red-600 hover:bg-red-500 transition-all cursor-pointer rounded-full text-white font-semibold p-0.5 px-2">X</div>
                         <img className="img" src={photo} key={photo} />
                     </div>
                 )

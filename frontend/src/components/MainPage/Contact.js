@@ -37,8 +37,8 @@ export default function Contact() {
             <div className="lg:w-6/12 w-full flex-1 lg:pr-2">
                 <div className="bg-white rounded-3xl pt-5">
                     <p className="text-center text-purple-950 font-bold text-3xl">Контакти</p>
-                    <div className="flex text-center m-auto items-center mt-5 justify-center"><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/gps.png" alt="ok_logo_mini" className="h-9" /><p className="font-medium text-center pl-2 text-lg">Україна, Київ, вул. Предславинська</p></div>
-                    <div className="flex m-auto items-center mt-3 justify-center"><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/phone.png" alt="ok_logo_mini" className="h-9" /><p className="font-medium text-center pl-2 text-lg">+38 044 240 05 970</p></div>
+                    <div className="flex text-center m-auto items-center mt-5 justify-center"><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/gps.png" alt="ok_logo_mini" className="h-9" /><p className="font-medium text-center pl-2 text-lg">Україна, Київ, вул. Предславинська, 39</p></div>
+                    <div className="flex m-auto items-center mt-3 justify-center"><img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/landing/phone.png" alt="ok_logo_mini" className="h-9" /><p className="font-medium text-center pl-2 text-lg">+38 044 240 05 97</p></div>
                     <div className="w-full pt-4 h-124 rounded-b-3xl">
                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2542.0956030047937!2d30.521662415730326!3d50.420690379471246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4cf178d9b9fb1%3A0x3be933d9d0bc7fb4!2z0YPQuy4g0J_RgNC10LTRgdC70LDQstC40L3RgdC60LDRjywgMzksINCa0LjQtdCyLCAwMjAwMA!5e0!3m2!1sru!2sua!4v1626626386177!5m2!1sru!2sua" allowfullscreen="" loading="lazy" className="border-0 w-full h-full"></iframe>
                     </div>

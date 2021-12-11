@@ -352,6 +352,7 @@ router.post('/googleUserAuth', async (req, res) => {
 router.post("/tokenIsValid", async (req, res) => {
     try {
         const { signature } = req.body
+        console.log(signature)
         const token = req.header("x-auth-token")
         if (!token) return res.json(false)
 
