@@ -11,11 +11,11 @@ import { BrowserRouter as Router } from "react-router-dom";
 const store = createStore(allReducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 const APP = (
-  <Provider store={store}>
-    <Router>
+  <Router>
+    <Provider store={store}>
       <App />
-    </Router>
-  </Provider>
+    </Provider>
+  </Router>
 )
 
 const rootElement = document.getElementById("root");

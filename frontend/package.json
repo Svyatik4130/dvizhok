@@ -80,6 +80,8 @@
   "homepage": "https://dvizhok.herokuapp.com",
   "reactSnap": {
     "cacheAjaxRequests": true,
+    "inlineCss": true,
+    "fixWebpackChunksIssue": false,
     "puppeteerArgs": [
       "--no-sandbox",
       "--disable-setuid-sandbox"
