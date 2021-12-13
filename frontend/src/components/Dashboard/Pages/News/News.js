@@ -225,7 +225,6 @@ export default function News() {
                     return bDate.getTime() - aDate.getTime()
                 })
                 setNews(sortedNews)
-                console.log(sortedNews)
                 const resFollowed = await axios.get(`/project/get-followed-ids/${userData.user.id}`)
                 const onlyFollowedNews = sortedNews.filter(news => resFollowed.data.includes(news.projectId))
                 console.log(onlyFollowedNews)

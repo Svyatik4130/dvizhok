@@ -44,17 +44,17 @@ export default function EventCard({ story }) {
     const [reqLoading, setreqLoading] = useState(false)
     const [amount, setAmount] = useState(0)
 
-    const setting = story.photosNvideos.length > 0 ? ({
+    const setting = {
         width: '600',
         height: ['250px', '170px'],
-        layout: story.photosNvideos.length === 1 ? ([1]) : (story.photosNvideos.length === 2 ? ([2]) : (story.photosNvideos.length === 3 ? ([1, 2]) : (story.photosNvideos.length === 4 ? ([1, 3]) : (story.photosNvideos.length === 5 ? ([2, 3]) : (story.photosNvideos.length > 5 ? ([2, 4]) : ([2, 5])))))),
-        photos:
-        story.photosNvideos.map(link => {
-            return { source: link }
-        })
-        ,
+        layout: story.photosNvideos.length > 0 ? (story.photosNvideos.length === 1 ? ([1]) : (story.photosNvideos.length === 2 ? ([2]) : (story.photosNvideos.length === 3 ? ([1, 2]) : (story.photosNvideos.length > 4 ? ([2, 3]) : ([1, 3]))))) : ([]),
+        photos: story.photosNvideos.length > 0 ? (
+            story.photosNvideos.map(link => {
+                return { source: link }
+            })
+        ) : ([]),
         showNumOfRemainingPhotos: true
-    }) : ({})
+    }
 
     const handleAmountInputChange = (amount) => {
         if (amount > userData.user.balance) {
