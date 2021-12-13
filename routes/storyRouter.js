@@ -4,6 +4,7 @@ const multerS3 = require('multer-s3');
 const multer = require('multer');
 const path = require('path');
 const jwt = require("jsonwebtoken")
+const auth = require("../middleware/auth")
 
 const Story = require("../models/storyModel")
 const s3 = new aws.S3({
@@ -59,7 +60,7 @@ router.post('/create-story', (req, res) => {
                     return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}` })
                 }
                 if (!req.body.locationString || !req.body.location) {
-                    return res.status(400).json({ msg: `Введіть локацію новиниfff` })
+                    return res.status(400).json({ msg: `Введіть локацію новини` })
                 }
 
                 const token = req.header("x-auth-token")
@@ -98,6 +99,35 @@ router.post('/create-story', (req, res) => {
             }
         }
     })
+})
+
+router.post('/create-story-noPhoto', auth, async (req, res) => {
+    const { projectId, projectLogo, projectName, publisherId, storyType, text, location, locationString } = req.body
+    
+    if (text.length < 5 || text.length > 1000) {
+        return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}` })
+    }
+    if (!locationString || !location) {
+        return res.status(400).json({ msg: `Введіть локацію новини` })
+    }
+
+    // save proj in mongodb
+    const newStory = new Story({
+        projectId: projectId,
+        projectLogo: projectLogo,
+        projectName: projectName,
+        publisherId: publisherId,
+        storyType: storyType,
+        text: text,
+        likedIds: [],
+        photosNvideos: [],
+        location: location,
+        locationString: locationString,
+    })
+
+
+    const savedStory = await newStory.save()
+    res.json(savedStory);
 })
 
 router.get("/get-all-stories", async (req, res) => {

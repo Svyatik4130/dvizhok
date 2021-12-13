@@ -502,3 +502,7 @@ code {
 .css-1cm5myo{
   max-width: 80% !important;
 }
+
+.link{
+  @apply text-blue-600 cursor-pointer underline;
+}

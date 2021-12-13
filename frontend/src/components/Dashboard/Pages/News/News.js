@@ -105,77 +105,109 @@ export default function News() {
             setError('')
             setreqLoading(true)
 
-            if (desc.length < 5) {
-                setError(`Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}`)
-                setreqLoading(false)
-                return
-            }
-            if (!locationString || !Location) {
-                setError(`Введіть локацію новини`)
-                setreqLoading(false)
-                return
-            }
-            if (!selectedFiles) {
-                setError('Будь ласка, завантажте хоча б один відео або фото файл');
-                setreqLoading(false)
-                return
-            }
-            const data = new FormData();
-
-            for (let i = 0; i < selectedFiles.length; i++) {
-                if (i < 4) {
-                    data.append('galleryImage', selectedFiles[i]);
+            if (selectedFiles) {
+                if (desc.length < 5) {
+                    setError(`Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}`)
+                    setreqLoading(false)
+                    return
                 }
-            }
+                if (!locationString || !Location) {
+                    setError(`Введіть локацію новини`)
+                    setreqLoading(false)
+                    return
+                }
+                const data = new FormData();
 
-            data.append('projectId', selectedProject._id)
-            data.append('projectLogo', selectedProject.logoUrl[0])
-            data.append('projectName', selectedProject.projectName)
-            data.append('publisherId', userData.user.id)
-            data.append('storyType', "news")
-            data.append('text', desc)
-            data.append('location', Location)
-            data.append('locationString', locationString)
-            data.append('secret', signature);
-
-            let AreExtsSuitable = true
-            for (let i = 0; i < selectedFiles.length; i++) {
-                if (i < 4) {
-                    if (!(/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
-                        AreExtsSuitable = false
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    if (i < 4) {
+                        data.append('galleryImage', selectedFiles[i]);
                     }
                 }
-            }
-            if (!AreExtsSuitable) {
-                setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .mov, .mp4');
-                setreqLoading(false)
-                return
-            }
 
-            let token = localStorage.getItem("auth-token")
-            const publishRes = await axios.post('/story/create-story', data, {
-                headers: {
-                    'accept': 'application/json',
-                    'Accept-Language': 'en-US,en;q=0.8',
-                    'Content-Type': 'multipart/form-data',
-                    'location': `images/projects/story`,
-                    "x-auth-token": token,
+                data.append('projectId', selectedProject._id)
+                data.append('projectLogo', selectedProject.logoUrl[0])
+                data.append('projectName', selectedProject.projectName)
+                data.append('publisherId', userData.user.id)
+                data.append('storyType', "news")
+                data.append('text', desc)
+                data.append('location', Location)
+                data.append('locationString', locationString)
+                data.append('secret', signature);
+
+                let AreExtsSuitable = true
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    if (i < 4) {
+                        if (!(/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
+                            AreExtsSuitable = false
+                        }
+                    }
                 }
-            })
-            if (publishRes.status === 200) {
-                setreqLoading(false)
-                setSuccessMessage("Ви успішно опублікували новину")
-                setSuccessMessage()
-                setDesc()
-                setselectedFiles()
-                setLocation()
-                setLocationString()
-                setTimeout(() => {
-                    close()
-                }, 1500);
-            }
-            console.log(publishRes.data)
+                if (!AreExtsSuitable) {
+                    setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .mov, .mp4');
+                    setreqLoading(false)
+                    return
+                }
 
+                let token = localStorage.getItem("auth-token")
+                const publishRes = await axios.post('/story/create-story', data, {
+                    headers: {
+                        'accept': 'application/json',
+                        'Accept-Language': 'en-US,en;q=0.8',
+                        'Content-Type': 'multipart/form-data',
+                        'location': `images/projects/story`,
+                        "x-auth-token": token,
+                    }
+                })
+                if (publishRes.status === 200) {
+                    setreqLoading(false)
+                    setDesc()
+                    setselectedFiles()
+                    setLocation()
+                    setLocationString()
+                    setSuccessMessage("Ви успішно опублікували новину")
+                    setTimeout(() => {
+                        close()
+                        setSuccessMessage()
+                    }, 1500);
+                }
+                console.log(publishRes.data)
+            } else {
+                if (desc.length < 5) {
+                    setError(`Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}`)
+                    setreqLoading(false)
+                    return
+                }
+                if (!locationString || !Location) {
+                    setError(`Введіть локацію новини`)
+                    setreqLoading(false)
+                    return
+                }
+                let token = localStorage.getItem("auth-token")
+                const payload = {
+                    "projectId": selectedProject._id,
+                    "projectLogo": selectedProject.logoUrl[0],
+                    "projectName": selectedProject.projectName,
+                    "publisherId": userData.user.id,
+                    "storyType": "news",
+                    "text": desc,
+                    "location": Location,
+                    "locationString": locationString,
+                }
+                const publishRes = await axios.post('/story/create-story-noPhoto', payload, { headers: { "x-auth-token": token, "secret": signature } })
+
+                if (publishRes.status === 200) {
+                    setreqLoading(false)
+                    setDesc()
+                    setselectedFiles()
+                    setLocation()
+                    setLocationString()
+                    setSuccessMessage("Ви успішно опублікували новину")
+                    setTimeout(() => {
+                        close()
+                        setSuccessMessage()
+                    }, 1500);
+                }
+            }
         } catch (error) {
             console.log(error)
             setreqLoading(false)
@@ -193,8 +225,10 @@ export default function News() {
                     return bDate.getTime() - aDate.getTime()
                 })
                 setNews(sortedNews)
+                console.log(sortedNews)
                 const resFollowed = await axios.get(`/project/get-followed-ids/${userData.user.id}`)
                 const onlyFollowedNews = sortedNews.filter(news => resFollowed.data.includes(news.projectId))
+                console.log(onlyFollowedNews)
                 setfollowedNews(onlyFollowedNews)
 
                 let sortedAdvrts = []
@@ -245,7 +279,7 @@ export default function News() {
             }
         }
         preloadOpps()
-    }, [])
+    }, [successMessage])
 
     if (loadError) return "MapError";
     if (!isLoaded || isLodaing) return (
