@@ -16,6 +16,7 @@ import AdminPanel from './AdminPanel';
 import ProjectsNews from './ProjectsNews';
 import { addAllProjects } from '../../../../actions/ProjectActions'
 import { ReactPhotoCollage } from "react-photo-collage";
+import Linkify from 'react-linkify';
 
 export default function ProjectPage() {
     let { id } = useParams()
@@ -33,6 +34,11 @@ export default function ProjectPage() {
     const [amount, setAmount] = useState(0)
     const [successMessage, setSuccessMessage] = useState()
     const [error, setError] = useState()
+    const [carouselClasses, setcarouselClasses] = useState({
+        parent: "prpl-btns",
+        item_expanded: false,
+        item_wrapper: "px-8"
+    })
 
     const members = Project.teamMembers.map(member => member)
     members.push(Project.projectleaderId)
@@ -137,6 +143,28 @@ export default function ProjectPage() {
             console.log(error)
         }
     }
+
+    const expandCarousel = () => {
+        setcarouselClasses({
+            parent: "prpl-btns-big fixed bg-black bg-opacity-60 w-full h-screen top-0 right-0 z-50",
+            item_expanded: true,
+            item_wrapper: "h-screen flex items-center justify-center px-48"
+        })
+    }
+    const closeCarousel = () => {
+        setcarouselClasses({
+            parent: "prpl-btns",
+            item_expanded: false,
+            item_wrapper: "px-8"
+        })
+    }
+
+    const componentDecorator = (href, text, key) => (
+        <a href={href} key={key} className="link" target="_blank">
+            {text}
+        </a>
+    )
+
     if (isLoading) {
         return (
             <div className="h-screen">
@@ -326,66 +354,73 @@ export default function ProjectPage() {
                         </div>
                     </div>
                     <p className="hidden lg:block font-medium text-lg mt-3 w-full whitespace-normal break-words">
-                        <div className="float-right w-6/12 -mt-28">
-                            <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns pl-3">
+                        <div className="float-right w-6/12 h-64 -mt-28">
+
+                            {carouselClasses.item_expanded && (
+                                <div onClick={() => closeCarousel()} className="fixed top-0 right-0 m-4 mr-14 rounded-full bg-gray-700 bg-opacity-80 hover:bg-opacity-100 hover:bg-gray-900 transition-all p-1 cursor-pointer" style={{ zIndex: 60 }} >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                </div>
+                            )}
+                            <Carousel autoPlay={false} showThumbs={false} showStatus={false} className={`pl-3 ${carouselClasses.parent} transition-all`}>
                                 {Project.photosNvideos.map((source) => {
                                     const ext = source.split('.')[source.split('.').length - 1]
-
-                                    const setting = {
-                                        width: '600',
-                                        height: ['250px', '170px'],
-                                        layout: [1],
-                                        photos: [
-                                            { source }
-                                        ],
-                                        showNumOfRemainingPhotos: true
-                                    };
                                     if (ext == "jpeg" || ext == 'jpg' || ext == 'png') {
                                         return (
                                             <>
-                                                <div className="px-8" >
-                                                    <ReactPhotoCollage {...setting} />
+                                                {carouselClasses.item_expanded && (<div onClick={() => closeCarousel()} style={{ zIndex: 55 }} className="absolute h-screen top-0 right-0 w-full"></div>)}
+                                                <div className={`pb-9 ${carouselClasses.item_wrapper} transition-all`}>
+                                                    {carouselClasses.item_expanded ? (
+                                                        <div className="flex h-full z-100">
+                                                            <img src={source} className={`object-contain relative`} style={{ zIndex: 60 }} />
+                                                        </div>
+                                                    ) : (
+                                                        <div onClick={() => expandCarousel()} className="mb-9 mx-8 h-56 responsive-image-bgImgUrl cursor-pointer" style={{ backgroundImage: `url(${source})` }}></div>
+                                                    )}
                                                 </div>
-                                                <div className="mb-9"></div>
                                             </>
                                         )
                                     } else {
                                         return (
-                                            <div className="pb-9 px-8">
-                                                <video controls>
-                                                    <source src={source} key={source}></source>
-                                                    Your browser does not support HTML5 video.
-                                                </video>
-                                            </div>
+                                            <>
+                                                {carouselClasses.item_expanded && (<div onClick={() => closeCarousel()} style={{ zIndex: 55 }} className="absolute h-screen top-0 right-0 w-full"></div>)}
+                                                <div className={`pb-9 ${carouselClasses.item_wrapper}`}>
+                                                    <video controls>
+                                                        <source src={source} key={source}></source>
+                                                        Your browser does not support HTML5 video.
+                                                    </video>
+                                                </div>
+                                            </>
                                         )
                                     }
                                 })}
                             </Carousel>
                         </div>
-                        <div className="mt-5">
-                            <strong className=" font-semibold text-2xl">Короткий опис</strong><br />
-                            {Project.description}
-                        </div>
-                        <div className="mt-5 whitespace-pre-line">
-                            <strong className=" font-semibold text-2xl">Актуальність Проекту</strong><br />
-                            {Project.projectRelevance}
-                        </div>
-                        <div className="mt-5 whitespace-pre-line">
-                            <strong className=" font-semibold text-2xl">Передісторія</strong><br />
-                            {Project.preHistory}
-                        </div>
-                        <div className="mt-5 whitespace-pre-line">
-                            <strong className=" font-semibold text-2xl">План реалізації Проекту</strong><br />
-                            {Project.projectPlan}
-                        </div>
-                        <div className="mt-5 whitespace-pre-line">
-                            <strong className=" font-semibold text-2xl">Очікування</strong><br />
-                            {Project.expectations}
-                        </div>
-                        <div className="mt-5 whitespace-pre-line">
-                            <strong className=" font-semibold text-2xl">Плани витрат</strong><br />
-                            {Project.spendingPlans}
-                        </div>
+                        <Linkify componentDecorator={componentDecorator}>
+                            <div className="mt-5">
+                                <strong className=" font-semibold text-2xl">Короткий опис</strong><br />
+                                {Project.description}
+                            </div>
+                            <div className="mt-5 whitespace-pre-line">
+                                <strong className=" font-semibold text-2xl">Актуальність Проекту</strong><br />
+                                {Project.projectRelevance}
+                            </div>
+                            <div className="mt-5 whitespace-pre-line">
+                                <strong className=" font-semibold text-2xl">Передісторія</strong><br />
+                                {Project.preHistory}
+                            </div>
+                            <div className="mt-5 whitespace-pre-line">
+                                <strong className=" font-semibold text-2xl">План реалізації Проекту</strong><br />
+                                {Project.projectPlan}
+                            </div>
+                            <div className="mt-5 whitespace-pre-line">
+                                <strong className=" font-semibold text-2xl">Очікування</strong><br />
+                                {Project.expectations}
+                            </div>
+                            <div className="mt-5 whitespace-pre-line">
+                                <strong className=" font-semibold text-2xl">Плани витрат</strong><br />
+                                {Project.spendingPlans}
+                            </div>
+                        </Linkify>
 
                         <div className="w-full relative h-12">
                             <div className="absolute right-0">

@@ -138,7 +138,6 @@ export default function ProjectList() {
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         )
