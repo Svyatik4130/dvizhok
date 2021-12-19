@@ -28,6 +28,8 @@ export default function News() {
     const [successMessage, setSuccessMessage] = useState()
     const [reqLoading, setreqLoading] = useState(false)
     const [desc, setDesc] = useState("")
+    const [detectedLink, setDetectedLink] = useState()
+    const [linkDetails, setlinkDetails] = useState()
 
     const [news, setNews] = useState()
     const [followedNews, setfollowedNews] = useState()
@@ -52,6 +54,7 @@ export default function News() {
     const [selectedProject, setselectedProject] = useState(myProjects[0])
     const [isListExpanded, setisListExpanded] = useState(false)
     const [listIconDegree, setlistIconDegree] = useState("0")
+    const [test, settest] = useState()
     const toggleMyProjectsList = () => {
         setisListExpanded(!isListExpanded)
         if (isListExpanded) {
@@ -192,6 +195,7 @@ export default function News() {
                     "text": desc,
                     "location": Location,
                     "locationString": locationString,
+                    "previev_image": linkDetails?.images?.[0]
                 }
                 const publishRes = await axios.post('/story/create-story-noPhoto', payload, { headers: { "x-auth-token": token, "secret": signature } })
 
@@ -211,12 +215,13 @@ export default function News() {
         } catch (error) {
             console.log(error)
             setreqLoading(false)
-            if (error.response.data) setError(error.response.data.msg)
+            if (error?.response?.data) setError(error.response.data.msg)
         }
     }
 
     useEffect(() => {
         const preloadOpps = async () => {
+            setisLodaing(true)
             try {
                 const res = await axios.get("/story/get-all-stories")
                 const sortedNews = res.data.filter(story => story.storyType === "news").sort((a, b) => {
@@ -227,8 +232,22 @@ export default function News() {
                 setNews(sortedNews)
                 const resFollowed = await axios.get(`/project/get-followed-ids/${userData.user.id}`)
                 const onlyFollowedNews = sortedNews.filter(news => resFollowed.data.includes(news.projectId))
-                console.log(onlyFollowedNews)
                 setfollowedNews(onlyFollowedNews)
+
+                if (onlyFollowedNews.length > 0) {
+                    settest(onlyFollowedNews.map(story => {
+                        return <EventCard story={story} />
+                    }))
+                } else {
+                    settest(
+                        <div className="w-full opacity-50">
+                            <div className="">
+                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
+                                <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Ви ще не стежите за жодним проектом або проект не опублікував жодної новини. Підписуйтесь та підтримуйте проекти, і ви будете бачити їхні новини</p>
+                            </div>
+                        </div>
+                    )
+                }
 
                 let sortedAdvrts = []
                 const Advts = res.data.filter(announcement => announcement.storyType === "announcement").filter(announcement => resFollowed.data.includes(announcement.projectId)).sort((a, b) => {
@@ -272,13 +291,36 @@ export default function News() {
                 }
                 setAdvrts(futureOnlyEvents)
                 setadvrtForMob(advrForMobile3together)
-                setisLodaing(false)
             } catch (error) {
                 console.log(error)
             }
+            setisLodaing(false)
         }
         preloadOpps()
     }, [successMessage])
+
+    useEffect(() => {
+        var urlRegex = /https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}/
+        let links = ""
+        if (desc) links = desc.match(urlRegex)
+        if (links?.[0]) {
+            setDetectedLink(links[0])
+        } else {
+            setDetectedLink()
+            setlinkDetails()
+        }
+    }, [desc])
+
+
+    useEffect(() => {
+        const getDetails = async () => {
+            if (detectedLink) {
+                const details = await axios.post('/story/get-link-details', { link: detectedLink });
+                setlinkDetails(details.data)
+            }
+        }
+        getDetails()
+    }, [detectedLink])
 
     if (loadError) return "MapError";
     if (!isLoaded || isLodaing) return (
@@ -347,7 +389,7 @@ export default function News() {
                                 ) : (
                                     <div className="w-full opacity-50">
                                         <div className=" pb-4">
-                                            <div className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36 opacity-100 transition-all" style={{ backgroundImage: `url(https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png)` }}></div>
+                                            <div className="responsive-image-bgImgUrl-cover cursor-pointer relative rounded-t-xl h-36 opacity-100 transition-all" style={{ backgroundImage: `url(https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png)` }}></div>
                                         </div>
                                     </div>
                                 )}
@@ -426,10 +468,33 @@ export default function News() {
                                                 )}
 
                                                 <div className="w-full mt-1">
-                                                    <textarea value={desc} onChange={e => setDesc(e.target.value)} placeholder="Що у вас нового?" className="focus:outline-none focus:border-pink-450 w-full resize-none text-xl px-2 py-1 rounded-lg border-2 border-purple-950" rows='3' ></textarea>
+                                                    <textarea value={desc} onChange={e => setDesc(e.target.value)} placeholder="Що у вас нового?" className="focus:outline-none focus:border-pink-450 w-full resize-none text-xl px-2 py-1 rounded-lg border-2 border-purple-950" rows='3' >
+                                                    </textarea>
                                                 </div>
 
                                                 <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} />
+
+                                                {linkDetails && (
+                                                    linkDetails.siteName ? (
+                                                        <div className="mt-4 lg:w-8/12 xl:w-7/12 lg:m-auto lg:mt-4 rounded-xl bg-gray-200">
+                                                            <a href={linkDetails.url} target="_blank" rel="noopener noreferrer">
+                                                                <div className="responsive-image-bgImgUrl-cover cursor-pointer relative rounded-t-xl h-80 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${linkDetails.images[0]})` }}></div>
+                                                            </a>
+                                                            <div className="p-2">
+                                                                <p className="text-xl text-gray-600">{linkDetails.siteName && (linkDetails.siteName)}</p>
+                                                                <p className="font-medium text-xl ">{linkDetails.title && (linkDetails.title)}</p>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="mt-4 lg:w-8/12 xl:w-7/12 lg:m-auto lg:mt-4 rounded-xl bg-gray-200">
+                                                            <div className="p-2">
+                                                                <a href={linkDetails.url} target="_blank" rel="noopener noreferrer">
+                                                                    <p className="text-xl text-gray-600">{linkDetails.url && (linkDetails.url)}</p>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                )}
 
                                                 <div className="relative mt-4">
                                                     <label htmlFor="upload-photo" className="cursor-pointer font-medium text-lg">
@@ -473,18 +538,7 @@ export default function News() {
                     ) : (null)}
                     <Switch>
                         <Route path="/dashboard/news/all">
-                            {followedNews.length > 0 ? (
-                                followedNews.map(story => {
-                                    return <EventCard story={story} />
-                                })
-                            ) : (
-                                <div className="w-full opacity-50">
-                                    <div className="">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
-                                        <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Ви ще не стежите за жодним проектом або проект не опублікував жодної новини. Підписуйтесь та підтримуйте проекти, і ви будете бачити їхні новини</p>
-                                    </div>
-                                </div>
-                            )}
+                            {test}
                         </Route>
                         <Route path="/dashboard/news/gps">
                             <NewsNearMe news={news} />

@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const jwt = require("jsonwebtoken")
 const auth = require("../middleware/auth")
+// const getLinkPreview = require("link-preview-js").getLinkPreview();
 
 const Story = require("../models/storyModel")
 const s3 = new aws.S3({
@@ -102,15 +103,15 @@ router.post('/create-story', (req, res) => {
 })
 
 router.post('/create-story-noPhoto', auth, async (req, res) => {
-    const { projectId, projectLogo, projectName, publisherId, storyType, text, location, locationString } = req.body
-    
+    const { projectId, projectLogo, projectName, publisherId, storyType, text, location, locationString, previev_image } = req.body
+
     if (text.length < 5 || text.length > 1000) {
         return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}` })
     }
     if (!locationString || !location) {
         return res.status(400).json({ msg: `Введіть локацію новини` })
     }
-
+    const image = previev_image ? (previev_image) : ([])
     // save proj in mongodb
     const newStory = new Story({
         projectId: projectId,
@@ -120,7 +121,7 @@ router.post('/create-story-noPhoto', auth, async (req, res) => {
         storyType: storyType,
         text: text,
         likedIds: [],
-        photosNvideos: [],
+        photosNvideos: image,
         location: location,
         locationString: locationString,
     })
@@ -232,6 +233,23 @@ router.post("/create-announcement", async (req, res) => {
 
     const savedAnnouncement = await newAdvrt.save()
     res.json(savedAnnouncement);
+})
+
+router.post("/get-link-details", async (req, res) => {
+    try {
+        const { link } = req.body
+        const details = await require("link-preview-js").getLinkPreview(link, {
+            headers: {
+                "user-agent": "googlebot",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": "*",
+                'Content-Type': 'application/json'
+            }
+        })
+        res.json(details)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 module.exports = router
