@@ -1,15 +1,24 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
+import Linkify from 'react-linkify';
 
 export default function Message({ message, own, friend }) {
     const history = useHistory()
+
+    const componentDecorator = (href, text, key) => (
+        <a href={href} key={key} className="link" target="_blank">
+            {text}
+        </a>
+    )
 
     return (
         <div>
             {own ? (
                 <div className="mt-1 mr-1 flex">
                     <div className="bg-purple-950 rounded-xl py-1 ml-auto mr-0 px-3 ">
-                        <p className="font-medium text-lg text-white break-words max-w-xxs lg:max-w-md">{message.text}</p>
+                        <Linkify componentDecorator={componentDecorator}>
+                            <p className="font-medium text-lg text-white break-words max-w-xxs lg:max-w-md">{message.text}</p>
+                        </Linkify>
                         <p className="font-medium text-right text-xs text-gray-300">{message.createdAt.split('.')[0].slice(-8, -3)}</p>
                     </div>
                 </div>
@@ -19,7 +28,9 @@ export default function Message({ message, own, friend }) {
                     <div>
                         <p className="font-medium text-sm">{friend.name}</p>
                         <div className="bg-gray-300 rounded-xl py-1 px-3">
-                            <p className="font-medium text-lg break-words inline-block max-w-xxs lg:max-w-md">{message.text}</p>
+                            <Linkify componentDecorator={componentDecorator}>
+                                <p className="font-medium text-lg break-words inline-block max-w-xxs lg:max-w-md">{message.text}</p>
+                            </Linkify>
                             <p className="font-medium text-right text-xs text-gray-500">{message?.createdAt.split('.')[0].slice(-8, -3)}</p>
                         </div>
                     </div>

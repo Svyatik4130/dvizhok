@@ -468,19 +468,22 @@ export default function ProjectPage() {
                                 })}
                             </Carousel>
                         </div>
+
                         <div className="break-words">
-                            <strong className=" font-semibold text-xl whitespace-pre-line">Короткий опис</strong><br />
-                            {Project.description}<br /><br />
-                            <strong className=" font-semibold text-xl whitespace-pre-line">Актуальність Проекту</strong><br />
-                            {Project.projectRelevance}<br /><br />
-                            <strong className=" font-semibold text-xl whitespace-pre-line">Передісторія</strong><br />
-                            {Project.preHistory}<br /><br />
-                            <strong className=" font-semibold text-xl whitespace-pre-line">План реалізації Проекту</strong><br />
-                            {Project.projectPlan}<br /><br />
-                            <strong className=" font-semibold text-xl whitespace-pre-line">Очікування</strong><br />
-                            {Project.expectations}<br /><br />
-                            <strong className=" font-semibold text-xl whitespace-pre-line">Плани витрат</strong><br />
-                            {Project.spendingPlans}<br /><br />
+                            <Linkify componentDecorator={componentDecorator}>
+                                <strong className=" font-semibold text-xl whitespace-pre-line">Короткий опис</strong><br />
+                                {Project.description}<br /><br />
+                                <strong className=" font-semibold text-xl whitespace-pre-line">Актуальність Проекту</strong><br />
+                                {Project.projectRelevance}<br /><br />
+                                <strong className=" font-semibold text-xl whitespace-pre-line">Передісторія</strong><br />
+                                {Project.preHistory}<br /><br />
+                                <strong className=" font-semibold text-xl whitespace-pre-line">План реалізації Проекту</strong><br />
+                                {Project.projectPlan}<br /><br />
+                                <strong className=" font-semibold text-xl whitespace-pre-line">Очікування</strong><br />
+                                {Project.expectations}<br /><br />
+                                <strong className=" font-semibold text-xl whitespace-pre-line">Плани витрат</strong><br />
+                                {Project.spendingPlans}<br /><br />
+                            </Linkify>
                         </div>
                         <div className="relative flex flex-col gap-2 text-center">
                             <a href={Project.fileXLS} download className="px-3 py-2 mr-3 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl flex text-lg font-medium text-purple-950">Завантажити презентацію <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5" /></svg></a>
