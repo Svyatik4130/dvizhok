@@ -107,7 +107,6 @@ export default function News() {
         try {
             setError('')
             setreqLoading(true)
-
             if (selectedFiles) {
                 if (desc.length < 5) {
                     setError(`Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}`)
@@ -233,21 +232,6 @@ export default function News() {
                 const resFollowed = await axios.get(`/project/get-followed-ids/${userData.user.id}`)
                 const onlyFollowedNews = sortedNews.filter(news => resFollowed.data.includes(news.projectId))
                 setfollowedNews(onlyFollowedNews)
-
-                if (onlyFollowedNews.length > 0) {
-                    settest(onlyFollowedNews.map(story => {
-                        return <EventCard story={story} />
-                    }))
-                } else {
-                    settest(
-                        <div className="w-full opacity-50">
-                            <div className="">
-                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
-                                <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Ви ще не стежите за жодним проектом або проект не опублікував жодної новини. Підписуйтесь та підтримуйте проекти, і ви будете бачити їхні новини</p>
-                            </div>
-                        </div>
-                    )
-                }
 
                 let sortedAdvrts = []
                 const Advts = res.data.filter(announcement => announcement.storyType === "announcement").filter(announcement => resFollowed.data.includes(announcement.projectId)).sort((a, b) => {
@@ -538,7 +522,18 @@ export default function News() {
                     ) : (null)}
                     <Switch>
                         <Route path="/dashboard/news/all">
-                            {test}
+                            {followedNews.length > 0 ? (
+                                followedNews.map(story => {
+                                    return <EventCard story={story} />
+                                })
+                            ) : (
+                                <div className="w-full opacity-50">
+                                    <div className="">
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
+                                        <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Ви ще не стежите за жодним проектом або проект не опублікував жодної новини. Підписуйтесь та підтримуйте проекти, і ви будете бачити їхні новини</p>
+                                    </div>
+                                </div>
+                            )}
                         </Route>
                         <Route path="/dashboard/news/gps">
                             <NewsNearMe news={news} />

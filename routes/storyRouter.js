@@ -58,7 +58,7 @@ router.post('/create-story', (req, res) => {
                 // If Success
                 console.log("good")
                 if (req.body.text.length < 5 || req.body.text.length > 1000) {
-                    return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}` })
+                    return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${req.body.text.length}` })
                 }
                 if (!req.body.locationString || !req.body.location) {
                     return res.status(400).json({ msg: `Введіть локацію новини` })
@@ -106,7 +106,7 @@ router.post('/create-story-noPhoto', auth, async (req, res) => {
     const { projectId, projectLogo, projectName, publisherId, storyType, text, location, locationString, previev_image } = req.body
 
     if (text.length < 5 || text.length > 1000) {
-        return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}` })
+        return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${text.length}` })
     }
     if (!locationString || !location) {
         return res.status(400).json({ msg: `Введіть локацію новини` })
@@ -164,7 +164,7 @@ router.post("/create-announcement", async (req, res) => {
     const { projectId, projectLogo, projectName, publisherId, storyType, text, location, locationString, announcementName, finishTime, finishDate, startTime, startDate, secret } = req.body
     console.log(text)
     if (text.length < 5 || text.length > 1000) {
-        return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}` })
+        return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${text.length}` })
     }
     if (!locationString || !location) {
         return res.status(400).json({ msg: `Введіть локацію новиниfff` })

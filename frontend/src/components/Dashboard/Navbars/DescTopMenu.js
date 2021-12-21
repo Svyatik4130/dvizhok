@@ -8,6 +8,8 @@ import SuccessNotice from '../../misc/SuccessNotice';
 import Popup from 'reactjs-popup';
 import Fuse from 'fuse.js'
 
+import BellNotificator from './BellNotificator'
+
 export default function DescTopMenu() {
     const userData = useSelector(state => state.userData)
     const allProjects = useSelector(state => state.allProjects)
@@ -145,12 +147,12 @@ export default function DescTopMenu() {
                 </div>
             </div>
             <div className="lg:flex lg:w-6/12 md:w-7/12 hidden items-center">
-                <div className="xl:w-6/12 md:w-5/12 px-2">
+                <div className="xl:w-7/12 lg:w-6/12 md:w-5/12 flex px-2">
                     {/* add funds here */}
                     {userData.user.role === 0 ? (
                         <Popup
                             trigger={
-                                <p className="cursor-pointer rounded-lg px-4 py-2 bg-purple-950 text-white text-lg font-semibold text-center">Стати Творцем</p>
+                                <p className="cursor-pointer flex-grow rounded-lg px-4 py-2 bg-purple-950 text-white text-lg font-semibold text-center">Стати Творцем</p>
                             }
                             modal
                             nested
@@ -197,7 +199,7 @@ export default function DescTopMenu() {
                     ) : (
                         <Popup
                             trigger={
-                                <p className="cursor-pointer rounded-lg px-4 py-2 bg-purple-950 text-white text-lg font-semibold text-center">Поповнити Потенціал</p>
+                                <p className="cursor-pointer flex-grow rounded-lg px-4 py-2 bg-purple-950 text-white text-lg font-semibold text-center">Поповнити Потенціал</p>
                             }
                             modal
                             nested
@@ -242,8 +244,9 @@ export default function DescTopMenu() {
                             )}
                         </Popup>
                     )}
+                    <BellNotificator />
                 </div>
-                <div className="w-6/12">
+                <div className="xl:w-5/12 lg:w-6/12 md:w-7/12">
                     <div className="flex justify-end pr-4">
                         <div onClick={() => history.push("/dashboard/profile/personal_info")} className="mb-1 w-14 h-14 mr-2 relative rounded-full hover:opacity-80 transition-all cursor-pointer overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
                         <div>

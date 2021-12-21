@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { io } from "socket.io-client";
 import Message from './Message';
 import OnlineSidebar from './OnlineSidebar';
 import SimpleLoader from '../../../Loaders/SimpleLoader';
 import ErrorNotice from '../../../misc/ErrorNotice'
+import { addAllNotifications } from '../../../../actions/AddNotifications'
+import { getSignature } from '../../../helpers/browser-key'
 
 export default function Panel() {
     const { id } = useParams()
@@ -18,6 +20,8 @@ export default function Panel() {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const socket = useRef();
     const scrollRef = useRef();
+    const dispatch = useDispatch()
+    const signature = getSignature()
     const [friend, setFriend] = useState(null)
     const history = useHistory()
     const [btnColor, setbtnColor] = useState("bg-gray-500 cursor-default")
@@ -66,6 +70,16 @@ export default function Panel() {
         arrivalMessage &&
             currentChat?.members.includes(arrivalMessage.sender) &&
             setMessages((prev) => [...prev, arrivalMessage]);
+
+        if (currentChat?._id) {
+            const notificationCheck = async () => {
+                let token = localStorage.getItem("auth-token")
+                const Notifications = await axios.post("/notifications/read-dm", { url: currentChat._id }, { headers: { "x-auth-token": token, "secret": signature } })
+                console.log(Notifications)
+                dispatch(addAllNotifications(Notifications.data))
+            }
+            notificationCheck()
+        }
     }, [arrivalMessage, currentChat]);
 
     useEffect(() => {
@@ -103,6 +117,12 @@ export default function Panel() {
                 text: newMessage,
                 conversationId: currentChat._id,
             };
+            const notification_payload = {
+                receiverId: friend._id,
+                type: "new_dm",
+                text: `У вас нове непрочитане повідомлення від ${user.name}`,
+                link: currentChat._id
+            }
 
             const receiverId = currentChat.members.find(
                 (member) => member !== user.id
@@ -118,6 +138,7 @@ export default function Panel() {
 
             try {
                 const res = await axios.post("/messages/add", message);
+                await axios.post("/notifications/add", notification_payload)
                 setMessages([...messages, res.data]);
                 setNewMessage("");
 

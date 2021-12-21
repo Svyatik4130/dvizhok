@@ -8,6 +8,7 @@ import ProfilePage from './Pages/Profile/ProfilePage';
 import Projects from './Pages/Projects/Projects';
 import axios from 'axios'
 import { addMyProjects } from '../../actions/ProjectActions'
+import { addAllNotifications } from '../../actions/AddNotifications'
 import Loader from '../Loaders/loading'
 import MobileNavbar from './Navbars/MobileNavbar';
 import UserPage from './Pages/UserPage/UserPage';
@@ -29,18 +30,22 @@ export default function Index() {
             history.push("/signup/")
         }
 
-        const gettingProjects = async () => {
+        const preloadOpps = async () => {
             try {
                 let token = localStorage.getItem("auth-token")
                 const myProjects = await axios.get("/project/get-my-projects", { headers: { "x-auth-token": token, "secret": signature } })
                 dispatch(addMyProjects(myProjects.data))
+
+                const myNotifications = await axios.get("/notifications/get-my-notifications", { headers: { "x-auth-token": token, "secret": signature } })
+                console.log(myNotifications.data)
+                dispatch(addAllNotifications(myNotifications.data))
 
                 setisDataReceived(true)
             } catch (error) {
                 console.log(error)
             }
         }
-        gettingProjects()
+        preloadOpps()
     }, [])
 
     if (!isDataReceived) {
