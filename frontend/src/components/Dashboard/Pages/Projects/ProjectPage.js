@@ -15,6 +15,7 @@ import { loggedUser } from '../../../../actions/UserActions'
 import AdminPanel from './AdminPanel';
 import ProjectsNews from './ProjectsNews';
 import { addAllProjects } from '../../../../actions/ProjectActions'
+import { addAllNotifications } from '../../../../actions/AddNotifications'
 import { ReactPhotoCollage } from "react-photo-collage";
 import Linkify from 'react-linkify';
 
@@ -109,6 +110,7 @@ export default function ProjectPage() {
             const res = await axios.post("/project/raise", { amount: Number(amount), userId: userData.user.id, projectId: id, signature }, {
                 headers: { "x-auth-token": token },
             })
+
             if (res.status === 200) {
                 setSuccessMessage("Ви успішно підтримали проект!")
                 dispatch(loggedUser({
@@ -120,6 +122,15 @@ export default function ProjectPage() {
                 projetsWithNewBalance[allProjects.findIndex(project => project._id === id)].raised += amount
                 dispatch(addAllProjects(projetsWithNewBalance))
 
+                const notification_payload = {
+                    receiverIds: [Project.projectleaderId, ...Project.teamMembers],
+                    type: "new_support",
+                    text: `Проект "${Project.projectName}" підтримав "${userData.user.name}" на суму ${amount}грн.`,
+                    link: id,
+                    myId: userData.user.id
+                }
+                await axios.post("/notifications/add-multiple", notification_payload)
+
                 setTimeout(() => {
                     closeFnc()
                 }, 1500);
@@ -129,6 +140,15 @@ export default function ProjectPage() {
             console.log(error)
         }
     }
+
+    useEffect(() => {
+        const notificationCheck = async () => {
+            let token = localStorage.getItem("auth-token")
+            const Notifications = await axios.post("/notifications/read-supports", { url: id }, { headers: { "x-auth-token": token, "secret": signature } })
+            dispatch(addAllNotifications(Notifications.data))
+        }
+        notificationCheck()
+    }, [])
 
     const Follow = async () => {
         try {

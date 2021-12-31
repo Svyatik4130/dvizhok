@@ -57,7 +57,7 @@ export default function NewsNearMe({ news }) {
             </div>
         )
     }
-    if (!newsNear) {
+    if (newsNear.length === 0) {
         return (
             <div className="w-full opacity-50">
                 <div className="">
@@ -70,6 +70,7 @@ export default function NewsNearMe({ news }) {
 
     return (
         <>
+            hi
             {newsNear.map(story => {
                 return (
                     <div key={story._id}>

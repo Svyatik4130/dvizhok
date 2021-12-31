@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios';
 import EventCard from './EventCard';
 import SidebarEventAlert from './SidebarEventAlert';
@@ -15,6 +15,7 @@ import SimpleLoader from '../../../Loaders/SimpleLoader';
 import "@reach/combobox/styles.css";
 import { getSignature } from '../../../helpers/browser-key'
 import { Switch, Route, NavLink, Redirect } from "react-router-dom";
+import { addAllNotifications } from '../../../../actions/AddNotifications'
 import { Carousel } from 'react-responsive-carousel';
 import AnnouncementsNearMe from './AnnouncementsNearMe';
 import TopPeaceOfNews from './TopPeaceOfNews';
@@ -48,13 +49,12 @@ export default function News() {
         libraries,
     });
 
-
     const signature = getSignature()
+    const dispatch = useDispatch()
 
     const [selectedProject, setselectedProject] = useState(myProjects[0])
     const [isListExpanded, setisListExpanded] = useState(false)
     const [listIconDegree, setlistIconDegree] = useState("0")
-    const [test, settest] = useState()
     const toggleMyProjectsList = () => {
         setisListExpanded(!isListExpanded)
         if (isListExpanded) {
@@ -161,6 +161,17 @@ export default function News() {
                     }
                 })
                 if (publishRes.status === 200) {
+                    if (selectedProject.followers.length > 0) {
+                        const notification_payload = {
+                            receiverIds: [...selectedProject.followers, ...selectedProject.helpers],
+                            type: "new_news",
+                            text: `Проект "${selectedProject.projectName}" опублікував свіжу новину`,
+                            myId: userData.user.id
+                        }
+                        const notifications = await axios.post("/notifications/add-multiple", notification_payload)
+                        dispatch(addAllNotifications(notifications.data))
+                    }
+
                     setreqLoading(false)
                     setDesc()
                     setselectedFiles()
@@ -199,6 +210,17 @@ export default function News() {
                 const publishRes = await axios.post('/story/create-story-noPhoto', payload, { headers: { "x-auth-token": token, "secret": signature } })
 
                 if (publishRes.status === 200) {
+                    if (selectedProject.followers.length > 0) {
+                        const notification_payload = {
+                            receiverIds: [...selectedProject.followers, ...selectedProject.helpers],
+                            type: "new_news",
+                            text: `Проект "${selectedProject.projectName}" опублікував свіжу новину`,
+                            myId: userData.user.id
+                        }
+                        const notifications = await axios.post("/notifications/add-multiple", notification_payload)
+                        dispatch(addAllNotifications(notifications.data))
+                    }
+
                     setreqLoading(false)
                     setDesc()
                     setselectedFiles()
@@ -305,6 +327,15 @@ export default function News() {
         }
         getDetails()
     }, [detectedLink])
+
+    useEffect(() => {
+        const notificationCheck = async () => {
+            let token = localStorage.getItem("auth-token")
+            const Notifications = await axios.get("/notifications/read-news", { headers: { "x-auth-token": token, "secret": signature } })
+            dispatch(addAllNotifications(Notifications.data))
+        }
+        notificationCheck()
+    }, [])
 
     if (loadError) return "MapError";
     if (!isLoaded || isLodaing) return (
@@ -431,7 +462,7 @@ export default function News() {
                                                         </div>
                                                         <div className="absolute z-20 h-auto bg-gray-100 rounded-3xl left-0 top-0 w-full">
                                                             {isListExpanded ? (
-                                                                <div className="pt-24 px-4">
+                                                                <div className="pt-24 px-4 max-h-80 overflow-y-scroll">
                                                                     {myProjects.map(project => {
                                                                         return (
                                                                             <div onClick={() => { setselectedProject(project); setisListExpanded(false); setlistIconDegree("0") }} className="flex items-center hover:bg-gray-200 bg-white cursor-pointer transition-all hover:shadow-xl custom-shadow rounded-3xl p-2 mb-2">

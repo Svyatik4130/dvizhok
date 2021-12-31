@@ -75,7 +75,6 @@ export default function Panel() {
             const notificationCheck = async () => {
                 let token = localStorage.getItem("auth-token")
                 const Notifications = await axios.post("/notifications/read-dm", { url: currentChat._id }, { headers: { "x-auth-token": token, "secret": signature } })
-                console.log(Notifications)
                 dispatch(addAllNotifications(Notifications.data))
             }
             notificationCheck()
