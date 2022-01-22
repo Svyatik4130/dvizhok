@@ -48,7 +48,7 @@ export default function ProjectList() {
             </div>
             <div className="w-full h-full flex lg:flex-row flex-col ">
                 <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full lg:border-2 border-gray-300 rounded-xl">
-                    {allProjects.map((project) => {
+                    {allProjects.length > 0 ? (allProjects.map((project) => {
                         let raised = project.raised
                         let rqrd = project.fundsReqrd
                         if (project.isFundsInfinite) {
@@ -141,7 +141,14 @@ export default function ProjectList() {
                                 </div>
                             </div>
                         )
-                    })}
+                    })) : (
+                        <div className="w-full h-full relative opacity-50">
+                            <div className="absolute w-6/7 lg:w-auto center-content">
+                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
+                                <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">У системі ще немає жодного проекту</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div className="lg:w-3/12 w-full lg:pl-3 pl-0 pb-4 lg:pb-0 order-1 lg:order-2">
                     <div className="relative">

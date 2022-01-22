@@ -76,8 +76,7 @@
   "proxy": "http://localhost:5040",
   "devDependencies": {
     "autoprefixer": "^9.8.6",
-    "postcss": "^7.0.36",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.4"
+    "postcss": "^7.0.36"
   },
   "reactSnap": {
     "cacheAjaxRequests": true,
