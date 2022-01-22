@@ -52,7 +52,7 @@ export default function ProfilePage() {
                         Особиста інфо
                     </NavLink>
                     <NavLink activeClassName="bg-white" to={"/dashboard/profile/about_myself"} className="w-3/12 py-2 text-center  border-r-2">
-                        Про себе
+                        Про себе111111
                     </NavLink>
                     <NavLink activeClassName="bg-white" to={"/dashboard/profile/potential"} className={`w-3/12 text-center py-2 border-r-2 ${stylesForPotentialBtn}`}>
                         Ваш потенціал
