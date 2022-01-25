@@ -74,7 +74,7 @@ const ProjectPDFAndXLSUploads = multer({
             cb(null, "images/files/pdfAndXlsFiles/" + FileName)
         }
     }),
-    limits: { fileSize: 11000000 },
+    limits: { fileSize: 15728640 }, // 15mb
     fileFilter: function (req, file, cb) {
         checkPdfAndXlsType(file, cb);
     }
@@ -107,7 +107,7 @@ router.post('/upload-xlsANDpdf', (req, res) => {
                     return res.status(400).json({ msg: "Назва проекту має бути меншим за 50 символів" })
                 }
                 if (req.body.category === "") {
-                    return res.status(400).json({ msg: "Будь ласка, виберіть 44444категорію проекту" })
+                    return res.status(400).json({ msg: "Будь ласка, виберіть категорію проекту" })
                 }
                 // change categories here
                 const arrCtgr = req.body.category.split(",")

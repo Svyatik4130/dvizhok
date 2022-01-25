@@ -7,11 +7,13 @@ const app = express()
 const cors = require('cors')
 
 app.use(cors())
-
 app.use(express.json())
 app.use(express.urlencoded({
     extended: true
 }))
+app.use(express.bodyParser({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
+
 const PORT = process.env.PORT || 5040
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
@@ -26,12 +28,15 @@ mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
 app.use("/users", require("./routes/userRouter"))
 app.use("/landing", require("./routes/landingRouter"))
 app.use("/project", require("./routes/projectRouter"))
+app.use("/projectDraft", require("./routes/projectDraftRouter"))
 app.use("/conversations", require("./routes/conversationRouter"))
 app.use("/messages", require("./routes/messageRouter"))
 app.use("/payments", require("./routes/wayforpayRouter"))
 app.use("/story", require("./routes/storyRouter"))
 app.use("/comments", require("./routes/commentRouter"))
 app.use("/notifications", require("./routes/notificationRouter"))
+
+
 
 // Passport middleware
 app.use(passport.initialize());

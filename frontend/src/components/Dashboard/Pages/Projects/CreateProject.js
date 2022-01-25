@@ -48,6 +48,7 @@ export default function CreateProject() {
     const [htmlImages, sethtmlImages] = useState([])
     const [logo, setLogo] = useState([])
     const [reqLoading, setreqLoading] = useState(false)
+    const [reqLoading1, setreqLoading1] = useState(false)
     const [allUsers, setAllUsers] = useState([])
     const [findedUsers, setFindedUsers] = useState()
     const [inputStyle, setInputStyle] = useState("rounded-3xl bg-gray-100")
@@ -428,6 +429,295 @@ export default function CreateProject() {
         multipleFileUploadHandler(location)
     }
 
+    const handleDraftSave = async (e) => {
+        const dateNow = formatDate(new Date)
+        const location = `${dateNow}/`
+        multipleFileUploadHandlerForDraft(location)
+    }
+    const multipleFileUploadHandlerForDraft = async (location) => {
+        setError('')
+        setreqLoading1(true)
+
+        // If file selected
+        if (selectedFiles) {
+            const data = new FormData();
+
+            const onlyMembersIds = teamMembers.map((member, index) => {
+                if (index === teamMembers.length - 1) return true
+                return member._id
+            })
+            onlyMembersIds.splice(-1)
+
+            let areSelectionsCorrect = true
+            selections.forEach(selection => {
+                // add new categories here
+                if (selection !== "Культура" && selection !== "Екологія") {
+                    areSelectionsCorrect = false
+                }
+            })
+            if (!areSelectionsCorrect) {
+                setError("Не треба так))))")
+                setreqLoading(false)
+                return
+            }
+            data.append('description', shortDesc)
+            data.append('projName', Name)
+            data.append('category', selections)
+            data.append('Location', Location)
+            data.append('locationString', locationString)
+            data.append('userId', userData.user.id)
+            data.append('userName', userData.user.name)
+            data.append('filePDFAndXLS', filePDF)
+            data.append('filePDFAndXLS', fileXLS)
+            data.append('spendingPlans', spendingPlans)
+            data.append('expectations', expectations)
+            data.append('projectPlan', projectPlan)
+            data.append('preHistory', preHistory)
+            data.append('projectRelevance', projectRelevance)
+            data.append('teamMembers', onlyMembersIds)
+            data.append('isFundsInfinite', isFundsInfinite)
+            data.append('isProjectInfinite', isProjectInfinite)
+            data.append('fundsReqrd', fundsReqrd)
+            data.append('finishDate', finishDate)
+            data.append('secret', signature);
+
+            try {
+                let AreExtsSuitable = true
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    if (i < 4) {
+                        if (!(/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
+                            AreExtsSuitable = false
+                        }
+                    }
+                }
+                if (!(/(jpe?g|png)$/i).test(logoFile.name.split('.').pop())) {
+                    AreExtsSuitable = false
+                }
+                if (!AreExtsSuitable) {
+                    setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .mov, .mp4');
+                    setreqLoading(false)
+                    return
+                }
+                let token = localStorage.getItem("auth-token")
+
+                if (filePDF && fileXLS) {
+                    // const prepublishRes = await axios.post("/project/prepublish-check", payload, { headers: { "x-auth-token": token, "secret": signature } })
+                    const prepublishRes = await axios.post('/projectDraft/upload-xlsANDpdf', data, {
+                        headers: {
+                            'accept': 'application/json',
+                            'Accept-Language': 'en-US,en;q=0.8',
+                            'Content-Type': 'multipart/form-data',
+                            "x-auth-token": token,
+                        }
+                    })
+                    data.delete("filePDFAndXLS")
+                    if (prepublishRes.status === 201) {
+                        if (selectedFiles.length > 1) {
+                            for (let i = 0; i < selectedFiles.length; i++) {
+                                if (i < 4) {
+                                    data.append('galleryImage', selectedFiles[i]);
+                                }
+                            }
+                            data.append('galleryImage', logoFile);
+                            data.append('XlsAndPdfFilesLocations', prepublishRes.data)
+                            const publishRes = await axios.post('/projectDraft/create-project', data, {
+                                headers: {
+                                    'accept': 'application/json',
+                                    'Accept-Language': 'en-US,en;q=0.8',
+                                    'Content-Type': 'multipart/form-data',
+                                    'location': `images/projects/${location}`,
+                                    "x-auth-token": token,
+                                }
+                            })
+                            // If file size is larger than expected.
+                            console.log(publishRes.data)
+                            if (publishRes.data.msg) {
+                                if (publishRes.data.msg.code === "LIMIT_FILE_SIZE") {
+                                    setError('Max size: 20MB')
+                                } else if (publishRes.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
+                                    setError('Max 4 images & videos allowed');
+                                } else {
+                                    console.log(publishRes.data)
+                                    setError(publishRes.data.msg.code)
+                                }
+                            } else {
+                                // Success with images and videos
+                                setSuccessMessage('Проект опублікован')
+
+                                // adding projects to redux
+                                myProjects.push(publishRes.data)
+                                dispatch(addMyProjects(myProjects))
+
+                                allProjects.push(publishRes.data)
+                                dispatch(addAllProjects(allProjects))
+
+                                setTimeout(() => {
+                                    history.push("/dashboard/projects/myprojects")
+                                }, 1000);
+                            }
+                        } else {
+                            const payload = {
+                                description: shortDesc,
+                                projName: Name,
+                                category: selections,
+                                Location: Location,
+                                locationString: locationString,
+                                userId: userData.user.id,
+                                userName: userData.user.name,
+                                spendingPlans: spendingPlans,
+                                expectations: expectations,
+                                projectPlan: projectPlan,
+                                preHistory: preHistory,
+                                projectRelevance: projectRelevance,
+                                teamMembers: onlyMembersIds,
+                                isFundsInfinite: isFundsInfinite,
+                                isProjectInfinite: isProjectInfinite,
+                                fundsReqrd: fundsReqrd,
+                                finishDate: finishDate,
+                                secret: signature,
+                                XlsAndPdfFilesLocations: prepublishRes.data
+                            }
+                            const publishRes = await axios.post('/projectDraft/create-project-nophoto', payload)
+                            // If file size is larger than expected.
+                            console.log(publishRes.data)
+                            if (publishRes.data.msg) {
+                                if (publishRes.data.msg.code === "LIMIT_FILE_SIZE") {
+                                    setError('Max size: 20MB')
+                                } else if (publishRes.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
+                                    setError('Max 4 images & videos allowed');
+                                } else {
+                                    console.log(publishRes.data)
+                                    setError(publishRes.data.msg.code)
+                                }
+                            } else {
+                                // Success with images and videos
+                                setSuccessMessage('Проект опублікован')
+
+                                // adding projects to redux
+                                myProjects.push(publishRes.data)
+                                dispatch(addMyProjects(myProjects))
+
+                                allProjects.push(publishRes.data)
+                                dispatch(addAllProjects(allProjects))
+
+                                setTimeout(() => {
+                                    history.push("/dashboard/projects/myprojects")
+                                }, 1000);
+                            }
+                        }
+                    }
+                } else {
+                    if (selectedFiles.length > 1) {
+                        for (let i = 0; i < selectedFiles.length; i++) {
+                            if (i < 4) {
+                                data.append('galleryImage', selectedFiles[i]);
+                            }
+                        }
+                        data.append('galleryImage', logoFile);
+                        const publishRes = await axios.post('/projectDraft/create-project', data, {
+                            headers: {
+                                'accept': 'application/json',
+                                'Accept-Language': 'en-US,en;q=0.8',
+                                'Content-Type': 'multipart/form-data',
+                                'location': `images/projects/${location}`,
+                                "x-auth-token": token,
+                            }
+                        })
+                        // If file size is larger than expected.
+                        if (publishRes.data.msg) {
+                            if (publishRes.data.msg.code === "LIMIT_FILE_SIZE") {
+                                setError('Max size: 20MB')
+                            } else if (publishRes.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
+                                setError('Max 4 images & videos allowed');
+                            } else {
+                                console.log(publishRes.data)
+                                setError(publishRes.data.msg.code)
+                            }
+                        } else {
+                            // Success with images and videos
+                            setSuccessMessage('Проект опублікован')
+
+                            // adding projects to redux
+                            myProjects.push(publishRes.data)
+                            dispatch(addMyProjects(myProjects))
+
+                            allProjects.push(publishRes.data)
+                            dispatch(addAllProjects(allProjects))
+
+                            setTimeout(() => {
+                                history.push("/dashboard/projects/myprojects")
+                            }, 1000);
+                        }
+                    } else {
+                        const payload = {
+                            description: shortDesc,
+                            projName: Name,
+                            category: selections,
+                            Location: Location,
+                            locationString: locationString,
+                            userId: userData.user.id,
+                            userName: userData.user.name,
+                            spendingPlans: spendingPlans,
+                            expectations: expectations,
+                            projectPlan: projectPlan,
+                            preHistory: preHistory,
+                            projectRelevance: projectRelevance,
+                            teamMembers: onlyMembersIds,
+                            isFundsInfinite: isFundsInfinite,
+                            isProjectInfinite: isProjectInfinite,
+                            fundsReqrd: fundsReqrd,
+                            finishDate: finishDate,
+                            secret: signature
+                        }
+                        const publishRes = await axios.post('/projectDraft/create-project-nophoto', data)
+                        // If file size is larger than expected.
+                        if (publishRes.data.msg) {
+                            if (publishRes.data.msg.code === "LIMIT_FILE_SIZE") {
+                                setError('Max size: 20MB')
+                            } else if (publishRes.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
+                                setError('Max 4 images & videos allowed');
+                            } else {
+                                console.log(publishRes.data)
+                                setError(publishRes.data.msg.code)
+                            }
+                        } else {
+                            // Success with images and videos
+                            setSuccessMessage('Проект опублікован')
+
+                            // adding projects to redux
+                            myProjects.push(publishRes.data)
+                            dispatch(addMyProjects(myProjects))
+
+                            allProjects.push(publishRes.data)
+                            dispatch(addAllProjects(allProjects))
+
+                            setTimeout(() => {
+                                history.push("/dashboard/projects/myprojects")
+                            }, 1000);
+                        }
+                    }
+                }
+                setreqLoading(false)
+            } catch (err) {
+                console.log(err)
+                if (err.response?.data?.msg) {
+                    if (err.response.data.msg.code === "LIMIT_FILE_SIZE") {
+                        setError('Max size: 20MB')
+                    } else if (err.response.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
+                        setError('Max 4 images & videos allowed');
+                    } else {
+                        setError(err.response.data.msg)
+                    }
+                }
+                setreqLoading(false)
+            }
+        } else {
+            // if file not selected throw error
+            setError('Будь ласка, завантажте хоча б один відео або фото файл');
+            setreqLoading(false)
+        }
+    }
+
     const deleteFile = (blob, index) => {
         const newArray = htmlImages
         newArray.splice(htmlImages.findIndex(source => source === blob), 1)
@@ -508,7 +798,7 @@ export default function CreateProject() {
             </div>
         )
     }
-    
+
     return (
         <div>
             <form onSubmit={handleSubmit} className="flex lg:flex-row flex-col">
@@ -708,14 +998,23 @@ export default function CreateProject() {
                             {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
                         </div>
                     </div>
-
-                    <div className="flex mt-6 float-right">
-                        <button id="submitbtn" className={`font-meduim text-lg px-6 py-2 bg-purple-950 cursor-pointer text-white rounded-xl`} type="submit">+ Створити проект</button>
-                        {reqLoading ? (
-                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-11" />
-                        ) : (
-                            null
-                        )}
+                    <div className='flex flex-col'>
+                        <div className="flex mt-6 ml-auto">
+                            <button id="submitbtn" className={`font-meduim text-lg px-6 py-2 bg-gray-200 hover:bg-gray-300 transition-all flex cursor-pointer text-black font-medium items-center rounded-xl`} type="button"><svg className='mr-2' xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z" /><path d="M13 3v6h6" /></svg>Зберегти чернетку</button>
+                            {reqLoading ? (
+                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-11" />
+                            ) : (
+                                null
+                            )}
+                        </div>
+                        <div className="flex mt-6 ml-auto">
+                            <button id="submitbtn" className={`font-meduim text-lg px-6 py-2 bg-purple-950 cursor-pointer text-white rounded-xl`} type="submit">+ Створити проект</button>
+                            {reqLoading ? (
+                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-11" />
+                            ) : (
+                                null
+                            )}
+                        </div>
                     </div>
                 </div>
             </form >
