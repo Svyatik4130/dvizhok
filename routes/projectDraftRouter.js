@@ -97,13 +97,6 @@ router.post('/upload-xlsANDpdf', (req, res) => {
                     PdfAndXlsLocationArray.push(fileLocation)
                 }
 
-                const token = req.header("x-auth-token")
-                if (!token) return res.status(400).json({ msg: "Ошибка" })
-                const verified = jwt.verify(token, process.env.JWT_SECRET)
-                if (verified.key !== req.body.secret) return res.status(400).json({ msg: "Ошибка" })
-                const user = await User.findById(verified.id)
-                if (!user.leaderReady) return res.status(400).json({ msg: "У  вас недостатньо прав" })
-
                 res.status(201).json(PdfAndXlsLocationArray)
             }
         }
@@ -128,12 +121,31 @@ router.post('/create-project', (req, res) => {
                     fileLocation = fileArray[i].location;
                     galleryImgLocationArray.push(fileLocation)
                 }
-                // last image in array is the logo
-                const logo = galleryImgLocationArray.splice(-1)
-                let latNlng = req.body.Location.split(',').map(Number)
-                const teamMemeberIds = req.body.teamMembers.split(",")
 
-                const files_pdf_xls = req.body.XlsAndPdfFilesLocations.split(',')
+                let logo = ""
+                if (req.body.isLogo == "true") {
+                    // last image in array is the logo
+                    logo = galleryImgLocationArray.splice(-1)
+                }
+
+                let latNlng = ["", ""]
+                if (req.body.Location) {
+                    latNlng = req.body.Location.split(',').map(Number)
+                }
+
+                let teamMemeberIds = []
+                if (req.body.teamMembers.length > 0) {
+                    teamMemeberIds = req.body.teamMembers.split(",")
+                }
+
+                let arrCtgr = ""
+                if (req.body.category) {
+                    arrCtgr = req.body.category.split(",")
+                }
+                let files_pdf_xls = []
+                if (req.body.XlsAndPdfFilesLocations) {
+                    files_pdf_xls = req.body.XlsAndPdfFilesLocations.split(',')
+                }
                 // save proj in mongodb
                 const newProjDraft = new ProjectDraft({
                     projectleaderName: req.body.userName,
@@ -159,6 +171,7 @@ router.post('/create-project', (req, res) => {
                     finishDate: req.body.finishDate,
                     followers: [req.body.userId],
                 })
+                await ProjectDraft.deleteMany({ "projectleaderId": req.body.userId })
 
                 const savedProjectDraft = await newProjDraft.save()
                 res.json(savedProjectDraft);
@@ -167,39 +180,58 @@ router.post('/create-project', (req, res) => {
     })
 })
 router.post('/create-project-nophoto', async (req, res) => {
+    const { description, projName, userName, userId, category, Location, locationString, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, XlsAndPdfFilesLocations, logoUrl, imageVidUrls } = req.body
 
-    let latNlng = req.body.Location.split(',').map(Number)
-    const teamMemeberIds = req.body.teamMembers.split(",")
+    // let latNlng = ["", ""]
+    // if (Location) {
+    //     latNlng = Location.split(',').map(Number)
+    // }
 
-    const files_pdf_xls = req.body.XlsAndPdfFilesLocations.split(',')
+    // let teamMemeberIds = []
+    // if (teamMembers.length > 0) {
+    //     teamMemeberIds = teamMembers.split(",")
+    // }
+console.log(Location);
+    const files_pdf_xls = XlsAndPdfFilesLocations.split(',')
     // save proj in mongodb
     const newProjDraft = new ProjectDraft({
-        projectleaderName: req.body.userName,
-        projectleaderId: req.body.userId,
-        description: req.body.description,
-        photosNvideos: galleryImgLocationArray,
-        category: arrCtgr,
-        location: latNlng,
-        locationString: req.body.locationString,
-        logoUrl: logo,
-        projectName: req.body.projName,
+        projectleaderName: userName,
+        projectleaderId: userId,
+        description: description,
+        photosNvideos: imageVidUrls,
+        category: category,
+        location: Location,
+        locationString: locationString,
+        logoUrl: logoUrl,
+        projectName: projName,
         filePDF: files_pdf_xls[0],
         fileXLS: files_pdf_xls[1],
-        spendingPlans: req.body.spendingPlans,
-        expectations: req.body.expectations,
-        projectPlan: req.body.projectPlan,
-        preHistory: req.body.preHistory,
-        projectRelevance: req.body.projectRelevance,
-        teamMembers: teamMemeberIds,
-        isFundsInfinite: req.body.isFundsInfinite,
-        isProjectInfinite: req.body.isProjectInfinite,
-        fundsReqrd: req.body.fundsReqrd,
-        finishDate: req.body.finishDate,
-        followers: [req.body.userId],
+        spendingPlans: spendingPlans,
+        expectations: expectations,
+        projectPlan: projectPlan,
+        preHistory: preHistory,
+        projectRelevance: projectRelevance,
+        teamMembers: teamMembers,
+        isFundsInfinite: isFundsInfinite,
+        isProjectInfinite: isProjectInfinite,
+        fundsReqrd: fundsReqrd,
+        finishDate: finishDate,
+        followers: [userId],
     })
+    await ProjectDraft.deleteMany({ "projectleaderId": req.body.userId })
 
     const savedProjectDraft = await newProjDraft.save()
     res.json(savedProjectDraft);
 })
+router.get("/get-my-draft/:userID", async (req, res) => {
+    try {
+        const Draft = await ProjectDraft.find({
+            projectleaderId: req.params.userID,
+        });
+        res.status(200).json(Draft);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
 module.exports = router;

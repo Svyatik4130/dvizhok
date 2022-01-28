@@ -21,7 +21,6 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
     const myProjects = useSelector(state => state.myProjects)
     const allProjects = useSelector(state => state.allProjects)
     const dispatch = useDispatch()
-    const history = useHistory()
     const signature = getSignature()
 
     const [error, setError] = useState()

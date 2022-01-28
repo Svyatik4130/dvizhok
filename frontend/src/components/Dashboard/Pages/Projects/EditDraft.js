@@ -23,8 +23,8 @@ export default function CreateProject() {
     const history = useHistory()
     const signature = getSignature()
     const [isLoading, setIsLoading] = useState(true)
-    const [draft, setDraft] = useState();
 
+    const [draft, setDraft] = useState();
     const [Name, setName] = useState("")
     const [selectedFiles, setselectedFiles] = useState("")
     const [logoFile, setlogoFile] = useState("")
@@ -74,7 +74,36 @@ export default function CreateProject() {
                 setAllUsers(userRed.data)
 
                 const draft = await axios.get(`/projectDraft/get-my-draft/${userData.user.id}`)
-                setDraft(draft.data)
+                if (draft.data.length === 0) {
+                    history.push("/dashboard/projects/projectslist")
+                }
+                const draftInfo = draft.data[0]
+                console.log(draftInfo);
+                setDraft(draftInfo)
+                setName(draftInfo.projName)
+                setshortDesc(draftInfo.description)
+                if (draftInfo.locationString !== "undefined") {
+                    setLocation(draftInfo.location)
+                    setLocationString(draftInfo.locationString)
+                }
+                setFinishDate(draftInfo.finishDate)
+                setFundsReqrd(draftInfo.fundsReqrd)
+                setIsProjectInfinite(draftInfo.isProjectInfinite)
+                setIsFundsInfinite(draftInfo.isFundsInfinite)
+                const Members = userRed.data.filter(user => { return draftInfo.teamMembers.includes(user._id) })
+                Members.push("")
+                setTeamMembers(Members)
+                setProjectRelevance(draftInfo.projectRelevance)
+                setPreHistory(draftInfo.preHistory)
+                setProjectPlan(draftInfo.projectPlan)
+                setExpectations(draftInfo.expectations)
+                setSpendingPlans(draftInfo.spendingPlans)
+                sethtmlImages(draftInfo.photosNvideos)
+                if (draftInfo.category[0] === "") {
+                    setSelections("")
+                } else {
+                    setSelections(draftInfo.category)
+                }
 
                 setIsLoading(false)
             } catch (error) {
@@ -85,6 +114,8 @@ export default function CreateProject() {
     }, [])
 
     useEffect(() => {
+        console.log(htmlImages);
+
         const options = {
             minMatchCharLength: 2,
             keys: [
@@ -146,16 +177,18 @@ export default function CreateProject() {
     };
 
     const multipleFileChangedHandler = (event) => {
-        if (selectedFiles.length === 0) {
+        if (selectedFiles.length + htmlImages.filter(src => src.split(":")[0] !== "blob").length === 0) {
             if (event.target.files.length > 4) {
                 let newArr = event.target.files.slice(0, 4)
                 setselectedFiles(newArr)
             } else {
                 setselectedFiles([...event.target.files])
             }
-        } else if (selectedFiles.length < 4) {
+        } else if (selectedFiles.length + htmlImages.filter(src => src.split(":")[0] !== "blob").length < 4) {
+            const countAlreadyUploadedImages = htmlImages.filter(src => src.split(":")[0] !== "blob").length
+            console.log(countAlreadyUploadedImages)
             let newFileList = [...mergeFileLists(selectedFiles, event.target.files)]
-            if (newFileList.length > 4) { newFileList = newFileList.slice(0, 4) }
+            if (newFileList.length + countAlreadyUploadedImages > 4) { newFileList = newFileList.slice(0, 4 - countAlreadyUploadedImages) }
             setselectedFiles(newFileList)
         }
     }
@@ -519,22 +552,13 @@ export default function CreateProject() {
                 data.delete("filePDFAndXLS")
                 console.log(prepublishRes);
                 if (prepublishRes.status === 201) {
-                    if (selectedFiles.length > 0 || logoFile !== "") {
-                        if (selectedFiles.length > 0) {
-                            for (let i = 0; i < selectedFiles.length; i++) {
-                                if (i < 4) {
-                                    data.append('galleryImage', selectedFiles[i]);
-                                }
+                    if (selectedFiles.length > 0) {
+                        for (let i = 0; i < selectedFiles.length; i++) {
+                            if (i < 4) {
+                                data.append('galleryImage', selectedFiles[i]);
                             }
                         }
-
-                        if (logoFile !== "") {
-                            data.append('galleryImage', logoFile);
-                            data.append('isLogo', true);
-                        } else {
-                            data.append('isLogo', false);
-                        }
-
+                        data.append('galleryImage', logoFile);
                         data.append('XlsAndPdfFilesLocations', prepublishRes.data)
                         const publishRes = await axios.post('/projectDraft/create-project', data, {
                             headers: {
@@ -564,7 +588,7 @@ export default function CreateProject() {
                             }, 1000);
                         }
                     } else {
-                        const payload = {
+                        let payload = {
                             description: shortDesc,
                             projName: Name,
                             category: selections,
@@ -583,7 +607,16 @@ export default function CreateProject() {
                             fundsReqrd: fundsReqrd,
                             finishDate: finishDate,
                             secret: signature,
-                            XlsAndPdfFilesLocations: prepublishRes.data
+                            XlsAndPdfFilesLocations: prepublishRes.data,
+                            logoUrl: [],
+                            imageVidUrls: []
+                        }
+
+                        if (draft.logoUrl) {
+                            payload.logoUrl = draft.logoUrl
+                        }
+                        if (htmlImages.length > 0) {
+                            payload.imageVidUrls = htmlImages
                         }
                         const publishRes = await axios.post('/projectDraft/create-project-nophoto', payload)
                         // If file size is larger than expected.
@@ -607,21 +640,13 @@ export default function CreateProject() {
                     }
                 }
             } else if (!filePDF && !fileXLS) {
-                if (selectedFiles.length > 0 || logoFile !== "") {
-                    if (selectedFiles.length > 0) {
-                        for (let i = 0; i < selectedFiles.length; i++) {
-                            if (i < 4) {
-                                data.append('galleryImage', selectedFiles[i]);
-                            }
+                if (selectedFiles.length > 1) {
+                    for (let i = 0; i < selectedFiles.length; i++) {
+                        if (i < 4) {
+                            data.append('galleryImage', selectedFiles[i]);
                         }
                     }
-
-                    if (logoFile !== "") {
-                        data.append('galleryImage', logoFile);
-                        data.append('isLogo', true);
-                    } else {
-                        data.append('isLogo', false);
-                    }
+                    data.append('galleryImage', logoFile);
                     const publishRes = await axios.post('/projectDraft/create-project', data, {
                         headers: {
                             'accept': 'application/json',
@@ -668,7 +693,16 @@ export default function CreateProject() {
                         fundsReqrd: fundsReqrd,
                         finishDate: finishDate,
                         secret: signature,
-                        XlsAndPdfFilesLocations: " , "
+                        XlsAndPdfFilesLocations: " , ",
+                        logoUrl: [],
+                        imageVidUrls: []
+                    }
+
+                    if (draft.logoUrl) {
+                        payload.logoUrl = draft.logoUrl
+                    }
+                    if (htmlImages.length > 0) {
+                        payload.imageVidUrls = htmlImages
                     }
                     const publishRes = await axios.post('/projectDraft/create-project-nophoto', payload)
                     // If file size is larger than expected.
@@ -709,35 +743,57 @@ export default function CreateProject() {
         }
     }
 
-    const deleteFile = (blob, index) => {
-        const newArray = htmlImages
-        newArray.splice(htmlImages.findIndex(source => source === blob), 1)
+    const deleteFile = (src, index) => {
+        const newArray = htmlImages.filter((file, i) => i !== index)
         sethtmlImages(newArray)
-        let newSelectedFiles = selectedFiles.filter((file, i) => i !== index)
-        setselectedFiles(newSelectedFiles)
+        if (src.split(":")[0] === "blob") {
+            let newSelectedFiles = selectedFiles.filter((file, i) => i !== index)
+            setselectedFiles(newSelectedFiles)
+        }
     }
 
     const renderPhotos = (source) => {
         return source.map((photo, index) => {
-            if (index > 3) return null
-            if (photo.includes("video")) {
-                const video = photo.slice(0, -5)
-                return (
-                    <div className="video-wrapper relative" key={index} >
-                        <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-red-600 hover:bg-red-500 transition-all cursor-pointer rounded-full text-white font-semibold p-0.5 px-2">X</div>
-                        <video id={`video-element-${index}`} controls>
-                            <source src={video}></source>
-                            Your browser does not support HTML5 video.
-                        </video>
-                    </div>
-                )
+            if (photo.split(":")[0] === "blob") {
+                if (index > 3) return null
+                if (photo.includes("video")) {
+                    const video = photo.slice(0, -5)
+                    return (
+                        <div className="video-wrapper relative" key={index} >
+                            <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-white hover:bg-gray-200 transition-all border cursor-pointer rounded-full text-red-700 p-0.5 px-2">X</div>
+                            <video id={`video-element-${index}`} controls>
+                                <source src={video}></source>
+                                Your browser does not support HTML5 video.
+                            </video>
+                        </div>
+                    )
+                } else {
+                    return (
+                        <div className="img-wrapper relative">
+                            <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-white hover:bg-gray-200 transition-all border cursor-pointer rounded-full text-red-700 p-0.5 px-2">X</div>
+                            <img className="img" src={photo} key={photo} />
+                        </div>
+                    )
+                }
             } else {
-                return (
-                    <div className="img-wrapper relative">
-                        <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-red-600 hover:bg-red-500 transition-all cursor-pointer rounded-full text-white font-semibold p-0.5 px-2">X</div>
-                        <img className="img" src={photo} key={photo} />
-                    </div>
-                )
+                if (photo.match(/\.(jpeg|jpg|png)$/)) {
+                    return (
+                        <div className="img-wrapper relative">
+                            <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-red-600 hover:bg-red-500 transition-all cursor-pointer rounded-full text-white font-semibold p-0.5 px-2">X</div>
+                            <img className="img" src={photo} key={photo} />
+                        </div>
+                    )
+                } else {
+                    return (
+                        <div className="video-wrapper relative" key={index} >
+                            <div onClick={() => deleteFile(photo, index)} className=" -top-4 -right-4 absolute bg-red-600 hover:bg-red-500 transition-all cursor-pointer rounded-full text-white font-semibold p-0.5 px-2">X</div>
+                            <video id={`video-element-${index}`} controls>
+                                <source src={photo}></source>
+                                Your browser does not support HTML5 video.
+                            </video>
+                        </div>
+                    )
+                }
             }
         })
     }
@@ -750,16 +806,35 @@ export default function CreateProject() {
             )
         })
     }
+    const defaultRenderPhotos = (source) => {
+        return source.map((url, index) => {
+            if (url.match(/\.(jpeg|jpg|png)$/)) {
+                return (
+                    <img src={url} key={url} />
+                )
+            } else {
+                return (
+                    <div key={index} >
+                        <video id={`video-element-${index}`} controls>
+                            <source src={url}></source>
+                            Your browser does not support HTML5 video.
+                        </video>
+                    </div>
+                )
+            }
+        })
+    }
 
     function ProcessFiles(e) {
         // sethtmlImages([])
         if (e.target.files) {
-            const fileArr = Array.from(e.target.files).map((file) => {
+            let fileArr = Array.from(e.target.files).map((file) => {
                 if (file.type.includes("video")) {
                     return URL.createObjectURL(file) + "video"
                 }
                 return URL.createObjectURL(file)
             })
+            if (fileArr.length + htmlImages.length > 4) { fileArr = fileArr.slice(0, 4 - htmlImages.length) }
             sethtmlImages((prevImages) => prevImages.concat(fileArr))
         }
         Array.from(e.target.files).map(file => URL.revokeObjectURL(file))
@@ -796,11 +871,14 @@ export default function CreateProject() {
 
                 <div className="lg:w-6/12 w-full lg:pl-9 pl-0">
                     <div className="w-full mb-4 p-2">
-                        <p className="font-bold text-3xl">Створити новий проект</p>
+                        <p className="font-bold text-3xl">Продовжити створення чернетки</p>
                     </div>
 
                     <div className="flex mt-4 items-center">
                         <div className="logo-preview mr-1.5">
+                            {logoFile === "" && draft.logoUrl[0] !== "" ? (
+                                defaultRenderPhotos(draft.logoUrl)
+                            ) : (null)}
                             {renderLogo(logo)}
                         </div>
                         <div className="relative">
@@ -851,7 +929,7 @@ export default function CreateProject() {
                         )}
                     </div>
 
-                    <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} />
+                    <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} defaultValue={locationString} />
                     <p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>
 
                     <div className="w-full mt-4">
@@ -990,11 +1068,6 @@ export default function CreateProject() {
                         </div>
                     </div>
                     <div className='flex flex-col'>
-                        {draft.length > 0 && (
-                            <div className="flex mt-6 animate-bounce ml-auto">
-                                <p className='text-xl text-gray-700'>У вас є незакінчена <a onClick={() => history.push("/dashboard/projects/draft")} className=' underline animate-pulse text-yellow-500 cursor-pointer'>чернетка</a>!</p>
-                            </div>
-                        )}
                         <div className="flex mt-6 ml-auto">
                             <button onClick={() => handleDraftSave()} id="submitbtn" className={`font-meduim text-lg px-6 py-2 bg-gray-200 hover:bg-gray-300 transition-all flex cursor-pointer text-black font-medium items-center rounded-xl`} type="button"><svg className='mr-2' xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z" /><path d="M13 3v6h6" /></svg>Зберегти  чернетку</button>
                             {reqLoading1 ? (

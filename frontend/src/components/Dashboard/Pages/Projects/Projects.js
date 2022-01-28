@@ -6,6 +6,7 @@ import GPSLocation from './GPSLocation';
 import MyProjects from './MyProjects';
 import ProjectList from './ProjectList';
 import ProjectPage from './ProjectPage';
+import EditDraft from './EditDraft';
 
 export default function Projects() {
     const userData = useSelector(state => state.userData)
@@ -16,6 +17,11 @@ export default function Projects() {
                 <Route path="/dashboard/projects/createproject">
                     <div style={{ height: window.innerHeight - 100 }} className="w-full lg:overflow-y-scroll overflow-hidden rounded-xl p-4 bg-white">
                         <CreateProject />
+                    </div>
+                </Route>
+                <Route path="/dashboard/projects/draft">
+                    <div style={{ height: window.innerHeight - 100 }} className="w-full lg:overflow-y-scroll overflow-hidden rounded-xl p-4 bg-white">
+                        <EditDraft />
                     </div>
                 </Route>
                 <Route path="/dashboard/projects/gps">
