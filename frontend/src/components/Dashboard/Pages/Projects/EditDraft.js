@@ -114,8 +114,6 @@ export default function CreateProject() {
     }, [])
 
     useEffect(() => {
-        console.log(htmlImages);
-
         const options = {
             minMatchCharLength: 2,
             keys: [
@@ -552,13 +550,32 @@ export default function CreateProject() {
                 data.delete("filePDFAndXLS")
                 console.log(prepublishRes);
                 if (prepublishRes.status === 201) {
-                    if (selectedFiles.length > 0) {
-                        for (let i = 0; i < selectedFiles.length; i++) {
-                            if (i < 4) {
-                                data.append('galleryImage', selectedFiles[i]);
+                    if (selectedFiles.length > 0 || logoFile !== "") {
+                        if (selectedFiles.length > 0) {
+                            for (let i = 0; i < selectedFiles.length; i++) {
+                                if (i < 4) {
+                                    data.append('galleryImage', selectedFiles[i]);
+                                }
                             }
                         }
-                        data.append('galleryImage', logoFile);
+
+                        if (logoFile !== "") {
+                            data.append('galleryImage', logoFile);
+                            data.append('isLogo', true);
+                        } else {
+                            data.append('isLogo', false);
+                        }
+
+                        const imgUrlsOnly = htmlImages.filter(img => img.split(":")[0] !== "blob")
+                        if (imgUrlsOnly.length > 0) {
+                            data.append('imgUrls', imgUrlsOnly);
+                        }
+
+                        if (logo.length === 0 && draft.logoUrl.length === 1) {
+                            data.append('logoHtmlUrl', draft.logoUrl);
+                        }
+
+
                         data.append('XlsAndPdfFilesLocations', prepublishRes.data)
                         const publishRes = await axios.post('/projectDraft/create-project', data, {
                             headers: {
@@ -588,7 +605,7 @@ export default function CreateProject() {
                             }, 1000);
                         }
                     } else {
-                        let payload = {
+                        const payload = {
                             description: shortDesc,
                             projName: Name,
                             category: selections,
@@ -608,16 +625,19 @@ export default function CreateProject() {
                             finishDate: finishDate,
                             secret: signature,
                             XlsAndPdfFilesLocations: prepublishRes.data,
-                            logoUrl: [],
-                            imageVidUrls: []
+                            imgUrls: [],
+                            logoUrl: []
                         }
 
-                        if (draft.logoUrl) {
+                        const imgUrlsOnly = htmlImages.filter(img => img.split(":")[0] !== "blob")
+                        if (imgUrlsOnly.length > 0) {
+                            payload.imgUrls = imgUrlsOnly
+                        }
+
+                        if (logo.length === 0 && draft.logoUrl.length === 1) {
                             payload.logoUrl = draft.logoUrl
                         }
-                        if (htmlImages.length > 0) {
-                            payload.imageVidUrls = htmlImages
-                        }
+
                         const publishRes = await axios.post('/projectDraft/create-project-nophoto', payload)
                         // If file size is larger than expected.
                         console.log(publishRes.data)
@@ -640,13 +660,31 @@ export default function CreateProject() {
                     }
                 }
             } else if (!filePDF && !fileXLS) {
-                if (selectedFiles.length > 1) {
-                    for (let i = 0; i < selectedFiles.length; i++) {
-                        if (i < 4) {
-                            data.append('galleryImage', selectedFiles[i]);
+                if (selectedFiles.length > 0 || logoFile !== "") {
+                    if (selectedFiles.length > 0) {
+                        for (let i = 0; i < selectedFiles.length; i++) {
+                            if (i < 4) {
+                                data.append('galleryImage', selectedFiles[i]);
+                            }
                         }
                     }
-                    data.append('galleryImage', logoFile);
+
+                    if (logoFile !== "") {
+                        data.append('galleryImage', logoFile);
+                        data.append('isLogo', true);
+                    } else {
+                        data.append('isLogo', false);
+                    }
+
+                    const imgUrlsOnly = htmlImages.filter(img => img.split(":")[0] !== "blob")
+                    if (imgUrlsOnly.length > 0) {
+                        data.append('imgUrls', imgUrlsOnly);
+                    }
+
+                    if (logo.length === 0 && draft.logoUrl.length === 1) {
+                        data.append('logoHtmlUrl', draft.logoUrl);
+                    }
+
                     const publishRes = await axios.post('/projectDraft/create-project', data, {
                         headers: {
                             'accept': 'application/json',
@@ -694,15 +732,17 @@ export default function CreateProject() {
                         finishDate: finishDate,
                         secret: signature,
                         XlsAndPdfFilesLocations: " , ",
-                        logoUrl: [],
-                        imageVidUrls: []
+                        imgUrls: [],
+                        logoUrl: []
                     }
 
-                    if (draft.logoUrl) {
-                        payload.logoUrl = draft.logoUrl
+                    const imgUrlsOnly = htmlImages.filter(img => img.split(":")[0] !== "blob")
+                    if (imgUrlsOnly.length > 0) {
+                        payload.imgUrls = imgUrlsOnly
                     }
-                    if (htmlImages.length > 0) {
-                        payload.imageVidUrls = htmlImages
+
+                    if (logo.length === 0 && draft.logoUrl.length === 1) {
+                        payload.logoUrl = draft.logoUrl
                     }
                     const publishRes = await axios.post('/projectDraft/create-project-nophoto', payload)
                     // If file size is larger than expected.
@@ -1055,11 +1095,25 @@ export default function CreateProject() {
                         <p className="font-medium text-lg">Завантажити презентацію Проекту. Файл в форматі PDF</p>
                         <input onChange={(event) => { setFilePDF(event.target.files[0]) }} type="file" accept=".pdf" className="flex px-1 py-2 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                     </div>
+                    {draft.filePDF.length > 1 && (
+                        <div className="w-full">
+                            <p className=" text-gray-700 flex items-center gap-1 text-lg"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#17D06C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>Презентація PDF вже завантажена</p>
+                            <p className='text-gray-700 text-lg'>{draft.filePDF.split("pdfAndXlsFiles")[1]}</p>
+                        </div>
+                    )}
+
 
                     <div className="flex items-center mt-4 space-x-1">
                         <p className="font-medium text-lg">Завантажити бюджет Проекту. Файл в форматі XLS</p>
                         <input onChange={(event) => { setFileXLS(event.target.files[0]) }} type="file" accept=".xls, .xlsx" className="flex px-1 py-2 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
                     </div>
+                    {draft.fileXLS.length > 1 && (
+                        <div className="w-full">
+                            <p className=" text-gray-700 flex items-center gap-1 text-lg"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#17D06C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>Бюджет XLS вже завантажена</p>
+                            <p className='text-gray-700 text-lg'>{draft.fileXLS.split("pdfAndXlsFiles")[1]}</p>
+                        </div>
+                    )}
+
 
                     <div className="w-10/12 mt-3 m-auto">
                         <div className="px-2 m-auto">

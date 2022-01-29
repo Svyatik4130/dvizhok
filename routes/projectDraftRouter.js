@@ -116,7 +116,7 @@ router.post('/create-project', (req, res) => {
                 // If Success
                 let fileArray = req.files,
                     fileLocation;
-                const galleryImgLocationArray = [];
+                let galleryImgLocationArray = [];
                 for (let i = 0; i < fileArray.length; i++) {
                     fileLocation = fileArray[i].location;
                     galleryImgLocationArray.push(fileLocation)
@@ -126,6 +126,21 @@ router.post('/create-project', (req, res) => {
                 if (req.body.isLogo == "true") {
                     // last image in array is the logo
                     logo = galleryImgLocationArray.splice(-1)
+                }
+
+                if (req.body.imgUrls) {
+                    const imgUrlsArr = req.body.imgUrls.split(',')
+                    if (imgUrlsArr.length > 0) {
+                        galleryImgLocationArray = [...imgUrlsArr, ...galleryImgLocationArray]
+                    }
+                }
+
+                if (galleryImgLocationArray.length > 4) {
+                    galleryImgLocationArray = galleryImgLocationArray.slice(0, 4)
+                }
+
+                if(req.body.logoHtmlUrl){
+                    logo = req.body.logoHtmlUrl
                 }
 
                 let latNlng = ["", ""]
@@ -180,25 +195,17 @@ router.post('/create-project', (req, res) => {
     })
 })
 router.post('/create-project-nophoto', async (req, res) => {
-    const { description, projName, userName, userId, category, Location, locationString, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, XlsAndPdfFilesLocations, logoUrl, imageVidUrls } = req.body
+    const { description, projName, userName, userId, category, Location, locationString, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, XlsAndPdfFilesLocations, logoUrl, imgUrls } = req.body
 
-    // let latNlng = ["", ""]
-    // if (Location) {
-    //     latNlng = Location.split(',').map(Number)
-    // }
+    console.log(imgUrls);
 
-    // let teamMemeberIds = []
-    // if (teamMembers.length > 0) {
-    //     teamMemeberIds = teamMembers.split(",")
-    // }
-console.log(Location);
     const files_pdf_xls = XlsAndPdfFilesLocations.split(',')
     // save proj in mongodb
     const newProjDraft = new ProjectDraft({
         projectleaderName: userName,
         projectleaderId: userId,
         description: description,
-        photosNvideos: imageVidUrls,
+        photosNvideos: imgUrls,
         category: category,
         location: Location,
         locationString: locationString,
