@@ -492,22 +492,6 @@ export default function CreateProject() {
             let token = localStorage.getItem("auth-token")
 
             if (filePDF && fileXLS) {
-                let AreExtsSuitable = true
-                for (let i = 0; i < selectedFiles.length; i++) {
-                    if (i < 4) {
-                        if (!(/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
-                            AreExtsSuitable = false
-                        }
-                    }
-                }
-                if (!(/(jpe?g|png)$/i).test(logoFile.name.split('.').pop())) {
-                    AreExtsSuitable = false
-                }
-                if (!AreExtsSuitable) {
-                    setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .mov, .mp4');
-                    setreqLoading(false)
-                    return
-                }
                 const prepublishRes = await axios.post('/projectDraft/upload-xlsANDpdf', data, {
                     headers: {
                         'accept': 'application/json',
@@ -691,7 +675,6 @@ export default function CreateProject() {
                 }
             } else {
                 setError('Завантажте XLS та PDF презентації одночасно або завантажте їх разом потім');
-                return
             }
             setreqLoading1(false)
         } catch (err) {

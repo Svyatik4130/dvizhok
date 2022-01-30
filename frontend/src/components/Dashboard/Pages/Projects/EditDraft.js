@@ -80,7 +80,8 @@ export default function CreateProject() {
                 const draftInfo = draft.data[0]
                 console.log(draftInfo);
                 setDraft(draftInfo)
-                setName(draftInfo.projName)
+                console.log(draftInfo.projectName);
+                setName(draftInfo.projectName)
                 setshortDesc(draftInfo.description)
                 if (draftInfo.locationString !== "undefined") {
                     setLocation(draftInfo.location)
@@ -191,54 +192,59 @@ export default function CreateProject() {
         }
     }
 
-    const multipleFileUploadHandler = async (location) => {
+    const multipleFileUploadHandler = async (location, close) => {
         setError('')
         setreqLoading(true)
-
-        // If file selected
-        if (selectedFiles) {
-            const data = new FormData();
-
+        try {
+            //create proj with no photo and XLS PDF
             const onlyMembersIds = teamMembers.map((member, index) => {
                 if (index === teamMembers.length - 1) return true
                 return member._id
             })
             onlyMembersIds.splice(-1)
 
-            let areSelectionsCorrect = true
-            selections.forEach(selection => {
-                // add new categories here
-                if (selection !== "Культура" && selection !== "Екологія") {
-                    areSelectionsCorrect = false
+            const payload = {
+                description: shortDesc,
+                projName: Name,
+                category: selections,
+                Location: Location,
+                locationString: locationString,
+                spendingPlans: spendingPlans,
+                expectations: expectations,
+                projectPlan: projectPlan,
+                preHistory: preHistory,
+                projectRelevance: projectRelevance,
+                teamMembers: onlyMembersIds,
+                isFundsInfinite: isFundsInfinite,
+                isProjectInfinite: isProjectInfinite,
+                fundsReqrd: fundsReqrd,
+                finishDate: finishDate,
+                secret: signature,
+                userName: userData.user.name,
+                userId: userData.user.id,
+                logoUrl: draft.logoUrl,
+                photosNvideos: draft.photosNvideos,
+                filePDF: draft.filePDF,
+                fileXLS: draft.fileXLS
+            }
+
+            let token = localStorage.getItem("auth-token")
+            const publishResEmpty = await axios.post('/projectDraft/create-emptyProj', payload, {
+                headers: {
+                    "x-auth-token": token,
                 }
             })
-            if (!areSelectionsCorrect) {
-                setError("Не треба так))))")
-                setreqLoading(false)
-                return
-            }
-            data.append('description', shortDesc)
-            data.append('projName', Name)
-            data.append('category', selections)
-            data.append('Location', Location)
-            data.append('locationString', locationString)
-            data.append('userId', userData.user.id)
-            data.append('userName', userData.user.name)
-            data.append('filePDFAndXLS', filePDF)
-            data.append('filePDFAndXLS', fileXLS)
-            data.append('spendingPlans', spendingPlans)
-            data.append('expectations', expectations)
-            data.append('projectPlan', projectPlan)
-            data.append('preHistory', preHistory)
-            data.append('projectRelevance', projectRelevance)
-            data.append('teamMembers', onlyMembersIds)
-            data.append('isFundsInfinite', isFundsInfinite)
-            data.append('isProjectInfinite', isProjectInfinite)
-            data.append('fundsReqrd', fundsReqrd)
-            data.append('finishDate', finishDate)
-            data.append('secret', signature);
+            console.log(publishResEmpty.data)
 
-            try {
+            const project_id = publishResEmpty.data._id
+
+            // If file selected
+            if (selectedFiles.length > 0) {
+                const data = new FormData();
+                data.append('secret', signature);
+                data.append('projId', project_id);
+                data.append('oldVidNphotos', JSON.stringify(htmlImages.filter(src => src.split(":")[0] !== "blob")));
+
                 let AreExtsSuitable = true
                 for (let i = 0; i < selectedFiles.length; i++) {
                     if (i < 4) {
@@ -247,6 +253,46 @@ export default function CreateProject() {
                         }
                     }
                 }
+                if (!AreExtsSuitable) {
+                    setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .mov, .mp4');
+                    setreqLoading(false)
+                    return
+                }
+                let token = localStorage.getItem("auth-token")
+
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    if (i + htmlImages.filter(src => src.split(":")[0] !== "blob").length < 4) {
+                        data.append('galleryImage', selectedFiles[i]);
+                    }
+                }
+                const publishRes = await axios.post('/project/change-vidNphotos', data, {
+                    headers: {
+                        'accept': 'application/json',
+                        'Accept-Language': 'en-US,en;q=0.8',
+                        'Content-Type': 'multipart/form-data',
+                        'location': `images/projects/${location}`,
+                        "x-auth-token": token,
+                    }
+                })
+                // If file size is larger than expected.
+                console.log(publishRes.data)
+                if (publishRes.data.msg) {
+                    if (publishRes.data.msg.code === "LIMIT_FILE_SIZE") {
+                        setError('Max size: 20MB')
+                    } else if (publishRes.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
+                        setError('Max 4 images & videos allowed');
+                    } else {
+                        console.log(publishRes.data)
+                        setError(publishRes.data.msg.code)
+                    }
+                }
+            }
+            if (logoFile !== "") {
+                const data = new FormData();
+                data.append('secret', signature);
+                data.append('projId', project_id);
+
+                let AreExtsSuitable = true
                 if (!(/(jpe?g|png)$/i).test(logoFile.name.split('.').pop())) {
                     AreExtsSuitable = false
                 }
@@ -255,9 +301,40 @@ export default function CreateProject() {
                     setreqLoading(false)
                     return
                 }
+                data.append('galleryImage', logoFile);
+                let token = localStorage.getItem("auth-token")
+
+                const publishRes = await axios.post('/project/change-logo', data, {
+                    headers: {
+                        'accept': 'application/json',
+                        'Accept-Language': 'en-US,en;q=0.8',
+                        'Content-Type': 'multipart/form-data',
+                        'location': `images/projects/${location}`,
+                        "x-auth-token": token,
+                    }
+                })
+                // If file size is larger than expected.
+                console.log(publishRes.data)
+                if (publishRes.data.msg) {
+                    if (publishRes.data.msg.code === "LIMIT_FILE_SIZE") {
+                        setError('Max size: 20MB')
+                    } else if (publishRes.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
+                        setError('Max 4 images & videos allowed');
+                    } else {
+                        console.log(publishRes.data)
+                        setError(publishRes.data.msg.code)
+                    }
+                }
+            }
+            if (filePDF !== "") {
+                const data = new FormData();
+                data.append('secret', signature);
+                data.append('projId', project_id);
+                data.append('filePDFAndXLS', filePDF)
+
                 let token = localStorage.getItem("auth-token")
                 // const prepublishRes = await axios.post("/project/prepublish-check", payload, { headers: { "x-auth-token": token, "secret": signature } })
-                const prepublishRes = await axios.post('/project/upload-xlsANDpdf', data, {
+                const publishRes = await axios.post('/project/change-pdf', data, {
                     headers: {
                         'accept': 'application/json',
                         'Accept-Language': 'en-US,en;q=0.8',
@@ -265,72 +342,57 @@ export default function CreateProject() {
                         "x-auth-token": token,
                     }
                 })
-                data.delete("filePDFAndXLS")
-                console.log(prepublishRes)
-                if (prepublishRes.status === 201) {
-                    for (let i = 0; i < selectedFiles.length; i++) {
-                        if (i < 4) {
-                            data.append('galleryImage', selectedFiles[i]);
-                        }
-                    }
-                    data.append('galleryImage', logoFile);
-                    data.append('XlsAndPdfFilesLocations', prepublishRes.data)
-                    const publishRes = await axios.post('/project/create-project', data, {
-                        headers: {
-                            'accept': 'application/json',
-                            'Accept-Language': 'en-US,en;q=0.8',
-                            'Content-Type': 'multipart/form-data',
-                            'location': `images/projects/${location}`,
-                            "x-auth-token": token,
-                        }
-                    })
-                    // If file size is larger than expected.
-                    console.log(publishRes.data)
-                    if (publishRes.data.msg) {
-                        if (publishRes.data.msg.code === "LIMIT_FILE_SIZE") {
-                            setError('Max size: 20MB')
-                        } else if (publishRes.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
-                            setError('Max 4 images & videos allowed');
-                        } else {
-                            console.log(publishRes.data)
-                            setError(publishRes.data.msg.code)
-                        }
-                    } else {
-                        // Success with images and videos
-                        setSuccessMessage('Проект опублікован')
-
-                        // adding projects to redux
-                        myProjects.push(publishRes.data)
-                        dispatch(addMyProjects(myProjects))
-
-                        allProjects.push(publishRes.data)
-                        dispatch(addAllProjects(allProjects))
-
-                        setTimeout(() => {
-                            history.push("/dashboard/projects/myprojects")
-                        }, 1000);
-                    }
-                    setreqLoading(false)
-                } else {
-                    setreqLoading(false)
-                }
-                setreqLoading(false)
-            } catch (err) {
-                console.log(err)
-                if (err.response?.data?.msg) {
-                    if (err.response.data.msg.code === "LIMIT_FILE_SIZE") {
-                        setError('Max size: 20MB')
-                    } else if (err.response.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
-                        setError('Max 4 images & videos allowed');
-                    } else {
-                        setError(err.response.data.msg)
-                    }
-                }
-                setreqLoading(false)
+                console.log(publishRes)
             }
-        } else {
-            // if file not selected throw error
-            setError('Будь ласка, завантажте хоча б один відео або фото файл');
+            if (fileXLS !== "") {
+                const data = new FormData();
+                data.append('secret', signature);
+                data.append('projId', project_id);
+                data.append('filePDFAndXLS', fileXLS)
+
+                let token = localStorage.getItem("auth-token")
+                // const prepublishRes = await axios.post("/project/prepublish-check", payload, { headers: { "x-auth-token": token, "secret": signature } })
+                const publishRes = await axios.post('/project/change-xls', data, {
+                    headers: {
+                        'accept': 'application/json',
+                        'Accept-Language': 'en-US,en;q=0.8',
+                        'Content-Type': 'multipart/form-data',
+                        "x-auth-token": token,
+                    }
+                })
+                console.log(publishRes)
+            }
+
+            const newCreatedProject = await axios.post('/project/get-exact-projects', { id: project_id })
+            console.log(newCreatedProject);
+            await axios.post(`/projectDraft/delete-draft`, {id: draft._id})
+
+            setreqLoading(false)
+            setSuccessMessage('Проект опублікован')
+
+            // adding projects to redux
+            myProjects.push(newCreatedProject.data[0])
+            dispatch(addMyProjects(myProjects))
+
+            allProjects.push(newCreatedProject.data[0])
+            dispatch(addAllProjects(allProjects))
+
+            // setProjectFnc(publishRes.data)
+            setTimeout(() => {
+                history.push('/dashboard/projects/projectslist')
+            }, 1000);
+
+        } catch (err) {
+            console.log(err)
+            if (err.response.data.msg) {
+                if (err.response.data.msg.code === "LIMIT_FILE_SIZE") {
+                    setError('Max size: 20MB')
+                } else if (err.response.data.msg.code === 'LIMIT_UNEXPECTED_FILE') {
+                    setError('Max 4 images & videos allowed');
+                } else {
+                    setError(err.response.data.msg)
+                }
+            }
             setreqLoading(false)
         }
     }
@@ -368,6 +430,10 @@ export default function CreateProject() {
             return
         }
         if (!Location) {
+            setError(`Введіть місце розташування проекту та виберіть його зі списку`);
+            return
+        }
+        if(!locationString){
             setError(`Введіть місце розташування проекту та виберіть його зі списку`);
             return
         }
@@ -435,30 +501,41 @@ export default function CreateProject() {
             setError(`'Плани витрат' має бути меншим за 2000 символів. Зараз:${projectPlan.length}`);
             return
         }
-        if (filePDF == "" || !filePDF) {
-            setError('Завантажте презентацію проекту, будь ласка');
+        if (draft.filePDF.length < 1 && draft.fileXLS.length < 1) {
+            if (filePDF == "" || !filePDF) {
+                setError('Завантажте презентацію проекту, будь ласка');
+                return
+            }
+            if (fileXLS == "" || !fileXLS) {
+                setError('Завантажте бюджет проекту, будь ласка');
+                return
+            }
+            if (filePDF.name.split('.').pop() !== "pdf") {
+                setError('Неприпустимий формат презентації проекту, дозволені розширення: .pdf');
+                return
+            }
+            if (filePDF.size / 1024 / 1024 > 10) {
+                setError('Розмір презентації проекту занадто великий. Допустимий: 10мб');
+                return
+            }
+            if (fileXLS.name.split('.').pop() !== "xls" && fileXLS.name.split('.').pop() !== "xlsx") {
+                setError('Неприпустимий формат бюджету проекту, дозволені розширення: .xls');
+                return
+            }
+            if (fileXLS.size / 1024 / 1024 > 10) {
+                setError('Розмір бюджету проекту занадто великий. Допустимий: 10мб');
+                return
+            }
+        }
+        if (draft.logoUrl.length === 0 && logoFile === "") {
+            setError('Завантажте лого будь ласка');
             return
         }
-        if (fileXLS == "" || !fileXLS) {
-            setError('Завантажте бюджет проекту, будь ласка');
+        if (draft.photosNvideos.length === 0 && selectedFiles === "") {
+            setError('Завантажте фото або видео будь ласка');
             return
         }
-        if (filePDF.name.split('.').pop() !== "pdf") {
-            setError('Неприпустимий формат презентації проекту, дозволені розширення: .pdf');
-            return
-        }
-        if (filePDF.size / 1024 / 1024 > 10) {
-            setError('Розмір презентації проекту занадто великий. Допустимий: 10мб');
-            return
-        }
-        if (fileXLS.name.split('.').pop() !== "xls" && fileXLS.name.split('.').pop() !== "xlsx") {
-            setError('Неприпустимий формат бюджету проекту, дозволені розширення: .xls');
-            return
-        }
-        if (fileXLS.size / 1024 / 1024 > 10) {
-            setError('Розмір бюджету проекту занадто великий. Допустимий: 10мб');
-            return
-        }
+
         const dateNow = formatDate(new Date)
         const location = `${dateNow}/`
         multipleFileUploadHandler(location)
@@ -523,22 +600,6 @@ export default function CreateProject() {
             let token = localStorage.getItem("auth-token")
 
             if (filePDF && fileXLS) {
-                let AreExtsSuitable = true
-                for (let i = 0; i < selectedFiles.length; i++) {
-                    if (i < 4) {
-                        if (!(/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
-                            AreExtsSuitable = false
-                        }
-                    }
-                }
-                if (!(/(jpe?g|png)$/i).test(logoFile.name.split('.').pop())) {
-                    AreExtsSuitable = false
-                }
-                if (!AreExtsSuitable) {
-                    setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .mov, .mp4');
-                    setreqLoading(false)
-                    return
-                }
                 const prepublishRes = await axios.post('/projectDraft/upload-xlsANDpdf', data, {
                     headers: {
                         'accept': 'application/json',
@@ -765,7 +826,6 @@ export default function CreateProject() {
                 }
             } else {
                 setError('Завантажте XLS та PDF презентації одночасно або завантажте їх разом потім');
-                return
             }
             setreqLoading1(false)
         } catch (err) {

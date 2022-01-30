@@ -139,7 +139,7 @@ router.post('/create-project', (req, res) => {
                     galleryImgLocationArray = galleryImgLocationArray.slice(0, 4)
                 }
 
-                if(req.body.logoHtmlUrl){
+                if (req.body.logoHtmlUrl) {
                     logo = req.body.logoHtmlUrl
                 }
 
@@ -197,9 +197,12 @@ router.post('/create-project', (req, res) => {
 router.post('/create-project-nophoto', async (req, res) => {
     const { description, projName, userName, userId, category, Location, locationString, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, XlsAndPdfFilesLocations, logoUrl, imgUrls } = req.body
 
-    console.log(imgUrls);
-
-    const files_pdf_xls = XlsAndPdfFilesLocations.split(',')
+    let files_pdf_xls = []
+    if(typeof(XlsAndPdfFilesLocations) == "object"){
+        files_pdf_xls = XlsAndPdfFilesLocations
+    } else {
+        files_pdf_xls = XlsAndPdfFilesLocations.split(',')
+    }
     // save proj in mongodb
     const newProjDraft = new ProjectDraft({
         projectleaderName: userName,
@@ -234,6 +237,58 @@ router.get("/get-my-draft/:userID", async (req, res) => {
     try {
         const Draft = await ProjectDraft.find({
             projectleaderId: req.params.userID,
+        });
+        res.status(200).json(Draft);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+router.post('/create-emptyProj', async (req, res) => {
+    const { userName, userId, description, projName, category, Location, locationString, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, secret, logoUrl, photosNvideos, filePDF, fileXLS } = req.body
+
+    const token = req.header("x-auth-token")
+    if (!token) return res.status(400).json({ msg: "Ошибка" })
+    const verified = jwt.verify(token, process.env.JWT_SECRET)
+    if (verified.key !== secret) return res.status(400).json({ msg: "Ошибка" })
+    // const user = await User.findById(verified.id)
+    // if (!user.leaderReady) return res.status(400).json({ msg: "У  вас недостатньо прав" })
+
+    const newProj = new Project({
+        projectleaderName: userName,
+        projectleaderId: userId,
+        description: description,
+        photosNvideos: photosNvideos,
+        category: category,
+        location: Location,
+        locationString: locationString,
+        logoUrl: logoUrl,
+        projectName: projName,
+        filePDF: filePDF,
+        fileXLS: fileXLS,
+        spendingPlans: spendingPlans,
+        expectations: expectations,
+        projectPlan: projectPlan,
+        preHistory: preHistory,
+        projectRelevance: projectRelevance,
+        teamMembers: teamMembers,
+        isFundsInfinite: isFundsInfinite,
+        isProjectInfinite: isProjectInfinite,
+        fundsReqrd: fundsReqrd,
+        finishDate: finishDate,
+        followers: [userId],
+    })
+
+    const savedProject = await newProj.save()
+    console.log(savedProject)
+    res.json(savedProject);
+})
+
+router.post("/delete-draft", async (req, res) => {
+    try {
+        const { id } = req.body
+        const Draft = await ProjectDraft.findOneAndDelete({
+            _id: id,
         });
         res.status(200).json(Draft);
     } catch (err) {
