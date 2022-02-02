@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom"
 import { addMyProjects, addAllProjects } from '../../../../actions/ProjectActions'
 import Fuse from 'fuse.js'
 import SimpleLoader from '../../../Loaders/SimpleLoader';
-import SearchBar from './SearchBar'
+import SearchBarProject from './SearchBarProject'
 import { getSignature } from '../../../helpers/browser-key'
 import {
     useLoadScript
@@ -30,7 +30,6 @@ export default function CreateProject() {
     const [logoFile, setlogoFile] = useState("")
     const [shortDesc, setshortDesc] = useState("")
     const [Location, setLocation] = useState()
-    const [locationString, setLocationString] = useState()
     const [finishDate, setFinishDate] = useState("")
     const [fundsReqrd, setFundsReqrd] = useState("")
     const [isProjectInfinite, setIsProjectInfinite] = useState(false)
@@ -83,9 +82,8 @@ export default function CreateProject() {
                 console.log(draftInfo.projectName);
                 setName(draftInfo.projectName)
                 setshortDesc(draftInfo.description)
-                if (draftInfo.locationString !== "undefined") {
+                if (draftInfo.location !== "undefined") {
                     setLocation(draftInfo.location)
-                    setLocationString(draftInfo.locationString)
                 }
                 setFinishDate(draftInfo.finishDate)
                 setFundsReqrd(draftInfo.fundsReqrd)
@@ -208,7 +206,6 @@ export default function CreateProject() {
                 projName: Name,
                 category: selections,
                 Location: Location,
-                locationString: locationString,
                 spendingPlans: spendingPlans,
                 expectations: expectations,
                 projectPlan: projectPlan,
@@ -365,7 +362,7 @@ export default function CreateProject() {
 
             const newCreatedProject = await axios.post('/project/get-exact-projects', { id: project_id })
             console.log(newCreatedProject);
-            await axios.post(`/projectDraft/delete-draft`, {id: draft._id})
+            await axios.post(`/projectDraft/delete-draft`, { id: draft._id })
 
             setreqLoading(false)
             setSuccessMessage('Проект опублікован')
@@ -433,8 +430,8 @@ export default function CreateProject() {
             setError(`Введіть місце розташування проекту та виберіть його зі списку`);
             return
         }
-        if(!locationString){
-            setError(`Введіть місце розташування проекту та виберіть його зі списку`);
+        if(Location.filter(location => location.text === "")[0]){
+            setError(`Переконайтеся, що ви вибрали локацію зі спадного списку і не залишили порожніх полів локацій`);
             return
         }
         if (shortDesc.length < 25) {
@@ -578,8 +575,8 @@ export default function CreateProject() {
         data.append('description', shortDesc)
         data.append('projName', Name)
         data.append('category', selections)
-        data.append('Location', Location)
-        data.append('locationString', locationString)
+        const locStr = JSON.stringify(Location)
+        data.append('Location', locStr)
         data.append('userId', userData.user.id)
         data.append('userName', userData.user.name)
         data.append('filePDFAndXLS', filePDF)
@@ -671,7 +668,6 @@ export default function CreateProject() {
                             projName: Name,
                             category: selections,
                             Location: Location,
-                            locationString: locationString,
                             userId: userData.user.id,
                             userName: userData.user.name,
                             spendingPlans: spendingPlans,
@@ -778,7 +774,6 @@ export default function CreateProject() {
                         projName: Name,
                         category: selections,
                         Location: Location,
-                        locationString: locationString,
                         userId: userData.user.id,
                         userName: userData.user.name,
                         spendingPlans: spendingPlans,
@@ -950,6 +945,19 @@ export default function CreateProject() {
         Array.from(e.target.files).map(file => URL.revokeObjectURL(file))
     }
 
+    const addLocation = () => {
+        const maxId = Math.max.apply(Math, Location.map(function (o) { return o.id; }))
+        if (maxId < 4) {
+            setLocation([...Location, { id: maxId + 1, arr: [], text: "" }])
+        } else {
+            setError("Ви не можете додати більше ніж 5 локацій")
+        }
+    }
+    const deleteLocation = (id) => {
+        setLocation(Location.filter(location => location.id !== id))
+    }
+
+
     if (loadError) return "MapError";
     if (!isLoaded) return (
         <div className="pt-16">
@@ -1029,7 +1037,23 @@ export default function CreateProject() {
                         )}
                     </div>
 
-                    <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} defaultValue={locationString} />
+                    {Location.map((location, index) => {
+                        if (index === 0) {
+                            return (
+                                <div className="flex items-center">
+                                    <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
+                                    <div onClick={() => addLocation()} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0c9923" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                                </div>
+                            )
+                        } else {
+                            return (
+                                <div className="flex items-center mt-1">
+                                    <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
+                                    <div onClick={() => deleteLocation(location.id)} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d81a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                                </div>
+                            )
+                        }
+                    })}
                     <p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>
 
                     <div className="w-full mt-4">

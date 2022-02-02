@@ -143,11 +143,6 @@ router.post('/create-project', (req, res) => {
                     logo = req.body.logoHtmlUrl
                 }
 
-                let latNlng = ["", ""]
-                if (req.body.Location) {
-                    latNlng = req.body.Location.split(',').map(Number)
-                }
-
                 let teamMemeberIds = []
                 if (req.body.teamMembers.length > 0) {
                     teamMemeberIds = req.body.teamMembers.split(",")
@@ -168,8 +163,7 @@ router.post('/create-project', (req, res) => {
                     description: req.body.description,
                     photosNvideos: galleryImgLocationArray,
                     category: arrCtgr,
-                    location: latNlng,
-                    locationString: req.body.locationString,
+                    location: JSON.parse(req.body.Location),
                     logoUrl: logo,
                     projectName: req.body.projName,
                     filePDF: files_pdf_xls[0],
@@ -195,7 +189,7 @@ router.post('/create-project', (req, res) => {
     })
 })
 router.post('/create-project-nophoto', async (req, res) => {
-    const { description, projName, userName, userId, category, Location, locationString, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, XlsAndPdfFilesLocations, logoUrl, imgUrls } = req.body
+    const { description, projName, userName, userId, category, Location, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, XlsAndPdfFilesLocations, logoUrl, imgUrls } = req.body
 
     let files_pdf_xls = []
     if(typeof(XlsAndPdfFilesLocations) == "object"){
@@ -211,7 +205,6 @@ router.post('/create-project-nophoto', async (req, res) => {
         photosNvideos: imgUrls,
         category: category,
         location: Location,
-        locationString: locationString,
         logoUrl: logoUrl,
         projectName: projName,
         filePDF: files_pdf_xls[0],
@@ -245,7 +238,7 @@ router.get("/get-my-draft/:userID", async (req, res) => {
 });
 
 router.post('/create-emptyProj', async (req, res) => {
-    const { userName, userId, description, projName, category, Location, locationString, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, secret, logoUrl, photosNvideos, filePDF, fileXLS } = req.body
+    const { userName, userId, description, projName, category, Location, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, secret, logoUrl, photosNvideos, filePDF, fileXLS } = req.body
 
     const token = req.header("x-auth-token")
     if (!token) return res.status(400).json({ msg: "Ошибка" })
@@ -261,7 +254,6 @@ router.post('/create-emptyProj', async (req, res) => {
         photosNvideos: photosNvideos,
         category: category,
         location: Location,
-        locationString: locationString,
         logoUrl: logoUrl,
         projectName: projName,
         filePDF: filePDF,

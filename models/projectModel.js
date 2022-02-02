@@ -21,7 +21,7 @@ const projectSchema = new mongoose.Schema({
     fundsReqrd: { type: String, },
     finishDate: { type: String, },
     location: {type: Array, required: true},
-    locationString: {type: String, required: true},
+    // locationString: {type: String, required: true},
     followers: { type: Array, default: [] },
     helpers: { type: Array, default: [] },
     raised: { type: Number, default: 0 },

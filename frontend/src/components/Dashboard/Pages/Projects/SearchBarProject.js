@@ -11,7 +11,7 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from "use-places-autocomplete";
 
-export default function SearchBarProject({ id, setLocation, Locations, setLocationText, defaultValue }) {
+export default function SearchBarProject({ id, setLocation, Locations, defaultValue }) {
     const {
         ready,
         value,
@@ -28,7 +28,7 @@ export default function SearchBarProject({ id, setLocation, Locations, setLocati
     useEffect(() => {
         setValue(defaultValue, false)
         clearSuggestions();
-    }, [])
+    }, [id])
 
 
     const handleInput = (e) => {
@@ -37,17 +37,15 @@ export default function SearchBarProject({ id, setLocation, Locations, setLocati
 
     const handleSelect = async (address) => {
         setValue(address, false);
-        setLocationText(address)
-
+        const findedIndex = Locations.findIndex(location => location.id === id)
         clearSuggestions();
 
         try {
             const results = await getGeocode({ address });
             const { lat, lng } = await getLatLng(results[0]);
-            const findedIndex = Locations.findIndex(location => location.id === id)
-            Locations[findedIndex].arr = [lat, lng]
-            console.log(Locations);
-            setLocation(Locations)
+            const newArr = [...Locations]
+            newArr[findedIndex] = {id, arr: [lat, lng], text: address}
+            setLocation(newArr)
         } catch (error) {
             console.log("😱 Error: ", error);
         }

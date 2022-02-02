@@ -111,18 +111,21 @@ export default function GPSLocation() {
                 onLoad={onMapLoad}
             >
                 {allProjects.map((project) => (
-                    <Marker
-                        key={`${project?._id}`}
-                        position={{ lat: Number(project?.location?.[0]), lng: Number(project?.location?.[1]) }}
-                        onClick={() => {
-                            setSelected(project);
-                        }}
-                        icon={{
-                            url: `/marker_img.svg`,
-                            origin: new window.google.maps.Point(0, 0),
-                            scaledSize: new window.google.maps.Size(30, 30),
-                        }}
-                    />
+                    project.location.map(locInfo => {
+                        return (<Marker
+                            key={`${project?._id}`}
+                            position={{ lat: Number(locInfo?.arr?.[0]), lng: Number(locInfo?.arr?.[1]) }}
+                            onClick={() => {
+                                setSelected({ project, location: [locInfo?.arr?.[0], locInfo?.arr?.[1]] });
+                            }}
+                            icon={{
+                                url: `/marker_img.svg`,
+                                origin: new window.google.maps.Point(0, 0),
+                                scaledSize: new window.google.maps.Size(30, 30),
+                            }}
+                        />
+                        )
+                    })
                 ))}
 
                 {selected ? (
@@ -133,17 +136,17 @@ export default function GPSLocation() {
                         }}
                     >
                         <div className="max-w-4xl max-h-192 overflow-y-scroll">
-                            <div key={selected._id} className="flex mt-3 p-2 rounded-xl">
+                            <div key={selected.project._id} className="flex mt-3 p-2 rounded-xl">
                                 <div className="flex items-center min-w-0 max-w-md">
-                                    <div className="w-7 h-7 flex-shrink-0 rounded-xl relative responsive-image-bgImgUrl" style={{ backgroundImage: `url(${selected.logoUrl[0]})` }}>
+                                    <div className="w-7 h-7 flex-shrink-0 rounded-xl relative responsive-image-bgImgUrl" style={{ backgroundImage: `url(${selected.project.logoUrl[0]})` }}>
                                     </div>
                                     <div className="ml-2 truncate">
-                                        <a>{selected.projectName}</a>
+                                        <a>{selected.project.projectName}</a>
                                     </div>
                                 </div>
                             </div>
-                            <button onClick={() => { history.push(`/dashboard/projects/${selected._id}`) }} className="rounded-lg w-full py-1 px-1 text-center hover:bg-yellow-300 bg-yellow-350 ">Перейти на сторінку проекту</button>
-                            {CheckAndShowProjectsAtThisLocation(selected._id, selected.location[0], selected.location[1])}
+                            <button onClick={() => { history.push(`/dashboard/projects/${selected.project._id}`) }} className="rounded-lg w-full py-1 px-1 text-center hover:bg-yellow-300 bg-yellow-350 ">Перейти на сторінку проекту</button>
+                            {CheckAndShowProjectsAtThisLocation(selected.project._id, selected.location[0], selected.location[1])}
                         </div>
                     </InfoWindow>
                 ) : null}

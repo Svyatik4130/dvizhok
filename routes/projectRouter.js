@@ -291,7 +291,7 @@ router.post('/create-project', (req, res) => {
                 }
                 // last image in array is the logo
                 const logo = galleryImgLocationArray.splice(-1)
-                let latNlng = req.body.Location.split(',').map(Number)
+                // let latNlng = req.body.Location.split(',').map(Number)
                 const teamMemeberIds = req.body.teamMembers.split(",")
 
                 console.log(req.body.description)
@@ -304,8 +304,7 @@ router.post('/create-project', (req, res) => {
                     description: req.body.description,
                     photosNvideos: galleryImgLocationArray,
                     category: arrCtgr,
-                    location: latNlng,
-                    locationString: req.body.locationString,
+                    location: JSON.parse(req.body.Location),
                     logoUrl: logo,
                     projectName: req.body.projName,
                     filePDF: files_pdf_xls[0],
@@ -586,7 +585,7 @@ router.post("/change-xls", async (req, res) => {
     })
 })
 router.post("/change-info", async (req, res) => {
-    const { projId, description, projName, category, Location, locationString, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, secret } = req.body
+    const { projId, description, projName, category, Location, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, secret } = req.body
 
     const token = req.header("x-auth-token")
     if (!token) return res.status(400).json({ msg: "Ошибка" })
@@ -602,7 +601,6 @@ router.post("/change-info", async (req, res) => {
             "category": category,
             "description": description,
             "location": Location,
-            "locationString": locationString,
             "spendingPlans": spendingPlans,
             "expectations": expectations,
             "projectPlan": projectPlan,

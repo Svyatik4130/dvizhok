@@ -9,7 +9,7 @@ router.post('/add', async (req, res) => {
         return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 2 до 300 символів. Зараз:${text.length}` })
     }
 
-    if (type !== "new_dm", type !== "new_support") {
+    if (type !== "new_dm" && type !== "new_support") {
         return res.status(400).json({ msg: `type error` })
     }
 
@@ -32,7 +32,7 @@ router.post('/add-multiple', async (req, res) => {
         return res.status(400).json({ msg: `Довжина тексту новини повинна бути від 2 до 200 символів. Зараз:${text.length}` })
     }
 
-    if (type !== "new_news", type !== "new_support") {
+    if (type !== "new_news" && type !== "new_support") {
         return res.status(400).json({ msg: `type error` })
     }
     await receiverIds.map(async (id) => {

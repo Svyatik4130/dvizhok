@@ -321,7 +321,13 @@ export default function ProjectPage() {
                     <p className="text-2xl font-bold truncate w-full text-purple-950 text-center">{Project.projectName}</p>
                     <div className="font-medium text-lg w-full lg:w-6/12">
                         <p>Тип проекту: <strong className=" uppercase">{Project.category.join(", ")}</strong></p>
-                        <p>Місце реалізації: <strong className=" uppercase">{Project.locationString}</strong></p>
+                        <p>Місце реалізації: <strong className=" uppercase">{
+                            function () {
+                                const arrStrs = Project.location.map(location => location.text)
+                                console.log(arrStrs.join(", "));
+                                return arrStrs.join(", ")
+                            }()
+                        }</strong></p>
                         <div className="flex lg:flex-row flex-col justify-evenly">
                             <button onClick={() => Follow()} className={`lg:w-5/12 w-full mt-3 ${followers.includes(userData.user.id) ? ("bg-white") : ("bg-yellow-350")} hover:bg-yellow-350 hover:bg-opacity-50 border-2 transition-all border-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center`}>{followers.includes(userData.user.id) ? ("Відписатися") : ("Підписатися")}</button>
                             <Popup
