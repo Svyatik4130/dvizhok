@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Popup from 'reactjs-popup';
 import SuccessNotice from '../../../misc/SuccessNotice';
 import ErrorNotice from '../../../misc/ErrorNotice';
-import SearchBar from '../Projects/SearchBar';
+import SearchBarProject from '../Projects/SearchBarProject';
 import "@reach/combobox/styles.css";
 import { getSignature } from '../../../helpers/browser-key'
 import axios from 'axios';
@@ -11,7 +11,6 @@ import {
     useLoadScript
 } from "@react-google-maps/api";
 import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from "react-router-dom"
 import { addMyProjects, addAllProjects } from '../../../../actions/ProjectActions'
 import Fuse from 'fuse.js'
 import mergeFileLists from "merge-file-lists";
@@ -36,7 +35,6 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
     const [logoFile, setlogoFile] = useState("")
     const [shortDesc, setshortDesc] = useState(project.description)
     const [Location, setLocation] = useState(project.location)
-    const [locationString, setLocationString] = useState(project.locationString)
     const [finishDate, setFinishDate] = useState(project.finishDate)
     const [fundsReqrd, setFundsReqrd] = useState(project.fundsReqrd)
     const [isProjectInfinite, setIsProjectInfinite] = useState(project.isProjectInfinite)
@@ -279,7 +277,6 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
                 projName: Name,
                 category: selections,
                 Location: Location,
-                locationString: locationString,
                 spendingPlans: spendingPlans,
                 expectations: expectations,
                 projectPlan: projectPlan,
@@ -368,8 +365,12 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
             setError('Будь ласка, виберіть категорію проекту');
             return
         }
-        if (!Location) {
+        if (Location[0].text == '') {
             setError(`Введіть місце розташування проекту та виберіть його зі списку`);
+            return
+        }
+        if (Location.filter(location => location.text === "")[0]) {
+            setError(`Переконайтеся, що ви вибрали локацію зі спадного списку і не залишили порожніх полів локацій`);
             return
         }
         if (shortDesc.length < 25) {
@@ -568,6 +569,18 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
         Array.from(e.target.files).map(file => URL.revokeObjectURL(file))
     }
 
+    const addLocation = () => {
+        const maxId = Math.max.apply(Math, Location.map(function (o) { return o.id; }))
+        if (maxId < 4) {
+            setLocation([...Location, { id: maxId + 1, arr: [], text: "" }])
+        } else {
+            setError("Ви не можете додати більше ніж 5 локацій")
+        }
+    }
+    const deleteLocation = (id) => {
+        setLocation(Location.filter(location => location.id !== id))
+    }
+
     if (loadError) return "MapError";
     if (!isLoaded) return (
         <div>
@@ -664,7 +677,23 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
                                     </div>
 
                                     <p className="font-bold text-2xl mt-4">Mісце розташування на Google Maps</p>
-                                    <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} defaultValue={locationString} />
+                                    {Location.map((location, index) => {
+                                        if (index === 0) {
+                                            return (
+                                                <div className="flex items-center">
+                                                    <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
+                                                    <div onClick={() => addLocation()} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0c9923" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                                                </div>
+                                            )
+                                        } else {
+                                            return (
+                                                <div className="flex items-center mt-1">
+                                                    <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
+                                                    <div onClick={() => deleteLocation(location.id)} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d81a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                                                </div>
+                                            )
+                                        }
+                                    })}
                                     <p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>
 
                                     <div className="w-full mt-4">

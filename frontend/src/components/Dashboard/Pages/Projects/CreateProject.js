@@ -339,7 +339,7 @@ export default function CreateProject() {
             setError(`Введіть місце розташування проекту та виберіть його зі списку`);
             return
         }
-        if(Location.filter(location => location.text === "")){
+        if(Location.filter(location => location.text === "")[0]){
             setError(`Переконайтеся, що ви вибрали локацію зі спадного списку і не залишили порожніх полів локацій`);
             return
         }
