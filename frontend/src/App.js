@@ -4,6 +4,7 @@ import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import Landing from './components/MainPage/Landing';
+import Comix from './components/MainPage/ComixPages/Comix';
 import { useDispatch } from 'react-redux'
 import { loggedUser } from './actions/UserActions'
 import Loader from './components/Loaders/loading';
@@ -64,6 +65,9 @@ function App() {
       <Switch>
         <Route exact path="/">
           <Landing />
+        </Route>
+        <Route path="/comix">
+          <Comix />
         </Route>
         <Route path="/guest">
           <GuestPages />
