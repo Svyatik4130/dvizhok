@@ -37,8 +37,9 @@ export default function BellNotificator() {
         <div className="pl-4 items-center flex-row relative">
             <svg onClick={() => createTooltip()} className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#48004b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path></svg>
             <div className={`tooltip-tooltip z-40 w-32 lg:w-80  transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-2`}>
+                <div onClick={() => createTooltip()} className="fixed z-0 top-0 right-0 w-full h-screen"></div>
                 <div onClick={() => createTooltip()} className="absolute -top-2.5 -right-2 bg-white rounded-full hover:bg-opacity-90 transition-all"><svg className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
-                <div className="max-h-96 overflow-y-scroll">
+                <div className="max-h-96 flex flex-col z-50 relative overflow-y-scroll">
                     {notifications && (
                         notifications.map(notification => {
                             let image = <></>
@@ -61,17 +62,29 @@ export default function BellNotificator() {
                                     break;
                             }
                             return (
-                                <div onClick={() => history.push(link)} className={`flex items-center gap-2 bg-gray-200 transition-all hover:shadow-inner shadow-none cursor-pointer rounded-xl p-2 mb-2 ${!notification.isViewed && ("animate-pulse")}`}>
-                                    {image}
-                                    <p className="font-medium">{notification.text}</p>
-                                </div>
+                                <>
+                                    <div onClick={() => { createTooltip(); history.push(link) }} className={`flex flex-col bg-gray-200 transition-all hover:shadow-inner shadow-none cursor-pointer rounded-xl p-2 mb-2 ${!notification.isViewed && ("animate-pulse")}`}>
+                                        <div className="flex items-center gap-2">
+                                            {image}
+                                            <p className="font-medium">{notification.text}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-gray-600">{
+                                                function () {
+                                                    const date = new Date(notification.createdAt)
+                                                    const datestring = ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" +
+                                                        date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
+                                                    return (datestring)
+                                                }()
+                                            }</p>
+                                        </div>
+                                    </div>
+                                </>
                             )
                         })
                     )}
-
                 </div>
             </div>
-
             {unviewedNotifications.length > 0 && (
                 <div className="absolute bg-purple-950 w-2 h-2 rounded-full top-0 right-0 animate-ping"></div>
             )}

@@ -46,6 +46,7 @@ export default function ProjectPage() {
 
     const signature = getSignature()
     const dispatch = useDispatch()
+    console.log(Project.photosNvideos);
 
     useEffect(() => {
         const receivingExactProject = async () => {
@@ -166,7 +167,7 @@ export default function ProjectPage() {
 
     const expandCarousel = () => {
         setcarouselClasses({
-            parent: "prpl-btns-big fixed bg-black bg-opacity-60 w-full h-screen top-0 right-0 z-50",
+            parent: "gray-btns-big fixed bg-black bg-opacity-80 w-full h-screen top-0 right-0 z-50",
             item_expanded: true,
             item_wrapper: "h-screen flex items-center justify-center px-48"
         })
@@ -379,8 +380,8 @@ export default function ProjectPage() {
                             </Popup>
                         </div>
                     </div>
-                    <p className="hidden lg:block font-medium text-lg mt-3 w-full whitespace-normal break-words">
-                        <div className="float-right w-6/12 h-64 -mt-28">
+                    <p className="hidden lg:block text-lg mt-3 w-full whitespace-normal break-words">
+                        <div className="float-right w-6/12 h-64 mb-9 -mt-28">
 
                             {carouselClasses.item_expanded && (
                                 <div onClick={() => closeCarousel()} className="fixed top-0 right-0 m-4 mr-14 rounded-full bg-gray-700 bg-opacity-80 hover:bg-opacity-100 hover:bg-gray-900 transition-all p-1 cursor-pointer" style={{ zIndex: 60 }} >
@@ -390,7 +391,7 @@ export default function ProjectPage() {
                             <Carousel autoPlay={false} showThumbs={false} showStatus={false} className={`pl-3 ${carouselClasses.parent} transition-all`}>
                                 {Project.photosNvideos.map((source) => {
                                     const ext = source.split('.')[source.split('.').length - 1]
-                                    if (ext == "jpeg" || ext == 'jpg' || ext == 'png') {
+                                    if (ext.toLowerCase() == "jpeg" || ext.toLowerCase() == 'jpg' || ext.toLowerCase() == 'png') {
                                         return (
                                             <>
                                                 {carouselClasses.item_expanded && (<div onClick={() => closeCarousel()} style={{ zIndex: 55 }} className="absolute h-screen top-0 right-0 w-full"></div>)}
@@ -422,7 +423,7 @@ export default function ProjectPage() {
                             </Carousel>
                         </div>
                         <Linkify componentDecorator={componentDecorator}>
-                            <div className="mt-5">
+                            <div className="mt-5 whitespace-pre-line">
                                 <strong className=" font-semibold text-2xl">Короткий опис</strong><br />
                                 {Project.description}
                             </div>

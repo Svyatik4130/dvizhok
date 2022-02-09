@@ -56,12 +56,12 @@ export default function DescNavbar() {
                             <p className="element_text text-center text-purple-950 font-medium">Календар подій</p>
                         </div>
                     </NavLink>
-                    <NavLink to={"/dashboard/report"} activeClassName="active_desc_menu">
+                    {/* <NavLink to={"/dashboard/report"} activeClassName="active_desc_menu">
                         <div className="element_wrapper pretty-shadow-noBg transition-all left-0 p-2 my-2 rounded-3xl">
                             <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/report.png" alt="lazy" className="element_report_image w-9 m-auto" />
                             <p className="element_text text-center text-purple-950 font-medium">Звітність</p>
                         </div>
-                    </NavLink>
+                    </NavLink> */}
                     <NavLink to={"/dashboard/idea"} activeClassName="active_desc_menu">
                         <div className="element_wrapper pretty-shadow-noBg transition-all left-0 p-2 my-2 rounded-3xl">
                             <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/idea.png" alt="lazy" className="element_idea_image w-9 m-auto" />

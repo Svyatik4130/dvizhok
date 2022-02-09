@@ -157,37 +157,37 @@ export default function EventCard({ story }) {
                     <div onClick={() => createTooltip(story._id)} className="absolute -top-2.5 -right-2 bg-white rounded-full hover:bg-opacity-90 transition-all"><svg className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
                     <div className="max-h-96 flex gap-1 overflow-y-scroll">
                         <FacebookShareButton
-                            url={`http://31.131.24.170:3000/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
                         >
                             <FacebookIcon size={32} round />
                         </FacebookShareButton>
                         <EmailShareButton
-                            url={`http://31.131.24.170:3000/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
                         >
                             <EmailIcon size={32} round />
                         </EmailShareButton>
                         <LinkedinShareButton
-                            url={`http://31.131.24.170:3000/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
                         >
                             <LinkedinIcon size={32} round />
                         </LinkedinShareButton>
                         <OKShareButton
-                            url={`http://31.131.24.170:3000/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
                         >
                             <OKIcon size={32} round />
                         </OKShareButton>
                         <TelegramShareButton
-                            url={`http://31.131.24.170:3000/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
                         >
                             <TelegramIcon size={32} round />
                         </TelegramShareButton>
                         <TwitterShareButton
-                            url={`http://31.131.24.170:3000/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
                         >
                             <TwitterIcon size={32} round />
                         </TwitterShareButton>
                         <VKShareButton
-                            url={`http://31.131.24.170:3000/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
                         >
                             <VKIcon size={32} round />
                         </VKShareButton>

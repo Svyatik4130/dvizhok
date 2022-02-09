@@ -61,6 +61,18 @@ code {
 .prpl-btns-big .control-prev::before {
   border-right: 26px solid #b906f0 !important;
 }
+.gray-btns .control-next::before {
+  border-left: 12px solid #9c9c9c !important;
+}
+.gray-btns .control-prev::before {
+  border-right: 12px solid #9c9c9c !important;
+}
+.gray-btns-big .control-next::before {
+  border-left: 26px solid #fbfbfb !important;
+}
+.gray-btns-big .control-prev::before {
+  border-right: 26px solid #fbfbfb !important;
+}
 .dot {
   background: #48004b !important;
 }

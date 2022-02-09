@@ -5,9 +5,12 @@ import SimpleLoader from '../../Loaders/SimpleLoader';
 import { Carousel } from 'react-responsive-carousel';
 import { useHistory } from 'react-router-dom'
 import TeamMember from '../../Dashboard/Pages/Projects/TeamMember';
+import { useSelector } from 'react-redux';
+import Linkify from 'react-linkify';
 
 export default function ProjectPageForGuest() {
     let { id } = useParams()
+    const userData = useSelector(state => state.userData)
     const [Project, setProject] = useState()
     const [ProjectLeader, setProjectLeader] = useState()
     const [isLoading, setisLoading] = useState(true)
@@ -15,6 +18,12 @@ export default function ProjectPageForGuest() {
     const history = useHistory()
     const [startDate, setStartDate] = useState()
     const [dateDifference, setDateDifference] = useState()
+
+    const [carouselClasses, setcarouselClasses] = useState({
+        parent: "prpl-btns",
+        item_expanded: false,
+        item_wrapper: "px-8"
+    })
 
     useEffect(() => {
         const receivingExactProject = async () => {
@@ -55,6 +64,25 @@ export default function ProjectPageForGuest() {
         }
         receivingExactProject()
     }, [])
+    const closeCarousel = () => {
+        setcarouselClasses({
+            parent: "prpl-btns",
+            item_expanded: false,
+            item_wrapper: "px-8"
+        })
+    }
+    const expandCarousel = () => {
+        setcarouselClasses({
+            parent: "prpl-btns-big fixed bg-black bg-opacity-60 w-full h-screen top-0 right-0 z-50",
+            item_expanded: true,
+            item_wrapper: "h-screen flex items-center justify-center px-48"
+        })
+    }
+    const componentDecorator = (href, text, key) => (
+        <a href={href} key={key} className="link" target="_blank">
+            {text}
+        </a>
+    )
 
     if (isLoading) {
         return (
@@ -65,21 +93,26 @@ export default function ProjectPageForGuest() {
     }
     return (
         <div className="lg:w-4/5 overflow-y-scroll flex p-10 pt-20 flex-col lg:pr-8 pr-0 w-full">
-            <div style={StyleForFundDiv} className="lg:fixed order-2 p-4 rounded-3xl mt-3 lg:mt-0 lg:rounded-r-3xl rounded-l-3xl overflow-y-scroll bg-white top-0 right-0 w-full lg:w-1/5">
+            <div style={StyleForFundDiv} className="p-4 bg-white lg:fixed rounded-3xl mt-3 lg:mt-0 lg:rounded-r-3xl rounded-l-3xl overflow-y-scroll top-0 right-0 w-full lg:w-1/5">
                 <p className="text-2xl font-bold text-purple-950 text-center">Зібрано, грн</p>
-                <p className="text-2xl font-semibold mt-1">25 300</p>
+                <p className="text-2xl font-semibold mt-1">{Project.raised}</p>
                 <div className="flex justify-between items-center mt-3">
                     <p className="text-sm font-medium text-purple-950 text-center">Ціль проекта</p>
                     <p className="text-sm font-medium text-center">{Project.isFundsInfinite ? ("Необмежений збір") : (Project.fundsReqrd)}</p>
                 </div>
-                {Project.isProjectInfinite ? (null) : (
+                {Project.isProjectInfinite ? (
+                    <div className="flex justify-between items-center mt-1">
+                        <p className="text-sm font-medium text-purple-950 text-center">Дата завершення</p>
+                        <p className="text-sm font-medium text-center">{Project.isProjectInfinite ? ("Постійний проект") : (Project.finishDate)}</p>
+                    </div>
+                ) : (
                     <>
                         <div className="flex justify-between items-center mt-1">
                             <p className="text-sm font-medium text-purple-950 text-center">Дата завершення</p>
                             <p className="text-sm font-medium text-center">{Project.isProjectInfinite ? ("Постійний проект") : (Project.finishDate)}</p>
                         </div>
                         <div className="flex justify-between items-center mt-1">
-                            <p className="text-sm font-medium text-purple-950 text-center">Залишилось</p>
+                            <p className="text-sm font-medium text-purple-950 text-center">Залишилось днів</p>
                             <p className="text-sm font-medium text-center">{dateDifference}</p>
                         </div>
                     </>
@@ -89,10 +122,11 @@ export default function ProjectPageForGuest() {
                     <p className="text-sm font-medium text-purple-950 text-center">Проект запущений</p>
                     <p className="text-sm font-medium text-center">{startDate}</p>
                 </div>
-                <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
-                <p className="font-medium text-lg text-gray-500 mt-3">Лідери проекту</p>
+                <button onClick={() => { userData.user ? (history.push(`/dashboard/projects/${Project._id}`)): (history.push("/signup"))  }} className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
+
+                <p className="font-medium hidden lg:block text-lg text-gray-500 mt-3">Лідери проекту</p>
                 {/* leader profile */}
-                <div onClick={() => { history.push(`/dashboard/userpage/${ProjectLeader._id}/created-projects`) }} className="flex cursor-pointer w-full hover:shadow-inner p-2 shadow-none hover:bg-gray-100 rounded-3xl transition-all">
+                <div onClick={() => { history.push(`/dashboard/userpage/${ProjectLeader._id}/created-projects`) }} className="hidden lg:flex cursor-pointer w-full hover:shadow-inner p-2 shadow-none hover:bg-gray-100 rounded-3xl transition-all">
                     <div className="h-14  w-14 rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${ProjectLeader.avatarUrl})` }}></div>
                     <div className="ml-2">
                         <p className="font-semibold text-lg text-gray-700">{ProjectLeader.name}</p>
@@ -126,7 +160,7 @@ export default function ProjectPageForGuest() {
                     </div>
                 </div>
                 {Project.teamMembers.map(memberId => (
-                    <div key={memberId}>
+                    <div className="hidden lg:block" key={memberId}>
                         <TeamMember userId={memberId} />
                     </div>
                 ))}
@@ -136,57 +170,91 @@ export default function ProjectPageForGuest() {
                 <p className="text-2xl font-bold truncate w-full text-purple-950 text-center">{Project.projectName}</p>
                 <div className="font-medium text-lg w-full lg:w-6/12">
                     <p>Тип проекту: <strong className=" uppercase">{Project.category}</strong></p>
-                    <p>Місце реалізації: <strong className=" uppercase">{Project.category}</strong></p>
-                    <button className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
+                    <p>Місце реалізації: <strong className=" uppercase">{
+                        function () {
+                            const arrStrs = Project.location.map(location => location.text)
+                            console.log(arrStrs.join(", "));
+                            return arrStrs.join(", ")
+                        }()
+                    }</strong></p>
+                    <button onClick={() => { userData.user ? (history.push(`/dashboard/projects/${Project._id}`)): (history.push("/signup"))  }} className="w-full mt-3 bg-yellow-350 text-center py-2 rounded-2xl inline-flex text-2xl font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-9 ml-2" alt="support" /> </button>
                 </div>
+
                 <p className="hidden lg:block font-medium text-lg mt-3 w-full whitespace-normal break-words">
-                    <div className="float-right w-6/12 -mt-28">
-                        <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns pl-3">
+                    <div className="float-right w-6/12 h-64 mb-9 -mt-28">
+
+                        {carouselClasses.item_expanded && (
+                            <div onClick={() => closeCarousel()} className="fixed top-0 right-0 m-4 mr-14 rounded-full bg-gray-700 bg-opacity-80 hover:bg-opacity-100 hover:bg-gray-900 transition-all p-1 cursor-pointer" style={{ zIndex: 60 }} >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </div>
+                        )}
+                        <Carousel autoPlay={false} showThumbs={false} showStatus={false} className={`pl-3 ${carouselClasses.parent} transition-all`}>
                             {Project.photosNvideos.map((source) => {
                                 const ext = source.split('.')[source.split('.').length - 1]
-                                if (ext == "jpeg" || ext == 'jpg' || ext == 'png') {
+                                if (ext.toLowerCase() == "jpeg" || ext.toLowerCase() == 'jpg' || ext.toLowerCase() == 'png') {
                                     return (
-                                        <div className="mb-9 mx-8 h-56 responsive-image-bgImgUrl" style={{ backgroundImage: `url(${source})` }}>
-                                        </div>
+                                        <>
+                                            {carouselClasses.item_expanded && (<div onClick={() => closeCarousel()} style={{ zIndex: 55 }} className="absolute h-screen top-0 right-0 w-full"></div>)}
+                                            <div className={`pb-9 ${carouselClasses.item_wrapper} transition-all`}>
+                                                {carouselClasses.item_expanded ? (
+                                                    <div className="flex h-full z-100">
+                                                        <img src={source} className={`object-contain relative`} style={{ zIndex: 60 }} />
+                                                    </div>
+                                                ) : (
+                                                    <div onClick={() => expandCarousel()} className="mb-9 mx-8 h-56 responsive-image-bgImgUrl cursor-pointer" style={{ backgroundImage: `url(${source})` }}></div>
+                                                )}
+                                            </div>
+                                        </>
                                     )
                                 } else {
                                     return (
-                                        <div className="pb-9 px-8">
-                                            <video controls>
-                                                <source src={source} key={source}></source>
-                                                Your browser does not support HTML5 video.
-                                            </video>
-                                        </div>
+                                        <>
+                                            {carouselClasses.item_expanded && (<div onClick={() => closeCarousel()} style={{ zIndex: 55 }} className="absolute h-screen top-0 right-0 w-full"></div>)}
+                                            <div className={`pb-9 ${carouselClasses.item_wrapper}`}>
+                                                <video controls>
+                                                    <source src={source} key={source}></source>
+                                                    Your browser does not support HTML5 video.
+                                                </video>
+                                            </div>
+                                        </>
                                     )
                                 }
                             })}
                         </Carousel>
                     </div>
-                    <div className="mt-5">
-                        <strong className=" font-semibold text-2xl">Короткий опис</strong><br />
-                        {Project.description}
-                    </div>
-                    <div className="mt-5">
-                        <strong className=" font-semibold text-2xl">Актуальність Проекту</strong><br />
-                        {Project.projectRelevance}
-                    </div>
-                    <div className="mt-5">
-                        <strong className=" font-semibold text-2xl">Передісторія</strong><br />
-                        {Project.preHistory}
-                    </div>
-                    <div className="mt-5">
-                        <strong className=" font-semibold text-2xl">План реалізації Проекту</strong><br />
-                        {Project.projectPlan}
-                    </div>
-                    <div className="mt-5">
-                        <strong className=" font-semibold text-2xl">Очікування</strong><br />
-                        {Project.expectations}
-                    </div>
-                    <div className="mt-5">
-                        <strong className=" font-semibold text-2xl">Плани витрат</strong><br />
-                        {Project.spendingPlans}
-                    </div>
+                    <Linkify componentDecorator={componentDecorator}>
+                        <div className="mt-5 whitespace-pre-line">
+                            <strong className=" font-semibold text-2xl ">Короткий опис</strong><br />
+                            {Project.description}
+                        </div>
+                        <div className="mt-5 whitespace-pre-line">
+                            <strong className=" font-semibold text-2xl">Актуальність Проекту</strong><br />
+                            {Project.projectRelevance}
+                        </div>
+                        <div className="mt-5 whitespace-pre-line">
+                            <strong className=" font-semibold text-2xl">Передісторія</strong><br />
+                            {Project.preHistory}
+                        </div>
+                        <div className="mt-5 whitespace-pre-line">
+                            <strong className=" font-semibold text-2xl">План реалізації Проекту</strong><br />
+                            {Project.projectPlan}
+                        </div>
+                        <div className="mt-5 whitespace-pre-line">
+                            <strong className=" font-semibold text-2xl">Очікування</strong><br />
+                            {Project.expectations}
+                        </div>
+                        <div className="mt-5 whitespace-pre-line">
+                            <strong className=" font-semibold text-2xl">Плани витрат</strong><br />
+                            {Project.spendingPlans}
+                        </div>
+                    </Linkify>
 
+                    <div className="w-full relative h-12">
+                        <div className="absolute right-0">
+                            <a href={Project.filePDF} download className="px-3 py-2 mr-3 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl inline-flex text-lg font-medium text-purple-950">Завантажити презентацію Проекту <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5" /></svg></a>
+                            <a href={Project.fileXLS} download className="px-3 py-2 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl inline-flex text-lg font-medium text-purple-950">Завантажити бюджет Проекту <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5" /></svg></a>
+                        </div>
+                    </div>
                 </p>
 
                 {/* responsive mob design */}
@@ -213,8 +281,8 @@ export default function ProjectPageForGuest() {
                             })}
                         </Carousel>
                     </div>
-                    <div className="break-words">
-                        <strong className=" font-semibold text-xl">Короткий опис</strong><br />
+                    <div className="break-words whitespace-pre-line">
+                        <strong className=" font-semibold text-xl ">Короткий опис</strong><br />
                         {Project.description}
                         <strong className=" font-semibold text-xl">Актуальність Проекту</strong><br />
                         {Project.projectRelevance}
@@ -226,6 +294,12 @@ export default function ProjectPageForGuest() {
                         {Project.expectations}
                         <strong className=" font-semibold text-xl">Плани витрат</strong><br />
                         {Project.spendingPlans}
+                    </div>
+                    <div className="w-full relative h-12">
+                        <div className="absolute right-0">
+                            <a href={Project.filePDF} download className="px-3 py-2 mr-3 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl inline-flex text-lg font-medium text-purple-950">Завантажити презентацію Проекту <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5" /></svg></a>
+                            <a href={Project.fileXLS} download className="px-3 py-2 cursor-pointer bg-yellow-350 hover:bg-yellow-300 transition-all rounded-2xl inline-flex text-lg font-medium text-purple-950">Завантажити бюджет Проекту <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5" /></svg></a>
+                        </div>
                     </div>
                 </div>
             </div>

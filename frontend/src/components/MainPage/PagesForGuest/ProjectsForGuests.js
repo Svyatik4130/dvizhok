@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Fuse from 'fuse.js'
 import { useHistory } from 'react-router-dom'
+import { Doughnut, defaults } from 'react-chartjs-2'
+import ErrorNotice from '../../misc/ErrorNotice'
 
 export default function ProjectsForGuests() {
     const allProjects = useSelector(state => state.allProjects)
+    const [error, setError] = useState()
     const history = useHistory()
     const [searchText, setSearchText] = useState('')
     const [inputStyle, setInputStyle] = useState("rounded-3xl bg-gray-100")
@@ -33,38 +36,122 @@ export default function ProjectsForGuests() {
     }, [searchText])
 
     return (
-        <div className="p-10 pt-20">
+        <>
+            <div className="px-12 pt-20 m-auto">
+                {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
+            </div>
             <div className="w-full h-full flex lg:flex-row flex-col ">
-                <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full lg:border-2 border-gray-300 rounded-xl">
-                    {allProjects.map((project) => {
+                <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap h-full lg:border-2 border-gray-300 rounded-xl">
+                    {allProjects.length > 0 ? (allProjects.map((project) => {
+                        let raised = project.raised
+                        let rqrd = project.fundsReqrd
+                        if (project.isFundsInfinite) {
+                            raised = 0
+                            rqrd = 100
+                        }
+                        let fundsLeft = Number(rqrd) - Number(raised)
+                        if (fundsLeft < 0) {
+                            fundsLeft = 0
+                        }
+                        const createdAt = new Date(project.createdAt?.substring(0, 10)).getTime()
+                        const dateNow = new Date().getTime()
+                        const finishDate = new Date(project.finishDate).getTime()
+                        let remainTime = 100
+                        let passedTime = 0
+                        if (!project.isProjectInfinite) {
+                            remainTime = finishDate - dateNow
+                            passedTime = finishDate - createdAt - remainTime
+                            if (remainTime < 0) {
+                                remainTime = 0
+                                passedTime = 100
+                            }
+                        }
+                        const FundsOps = {
+                            data: {
+                                labels: ['Зібрано', 'Залишилося'],
+                                datasets: [
+                                    {
+                                        data: [raised, fundsLeft],
+                                        backgroundColor: ['#48004B', '#B8B8B8'],
+                                    },
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                cutoutPercentage: 80,
+                                events: [],
+                            },
+                            legend: {
+                                display: false,
+                            },
+                        }
+                        const KalendarOps = {
+                            data: {
+                                labels: ['Пройшло', 'Залишилося'],
+                                datasets: [
+                                    {
+                                        data: [Number(passedTime), Number(remainTime)],
+                                        backgroundColor: ['#48004B', '#B8B8B8'],
+                                    },
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                cutoutPercentage: 80,
+                                events: [],
+                            },
+                            legend: {
+                                display: false,
+                            },
+                        }
                         return (
                             <div className="h-124 lg:w-3/12 md:w-6/12 w-full md:p-1 p-2">
                                 <div className="w-full h-full bg-white rounded-xl relative">
-                                    <div onClick={() => sentToProjectPage(project._id)} className="responsive-image-bgImgUrl cursor-pointer relative rounded-t-xl h-36 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
-                                        <div className="w-full text-center absolute bottom-0">
-                                            <div className="absolute w-full h-full bg-purple-950 opacity-50 top-0"></div>
-                                            <p className="font-medium z-10 relative text-white py-1">{project.category}</p>
+                                    <div className="flex h-full flex-col justify-between">
+                                        <div>
+                                            {/* use responsive-image-bgImgUrl for not bg image covering */}
+                                            <div onClick={() => sentToProjectPage(project._id)} className="responsive-image-bgImgUrl-cover cursor-pointer relative rounded-t-xl h-36 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}>
+                                                <div className="w-full text-center absolute bottom-0">
+                                                    <div className="absolute w-full h-full bg-purple-950 opacity-50 top-0"></div>
+                                                    <p className="font-medium z-10 relative text-white py-1">{project.category}</p>
+                                                </div>
+                                            </div>
+                                            <div className="p-2">
+                                                <a onClick={() => sentToProjectPage(project._id)} className="font-semibold projectName-text cursor-pointer underline text-base mb-1 break-words">{project.projectName}</a>
+                                                <p className="font-medium text-sm overflow-y-scroll break-words h-32">{project.description}</p>
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <div className="p-2">
-                                        <a onClick={() => sentToProjectPage(project._id)} className="font-semibold projectName-text cursor-pointer underline text-sm mb-1 break-words">{project.projectName}</a>
-                                        <p className="font-medium text-xs overflow-y-scroll break-words h-56">{project.description}</p>
+                                        <div className={`w-full flex px-3 justify-evenly pb-2 ${!project.isFundsInfinite && passedTime === 100 ? ("mb-4") : ("")}`}>
+                                            <div className="lg:w-6/12 w-5/12 lg:border-r">
+                                                <Doughnut {...FundsOps} />
+                                                <p className="text-sm text-center">{project.isFundsInfinite ? (<>Необмежений <br /> збір</>) : (<> Зібрано </>)}</p>
+                                            </div>
+                                            <div className="lg:w-6/12 w-5/12 lg:border-l">
+                                                <Doughnut {...KalendarOps} />
+                                                <p className="text-sm text-center">{project.isProjectInfinite ? (<>Постійний<br /> проект</>) : (passedTime === 100 ? ("Закінчено") : (<> Днів до <br /> закінчення </>))}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         )
-                    })}
+                    })) : (
+                        <div className="w-full h-full relative opacity-50">
+                            <div className="absolute w-6/7 lg:w-auto center-content">
+                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
+                                <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">У системі ще немає жодного проекту</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div className="lg:w-3/12 w-full lg:pl-3 pl-0 pb-4 lg:pb-0 order-1 lg:order-2">
                     <div className="relative">
                         <input value={searchText} onChange={e => setSearchText(e.target.value)} type="text" className={`${inputStyle} w-full transition-all text-lg relative z-20 font-medium p-3 px-4 rounded-full outline-none focus:bg-white`} placeholder="Пошук проектів" />
-                        {/* <input value={searchText} onChange={(e) => setsearchText(e.target.value)} type="text" className={`${inputStyle} transition-all relative z-20 px-3 py-2 w-full outline-none focus:bg-white`} placeholder="Пошук ваших чатів та користувачів" /> */}
-                        <div className="rounded-3xl drop-shadow-lg mt-1.5 max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-9 top-0 w-full bg-white">
+                        <div className="rounded-3xl custom-shadow drop-shadow-lg mt-1.5 max-h-96 p-2 overflow-y-scroll absolute h-auto transition-all pt-9 top-0 w-full bg-white">
                             {findedProjects ? (
                                 findedProjects.map(({ item }) => {
                                     return (
-                                        <div onClick={() => sentToProjectPage(item._id)} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
+                                        <div onClick={() => history.push(`/dashboard/projects/${item._id}`)} className="flex mt-3 pretty-shadow cursor-pointer p-2 rounded-xl">
                                             <div className="flex items-center min-w-0">
                                                 <div className="w-14 h-14 flex-shrink-0 rounded-xl relative responsive-image-bgImgUrl" style={{ backgroundImage: `url(${item.logoUrl[0]})` }}>
                                                 </div>
@@ -80,6 +167,6 @@ export default function ProjectsForGuests() {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }

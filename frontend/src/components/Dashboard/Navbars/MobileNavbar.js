@@ -151,12 +151,12 @@ export default function MobileNavbar() {
                                         <p className="element_text text-center text-purple-950 font-medium">Календар подій</p>
                                     </div>
                                 </NavLink>
-                                <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/report"} activeClassName="active_mob_menu">
+                                {/* <NavLink onClick={() => setIsOpen(false)} to={"/dashboard/report"} activeClassName="active_mob_menu">
                                     <div className="element_wrapper transition-all left-0 p-2  rounded-3xl">
                                         <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/nav_icons/report.png" alt="lazy" className="element_report_image w-6 m-auto" />
                                         <p className="element_text text-center text-purple-950 font-medium">Звітність</p>
                                     </div>
-                                </NavLink>
+                                </NavLink> */}
                             </div>
 
                             <div className="flex w-full justify-around">
