@@ -68,9 +68,15 @@ export default function GPSLocation() {
     }, []);
 
     const CheckAndShowProjectsAtThisLocation = (id, lat, lng) => {
-        const OtherProjectsAtThisCoords = allProjects.filter((project) => {
+        let OtherProjectsAtThisCoords = allProjects.filter((project) => {
             return project._id !== id && project.location.find(location => location.arr[0] == lat && location.arr[1] == lng)
         })
+        if (lat == 50.4501 && lng == 30.5234) {
+            const wholeUkraineProjs = allProjects.filter((project) => {
+                return project._id !== id && project.isWholeUkraine
+            })
+            OtherProjectsAtThisCoords = [...OtherProjectsAtThisCoords, ...wholeUkraineProjs]
+        }
 
         if (OtherProjectsAtThisCoords) {
             return (
