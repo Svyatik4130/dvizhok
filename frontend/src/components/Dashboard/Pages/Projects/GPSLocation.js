@@ -117,6 +117,7 @@ export default function GPSLocation() {
                 center={center}
                 options={options}
                 onLoad={onMapLoad}
+                onDrag={() => {setSelected(null)}}
             >
                 {allProjects.map((project) => {
                     if (project?.isWholeUkraine) {
