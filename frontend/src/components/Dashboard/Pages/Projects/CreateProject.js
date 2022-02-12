@@ -30,6 +30,7 @@ export default function CreateProject() {
     const [logoFile, setlogoFile] = useState("")
     const [shortDesc, setshortDesc] = useState("")
     const [Location, setLocation] = useState([{ id: 0, arr: [], text: "" }])
+    const [isWholeUkraine, setisWholeUkraine] = useState(false);
     const [finishDate, setFinishDate] = useState("")
     const [fundsReqrd, setFundsReqrd] = useState("")
     const [isProjectInfinite, setIsProjectInfinite] = useState(false)
@@ -335,13 +336,15 @@ export default function CreateProject() {
             setError('Будь ласка, виберіть категорію проекту');
             return
         }
-        if (!Location) {
-            setError(`Введіть місце розташування проекту та виберіть його зі списку`);
-            return
-        }
-        if(Location.filter(location => location.text === "")[0]){
-            setError(`Переконайтеся, що ви вибрали локацію зі спадного списку і не залишили порожніх полів локацій`);
-            return
+        if (!isWholeUkraine) {
+            if (!Location) {
+                setError(`Введіть місце розташування проекту та виберіть його зі списку`);
+                return
+            }
+            if (Location.filter(location => location.text === "")[0]) {
+                setError(`Переконайтеся, що ви вибрали локацію зі спадного списку і не залишили порожніх полів локацій`);
+                return
+            }
         }
         if (shortDesc.length < 25) {
             setError("'Короткий опис' має містити принаймні 25 символів");
@@ -475,6 +478,7 @@ export default function CreateProject() {
         data.append('category', selections)
         const jsonStr = JSON.stringify(Location)
         data.append('Location', jsonStr)
+        data.append('isWholeUkraine', isWholeUkraine)
         data.append('userId', userData.user.id)
         data.append('userName', userData.user.name)
         data.append('filePDFAndXLS', filePDF)
@@ -556,6 +560,7 @@ export default function CreateProject() {
                             projName: Name,
                             category: selections,
                             Location: Location,
+                            isWholeUkraine,
                             userId: userData.user.id,
                             userName: userData.user.name,
                             spendingPlans: spendingPlans,
@@ -640,6 +645,7 @@ export default function CreateProject() {
                         projName: Name,
                         category: selections,
                         Location: Location,
+                        isWholeUkraine,
                         userId: userData.user.id,
                         userName: userData.user.name,
                         spendingPlans: spendingPlans,
@@ -846,25 +852,29 @@ export default function CreateProject() {
                             </div>
                         )}
                     </div>
-
-                    {Location.map((location, index) => {
-                        if (index === 0) {
-                            return (
-                                <div className="flex items-center">
-                                    <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
-                                    <div onClick={() => addLocation()} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0c9923" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
-                                </div>
-                            )
-                        } else {
-                            return (
-                                <div className="flex items-center mt-1">
-                                    <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
-                                    <div onClick={() => deleteLocation(location.id)} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d81a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
-                                </div>
-                            )
-                        }
-                    })}
-                    <p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>
+                    {!isWholeUkraine && (
+                        Location.map((location, index) => {
+                            if (index === 0) {
+                                return (
+                                    <div className="flex items-center">
+                                        <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
+                                        <div onClick={() => addLocation()} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0c9923" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                                    </div>
+                                )
+                            } else {
+                                return (
+                                    <div className="flex items-center mt-1">
+                                        <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
+                                        <div onClick={() => deleteLocation(location.id)} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d81a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                                    </div>
+                                )
+                            }
+                        }))}
+                    {!isWholeUkraine && (<p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>)}
+                    <label className="flex items-center">
+                        <input type="checkbox" checked={isWholeUkraine} onClick={() => setisWholeUkraine(!isWholeUkraine)} className="form-checkbox h-4 w-4" />
+                        <span className="ml-2 ">Вся Україна</span>
+                    </label>
 
                     <div className="w-full mt-4">
                         <textarea value={shortDesc} onChange={e => setshortDesc(e.target.value)} placeholder="Короткий опис проекту. Максимальна кількість символів: 300" className="focus:outline-none focus:border-pink-450 w-full resize-none text-lg px-2 py-1 rounded-lg border-2 border-purple-950" rows='5' ></textarea>

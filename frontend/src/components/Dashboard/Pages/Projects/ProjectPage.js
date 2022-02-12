@@ -324,6 +324,9 @@ export default function ProjectPage() {
                         <p>Тип проекту: <strong className=" uppercase">{Project.category.join(", ")}</strong></p>
                         <p>Місце реалізації: <strong className=" uppercase">{
                             function () {
+                                if(Project.isWholeUkraine){
+                                    return "Вся Україна"
+                                }
                                 const arrStrs = Project.location.map(location => location.text)
                                 console.log(arrStrs.join(", "));
                                 return arrStrs.join(", ")

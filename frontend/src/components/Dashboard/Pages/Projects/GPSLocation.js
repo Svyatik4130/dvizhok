@@ -36,6 +36,7 @@ const center = {
 
 export default function GPSLocation() {
     const allProjects = useSelector(state => state.allProjects)
+
     const history = useHistory()
 
     const [curPosition, setCurPosition] = React.useState();
@@ -68,8 +69,9 @@ export default function GPSLocation() {
 
     const CheckAndShowProjectsAtThisLocation = (id, lat, lng) => {
         const OtherProjectsAtThisCoords = allProjects.filter((project) => {
-            return project._id !== id && project.location[0] == lat && project.location[1] == lng
+            return project._id !== id && project.location.find(location => location.arr[0] == lat && location.arr[1] == lng)
         })
+
         if (OtherProjectsAtThisCoords) {
             return (
                 OtherProjectsAtThisCoords.map((project) => {
@@ -110,23 +112,40 @@ export default function GPSLocation() {
                 options={options}
                 onLoad={onMapLoad}
             >
-                {allProjects.map((project) => (
-                    project.location.map(locInfo => {
-                        return (<Marker
-                            key={`${project?._id}`}
-                            position={{ lat: Number(locInfo?.arr?.[0]), lng: Number(locInfo?.arr?.[1]) }}
-                            onClick={() => {
-                                setSelected({ project, location: [locInfo?.arr?.[0], locInfo?.arr?.[1]] });
-                            }}
-                            icon={{
-                                url: `/marker_img.svg`,
-                                origin: new window.google.maps.Point(0, 0),
-                                scaledSize: new window.google.maps.Size(30, 30),
-                            }}
-                        />
+                {allProjects.map((project) => {
+                    if (project?.isWholeUkraine) {
+                        return (
+                            <Marker
+                                key={`${project?._id}`}
+                                position={{ lat: Number(50.4501), lng: Number(30.5234) }}
+                                onClick={() => {
+                                    setSelected({ project, location: [50.4501, 30.5234] });
+                                }}
+                                icon={{
+                                    url: `/marker_img.svg`,
+                                    origin: new window.google.maps.Point(0, 0),
+                                    scaledSize: new window.google.maps.Size(30, 30),
+                                }}
+                            />
                         )
-                    })
-                ))}
+                    } else {
+                        return (project.location.map(locInfo => {
+                            return (<Marker
+                                key={`${project?._id}`}
+                                position={{ lat: Number(locInfo?.arr?.[0]), lng: Number(locInfo?.arr?.[1]) }}
+                                onClick={() => {
+                                    setSelected({ project, location: [locInfo?.arr?.[0], locInfo?.arr?.[1]] });
+                                }}
+                                icon={{
+                                    url: `/marker_img.svg`,
+                                    origin: new window.google.maps.Point(0, 0),
+                                    scaledSize: new window.google.maps.Size(30, 30),
+                                }}
+                            />
+                            )
+                        }))
+                    }
+                })}
 
                 {selected ? (
                     <InfoWindow

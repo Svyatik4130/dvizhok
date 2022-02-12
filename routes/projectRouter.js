@@ -305,6 +305,7 @@ router.post('/create-project', (req, res) => {
                     photosNvideos: galleryImgLocationArray,
                     category: arrCtgr,
                     location: JSON.parse(req.body.Location),
+                    isWholeUkraine: req.body.isWholeUkraine,
                     logoUrl: logo,
                     projectName: req.body.projName,
                     filePDF: files_pdf_xls[0],
@@ -585,7 +586,7 @@ router.post("/change-xls", async (req, res) => {
     })
 })
 router.post("/change-info", async (req, res) => {
-    const { projId, description, projName, category, Location, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, secret } = req.body
+    const { projId, description, projName, category, Location, isWholeUkraine, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, secret } = req.body
 
     const token = req.header("x-auth-token")
     if (!token) return res.status(400).json({ msg: "Ошибка" })
@@ -601,6 +602,7 @@ router.post("/change-info", async (req, res) => {
             "category": category,
             "description": description,
             "location": Location,
+            "isWholeUkraine": isWholeUkraine,
             "spendingPlans": spendingPlans,
             "expectations": expectations,
             "projectPlan": projectPlan,

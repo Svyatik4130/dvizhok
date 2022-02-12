@@ -164,6 +164,7 @@ router.post('/create-project', (req, res) => {
                     photosNvideos: galleryImgLocationArray,
                     category: arrCtgr,
                     location: JSON.parse(req.body.Location),
+                    isWholeUkraine: req.body.isWholeUkraine,
                     logoUrl: logo,
                     projectName: req.body.projName,
                     filePDF: files_pdf_xls[0],
@@ -189,7 +190,7 @@ router.post('/create-project', (req, res) => {
     })
 })
 router.post('/create-project-nophoto', async (req, res) => {
-    const { description, projName, userName, userId, category, Location, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, XlsAndPdfFilesLocations, logoUrl, imgUrls } = req.body
+    const { description, projName, userName, userId, category, Location, isWholeUkraine, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, XlsAndPdfFilesLocations, logoUrl, imgUrls } = req.body
 
     let files_pdf_xls = []
     if(typeof(XlsAndPdfFilesLocations) == "object"){
@@ -205,6 +206,7 @@ router.post('/create-project-nophoto', async (req, res) => {
         photosNvideos: imgUrls,
         category: category,
         location: Location,
+        isWholeUkraine,
         logoUrl: logoUrl,
         projectName: projName,
         filePDF: files_pdf_xls[0],
@@ -238,7 +240,7 @@ router.get("/get-my-draft/:userID", async (req, res) => {
 });
 
 router.post('/create-emptyProj', async (req, res) => {
-    const { userName, userId, description, projName, category, Location, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, secret, logoUrl, photosNvideos, filePDF, fileXLS } = req.body
+    const { userName, userId, description, projName, category, Location, isWholeUkraine, spendingPlans, expectations, projectPlan, preHistory, projectRelevance, teamMembers, isFundsInfinite, isProjectInfinite, fundsReqrd, finishDate, secret, logoUrl, photosNvideos, filePDF, fileXLS } = req.body
 
     const token = req.header("x-auth-token")
     if (!token) return res.status(400).json({ msg: "Ошибка" })
@@ -254,6 +256,7 @@ router.post('/create-emptyProj', async (req, res) => {
         photosNvideos: photosNvideos,
         category: category,
         location: Location,
+        isWholeUkraine,
         logoUrl: logoUrl,
         projectName: projName,
         filePDF: filePDF,

@@ -35,6 +35,7 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
     const [logoFile, setlogoFile] = useState("")
     const [shortDesc, setshortDesc] = useState(project.description)
     const [Location, setLocation] = useState(project.location)
+    const [isWholeUkraine, setisWholeUkraine] = useState(project.isWholeUkraine);
     const [finishDate, setFinishDate] = useState(project.finishDate)
     const [fundsReqrd, setFundsReqrd] = useState(project.fundsReqrd)
     const [isProjectInfinite, setIsProjectInfinite] = useState(project.isProjectInfinite)
@@ -277,6 +278,7 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
                 projName: Name,
                 category: selections,
                 Location: Location,
+                isWholeUkraine,
                 spendingPlans: spendingPlans,
                 expectations: expectations,
                 projectPlan: projectPlan,
@@ -365,13 +367,15 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
             setError('Будь ласка, виберіть категорію проекту');
             return
         }
-        if (Location[0].text == '') {
-            setError(`Введіть місце розташування проекту та виберіть його зі списку`);
-            return
-        }
-        if (Location.filter(location => location.text === "")[0]) {
-            setError(`Переконайтеся, що ви вибрали локацію зі спадного списку і не залишили порожніх полів локацій`);
-            return
+        if (!isWholeUkraine) {
+            if (!Location) {
+                setError(`Введіть місце розташування проекту та виберіть його зі списку`);
+                return
+            }
+            if (Location.filter(location => location.text === "")[0]) {
+                setError(`Переконайтеся, що ви вибрали локацію зі спадного списку і не залишили порожніх полів локацій`);
+                return
+            }
         }
         if (shortDesc.length < 25) {
             setError("'Короткий опис' має містити принаймні 25 символів");
@@ -677,24 +681,29 @@ export default function EditProjectInAdminPanel({ project, allUsers, setProjectF
                                     </div>
 
                                     <p className="font-bold text-2xl mt-4">Mісце розташування на Google Maps</p>
-                                    {Location.map((location, index) => {
-                                        if (index === 0) {
-                                            return (
-                                                <div className="flex items-center">
-                                                    <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
-                                                    <div onClick={() => addLocation()} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0c9923" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
-                                                </div>
-                                            )
-                                        } else {
-                                            return (
-                                                <div className="flex items-center mt-1">
-                                                    <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
-                                                    <div onClick={() => deleteLocation(location.id)} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d81a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
-                                                </div>
-                                            )
-                                        }
-                                    })}
-                                    <p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>
+                                    {!isWholeUkraine && (
+                                        Location.map((location, index) => {
+                                            if (index === 0) {
+                                                return (
+                                                    <div className="flex items-center">
+                                                        <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
+                                                        <div onClick={() => addLocation()} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0c9923" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                                                    </div>
+                                                )
+                                            } else {
+                                                return (
+                                                    <div className="flex items-center mt-1">
+                                                        <SearchBarProject id={location.id} Locations={Location} setLocation={(text) => setLocation(text)} defaultValue={location.text} />
+                                                        <div onClick={() => deleteLocation(location.id)} className="p-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d81a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+                                                    </div>
+                                                )
+                                            }
+                                        }))}
+                                    {!isWholeUkraine && (<p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>)}
+                                    <label className="flex items-center">
+                                        <input type="checkbox" checked={isWholeUkraine} onClick={() => setisWholeUkraine(!isWholeUkraine)} className="form-checkbox h-4 w-4" />
+                                        <span className="ml-2 ">Вся Україна</span>
+                                    </label>
 
                                     <div className="w-full mt-4">
                                         <p className="font-bold text-2xl">Короткий опис проекту</p>
