@@ -191,6 +191,7 @@ export default function CreateProject() {
             data.append('category', selections)
             const jsonStr = JSON.stringify(Location)
             data.append('Location', jsonStr)
+            data.append('isWholeUkraine', isWholeUkraine)
             data.append('userId', userData.user.id)
             data.append('userName', userData.user.name)
             data.append('filePDFAndXLS', filePDF)
