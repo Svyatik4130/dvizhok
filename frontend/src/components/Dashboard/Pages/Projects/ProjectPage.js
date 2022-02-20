@@ -40,6 +40,7 @@ export default function ProjectPage() {
         item_expanded: false,
         item_wrapper: "px-8"
     })
+    const [lastNewsId, setlastNewsId] = useState()
 
     const members = Project.teamMembers.map(member => member)
     members.push(Project.projectleaderId)
@@ -316,7 +317,7 @@ export default function ProjectPage() {
 
                 <div className="bg-white order-1 mt-2 lg:mt-0 rounded-3xl p-4">
                     {members.includes(userData.user.id) && userData.user.role >= 1 ? (
-                        <AdminPanel projectInfo={Project} setProjectFnc={setProject} />
+                        <AdminPanel projectInfo={Project} setLastNewsId={setlastNewsId} setProjectFnc={setProject} />
                     ) : (null)}
 
                     <p className="text-2xl font-bold truncate w-full text-purple-950 text-center">{Project.projectName}</p>
@@ -566,7 +567,7 @@ export default function ProjectPage() {
             </div>
             <div className="flex lg:flex-row flex-col my-5">
                 <div className="lg:w-6/12 w-full order-2 lg:order-1 mt-1 lg:mt-0 px-1">
-                    <ProjectsNews projId={id} />
+                    <ProjectsNews lastNewsId={lastNewsId} projId={id} />
                 </div>
                 <div className="lg:w-6/12 w-full order-1 lg:order-2  px-1">
                     <ProjectsChat projectId={id} />

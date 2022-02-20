@@ -3,6 +3,21 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      keyframes: {
+        jump: {
+          '0%, 100%': {
+            transform: "translateY(0)",
+            animationTimingFunction: "cubic-bezier(0.8, 0, 1, 1)"
+          },
+          '50%': {
+            transform: "translateY(-25%)",
+            animationTimingFunction: "cubic-bezier(0.8, 0, 1, 1)"
+          },
+        }
+      },
+      animation: {
+        jump: 'jump 0.7s infinite',
+      },
       colors: {
         purple: {
           850: '#4E0E55',

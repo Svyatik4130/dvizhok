@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     country: { type: String, default: "" },
     hometown: { type: String, default: "" },
     occupationTown: { type: String, default: "" },
+    occupationTownCoords: { type: Array, default: ['',''] },
     whoI: { type: String, default: "" },
     workAs: { type: String, default: "" },
     workPlace: { type: String, default: "" },

@@ -43,6 +43,7 @@ export default function EventCard({ story }) {
     const [likedIds, setlikedIds] = useState(story.likedIds)
     const [reqLoading, setreqLoading] = useState(false)
     const [amount, setAmount] = useState(0)
+const [classnameLinkShare, setclassnameLinkShare] = useState("")
 
     const setting = {
         width: '600',
@@ -153,31 +154,31 @@ export default function EventCard({ story }) {
                 <svg onClick={() => likeEvent()} className={`hover:text-purple-850 hover:text-opacity-80 transition-all fill-current cursor-pointer ${likedIds.includes(userData.user.id) ? ("text-purple-950") : ("text-white")} transition-all cursor-pointer" xmlns="http://www.w3.org/2000/svg`} width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                 {likedIds.length === 0 ? (null) : (<p className="font-medium pl-1 text-lg">{likedIds.length}</p>)}
                 <svg onClick={() => createTooltip(story._id)} className={`ml-4 btn-${story._id} cursor-pointer`} xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                <div className={`tooltip-${story._id} z-40 w-32 lg:w-80 transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4`}>
+                <div className={`tooltip-${story._id} z-40 w-40 lg:w-96 transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4 pt-2`}>
                     <div onClick={() => createTooltip(story._id)} className="absolute -top-2.5 -right-2 bg-white rounded-full hover:bg-opacity-90 transition-all"><svg className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
-                    <div className="max-h-96 flex gap-1 overflow-y-scroll">
+                    <div className="max-h-96 flex gap-3 pt-2 items-center overflow-y-scroll">
                         <FacebookShareButton
-                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/guest/projects/${story.projectId}`}
                         >
                             <FacebookIcon size={32} round />
                         </FacebookShareButton>
                         <EmailShareButton
-                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/guest/projects/${story.projectId}`}
                         >
                             <EmailIcon size={32} round />
                         </EmailShareButton>
                         <LinkedinShareButton
-                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/guest/projects/${story.projectId}`}
                         >
                             <LinkedinIcon size={32} round />
                         </LinkedinShareButton>
                         <OKShareButton
-                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/guest/projects/${story.projectId}`}
                         >
                             <OKIcon size={32} round />
                         </OKShareButton>
                         <TelegramShareButton
-                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/guest/projects/${story.projectId}`}
                         >
                             <TelegramIcon size={32} round />
                         </TelegramShareButton>
@@ -191,6 +192,12 @@ export default function EventCard({ story }) {
                         >
                             <VKIcon size={32} round />
                         </VKShareButton>
+                        <div
+                            className={`cursor-pointer ${classnameLinkShare}`}
+                            onClick={() => { navigator.clipboard.writeText(`http://31.131.24.170/dashboard/projects/${story.projectId}`); setclassnameLinkShare("animate-jump"); setTimeout(() => { setclassnameLinkShare("") }, 1000); }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                        </div>
                     </div>
                 </div>
 

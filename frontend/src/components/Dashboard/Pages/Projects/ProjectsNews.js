@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import EventCard from '../News/EventCard';
 
-export default function ProjectsNews({ projId }) {
+export default function ProjectsNews({ projId, lastNewsId }) {
     const [projectNews, setprojectNews] = useState()
-
     useEffect(() => {
         const preloadOpps = async () => {
             const res = await axios.get(`/story/get-stories/${projId}`)
@@ -15,7 +14,7 @@ export default function ProjectsNews({ projId }) {
             }))
         }
         preloadOpps()
-    }, [])
+    }, [lastNewsId])
 
     return (
         <div className="flex flex-col bg-white rounded-3xl overflow-y-scroll h-196">

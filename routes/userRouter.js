@@ -100,6 +100,7 @@ router.post("/login", async (req, res) => {
                 country: userAcc?.country,
                 hometown: userAcc?.hometown,
                 occupationTown: userAcc?.occupationTown,
+                occupationTownCoords: userAcc?.occupationTownCoords,
                 whoI: userAcc?.whoI,
                 workAs: userAcc?.workAs,
                 workPlace: userAcc?.workPlace,
@@ -123,9 +124,8 @@ router.post("/login", async (req, res) => {
 
 router.post('/info_change', auth, async (req, res) => {
     try {
-        const { name, email, surname, country, birthDate, occupation, phoneNumber, sex, whoI, workAs, myGoals, workPlace, whatICan, whatILike, whatIWant, mySocialDream, selfPresentation, myProjects, userID, signature } = req.body
+        const { name, email, surname, country, birthDate, locationString, Location, phoneNumber, sex, whoI, workAs, myGoals, workPlace, whatICan, whatILike, whatIWant, mySocialDream, selfPresentation, myProjects, userID, signature } = req.body
 
-        console.log(phoneNumber)
         if (req.user !== userID) {
             return res.status(400).json({ msg: 'Ошибка' })
         }
@@ -143,9 +143,6 @@ router.post('/info_change', auth, async (req, res) => {
         }
         if (country.length >= 35) {
             return res.status(400).json({ msg: "Bведіть коротку назву країни, будь ласка" })
-        }
-        if (occupation.length >= 35) {
-            return res.status(400).json({ msg: "Bведіть коротку назву місця проживання, будь ласка" })
         }
         if (whoI.length > 300) {
             return res.status(400).json({ msg: "Поле 'Хто ви' має бути менше 300 символів" })
@@ -175,7 +172,6 @@ router.post('/info_change', auth, async (req, res) => {
             return res.status(400).json({ msg: "Поле 'Ще декілька слів про себе/самопрезентація' має бути менше 300 символів" })
         }
 
-
         if (sex[0] !== "Чоловік" && sex[0] !== "Жінка" && sex[0] !== "") {
             return res.status(400).json({ msg: "Не треба так!))" })
         }
@@ -203,7 +199,8 @@ router.post('/info_change', auth, async (req, res) => {
                 "birthDate": birthDate,
                 "sex": sex,
                 "country": country,
-                "occupationTown": occupation,
+                "occupationTown": locationString,
+                "occupationTownCoords": Location,
                 "whoI": whoI,
                 "workAs": workAs,
                 "workPlace": workPlace,
@@ -234,6 +231,7 @@ router.post('/info_change', auth, async (req, res) => {
                 country: updatedUser?.country,
                 hometown: updatedUser?.hometown,
                 occupationTown: updatedUser?.occupationTown,
+                occupationTownCoords: updatedUser?.occupationTownCoords,
                 whoI: updatedUser?.whoI,
                 workAs: updatedUser?.workAs,
                 workPlace: updatedUser?.workPlace,
@@ -305,6 +303,7 @@ router.post('/pass_change', auth, async (req, res) => {
                 country: updatedUser?.country,
                 hometown: updatedUser?.hometown,
                 occupationTown: updatedUser?.occupationTown,
+                occupationTownCoords: updatedUser?.occupationTownCoords,
                 whoI: updatedUser?.whoI,
                 workAs: updatedUser?.workAs,
                 workPlace: updatedUser?.workPlace,
@@ -470,6 +469,7 @@ router.get("/getme", auth, async (req, res) => {
         country: user?.country,
         hometown: user?.hometown,
         occupationTown: user?.occupationTown,
+        occupationTownCoords: user?.occupationTownCoords,
         whoI: user?.whoI,
         workAs: user?.workAs,
         workPlace: user?.workPlace,
@@ -586,6 +586,7 @@ router.post('/change-avatar', (req, res) => {
                         country: updatedUser?.country,
                         hometown: updatedUser?.hometown,
                         occupationTown: updatedUser?.occupationTown,
+                        occupationTownCoords: updatedUser?.occupationTownCoords,
                         whoI: updatedUser?.whoI,
                         workAs: updatedUser?.workAs,
                         workPlace: updatedUser?.workPlace,

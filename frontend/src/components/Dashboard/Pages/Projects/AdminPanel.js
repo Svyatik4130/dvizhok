@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { addAllNotifications } from '../../../../actions/AddNotifications'
 import Popup from 'reactjs-popup';
 import SuccessNotice from '../../../misc/SuccessNotice';
 import ErrorNotice from '../../../misc/ErrorNotice';
@@ -17,7 +18,7 @@ import TimePicker from 'rc-time-picker';
 import EditProjectInAdminPanel from './EditProjectInAdminPanel';
 import { useHistory } from 'react-router-dom'
 
-export default function AdminPanel({ projectInfo, setProjectFnc }) {
+export default function AdminPanel({ projectInfo, setProjectFnc, setLastNewsId }) {
     const userData = useSelector(state => state.userData)
     const members = projectInfo.teamMembers.map(member => member)
     members.push(projectInfo.projectleaderId)
@@ -40,6 +41,8 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
         donations: "bg-gray-300",
         body: <></>
     });
+    const [detectedLink, setDetectedLink] = useState()
+    const [linkDetails, setlinkDetails] = useState()
 
     const [selectedFiles, setselectedFiles] = useState("")
     const [htmlImages, sethtmlImages] = useState([])
@@ -52,6 +55,7 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
         libraries,
     });
     const history = useHistory()
+    const dispatch = useDispatch()
 
     const signature = getSignature()
 
@@ -188,91 +192,163 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
             if (error.response.data) setError(error.response.data.msg)
         }
     }
+
+    useEffect(() => {
+        var urlRegex = /https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}/
+        let links = ""
+        if (desc) links = desc.match(urlRegex)
+        if (links?.[0]) {
+            setDetectedLink(links[0])
+        } else {
+            setDetectedLink()
+            setlinkDetails()
+        }
+    }, [desc])
+    useEffect(() => {
+        const getDetails = async () => {
+            if (detectedLink) {
+                const details = await axios.post('/story/get-link-details', { link: detectedLink });
+                setlinkDetails(details.data)
+            }
+        }
+        getDetails()
+    }, [detectedLink])
     const saveStory = async (close) => {
         try {
             setError('')
             setreqLoading(true)
-
-            if (desc.length < 5 || desc.length > 1000) {
-                setError(`Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}`)
-                setreqLoading(false)
-                return
-            }
-            if (!locationString || !Location) {
-                setError(`Введіть локацію новини`)
-                setreqLoading(false)
-                return
-            }
-            if (!selectedFiles) {
-                setError('Будь ласка, завантажте хоча б один відео або фото файл');
-                setreqLoading(false)
-                return
-            }
-            const data = new FormData();
-
-            for (let i = 0; i < selectedFiles.length; i++) {
-                if (i < 4) {
-                    data.append('galleryImage', selectedFiles[i]);
+            if (selectedFiles) {
+                if (desc.length < 5) {
+                    setError(`Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}`)
+                    setreqLoading(false)
+                    return
                 }
-            }
+                if (!locationString || !Location) {
+                    setError(`Введіть локацію новини`)
+                    setreqLoading(false)
+                    return
+                }
+                const data = new FormData();
 
-            data.append('projectId', projectInfo._id)
-            data.append('projectLogo', projectInfo.logoUrl[0])
-            data.append('projectName', projectInfo.projectName)
-            data.append('publisherId', userData.user.id)
-            data.append('storyType', "news")
-            data.append('text', desc)
-            data.append('location', Location)
-            data.append('locationString', locationString)
-            data.append('secret', signature);
-
-            let AreExtsSuitable = true
-            for (let i = 0; i < selectedFiles.length; i++) {
-                if (i < 4) {
-                    if (!(/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
-                        AreExtsSuitable = false
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    if (i < 4) {
+                        data.append('galleryImage', selectedFiles[i]);
                     }
                 }
-            }
-            if (!AreExtsSuitable) {
-                setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .mov, .mp4');
-                setreqLoading(false)
-                return
-            }
 
-            let token = localStorage.getItem("auth-token")
-            const publishRes = await axios.post('/story/create-story', data, {
-                headers: {
-                    'accept': 'application/json',
-                    'Accept-Language': 'en-US,en;q=0.8',
-                    'Content-Type': 'multipart/form-data',
-                    'location': `images/projects/story`,
-                    "x-auth-token": token,
+                data.append('projectId', projectInfo._id)
+                data.append('projectLogo', projectInfo.logoUrl[0])
+                data.append('projectName', projectInfo.projectName)
+                data.append('publisherId', userData.user.id)
+                data.append('storyType', "news")
+                data.append('text', desc)
+                data.append('location', Location)
+                data.append('locationString', locationString)
+                data.append('secret', signature);
+
+                let AreExtsSuitable = true
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    if (i < 4) {
+                        if (!(/(jpe?g|png|mp4|mov)$/i).test(selectedFiles[i].name.split('.').pop())) {
+                            AreExtsSuitable = false
+                        }
+                    }
                 }
-            })
-            if (publishRes.status === 200) {
-                setreqLoading(false)
-                setSuccessMessage("Ви успішно опублікували новину")
-                setDesc("")
-                setTimeout(() => {
-                    close()
-                    setSuccessMessage("")
-                    setDesc("")
-                    setfinishDate()
-                    setstartDate()
-                    setadvtName()
+                if (!AreExtsSuitable) {
+                    setError('Неприпустимий формат загружаеммого контенту, дозволені розширення: .png, .jpg, .jpeg, .mov, .mp4');
+                    setreqLoading(false)
+                    return
+                }
+
+                let token = localStorage.getItem("auth-token")
+                const publishRes = await axios.post('/story/create-story', data, {
+                    headers: {
+                        'accept': 'application/json',
+                        'Accept-Language': 'en-US,en;q=0.8',
+                        'Content-Type': 'multipart/form-data',
+                        'location': `images/projects/story`,
+                        "x-auth-token": token,
+                    }
+                })
+                if (publishRes.status === 200) {
+                    if (projectInfo.followers.length > 0) {
+                        const notification_payload = {
+                            receiverIds: [...projectInfo.followers, ...projectInfo.helpers],
+                            type: "new_news",
+                            text: `Проект "${projectInfo.projectName}" опублікував свіжу новину`,
+                            myId: userData.user.id
+                        }
+                        const notifications = await axios.post("/notifications/add-multiple", notification_payload)
+                        dispatch(addAllNotifications(notifications.data))
+                    }
+
+                    setreqLoading(false)
+                    setDesc()
+                    setselectedFiles()
                     setLocation()
                     setLocationString()
-                }, 1500);
+                    setSuccessMessage("Ви успішно опублікували новину")
+                    setLastNewsId(publishRes.data._id)
+                    setTimeout(() => {
+                        close()
+                        setSuccessMessage()
+                    }, 1500);
+                }
+                console.log(publishRes.data)
             } else {
-                setreqLoading(false)
-                setError("status !== 200. Error occured")
-            }
+                if (desc.length < 5) {
+                    setError(`Довжина тексту новини повинна бути від 5 до 1000 символів. Зараз:${desc.length}`)
+                    setreqLoading(false)
+                    return
+                }
+                if (!locationString || !Location) {
+                    setError(`Введіть локацію новини`)
+                    setreqLoading(false)
+                    return
+                }
+                let token = localStorage.getItem("auth-token")
+                const payload = {
+                    "projectId": projectInfo._id,
+                    "projectLogo": projectInfo.logoUrl[0],
+                    "projectName": projectInfo.projectName,
+                    "publisherId": userData.user.id,
+                    "storyType": "news",
+                    "text": desc,
+                    "location": Location,
+                    "locationString": locationString,
+                    "previev_image": linkDetails?.images?.[0]
+                }
+                const publishRes = await axios.post('/story/create-story-noPhoto', payload, { headers: { "x-auth-token": token, "secret": signature } })
 
+                if (publishRes.status === 200) {
+                    if (projectInfo.followers.length > 0) {
+                        const notification_payload = {
+                            receiverIds: [...projectInfo.followers, ...projectInfo.helpers],
+                            type: "new_news",
+                            text: `Проект "${projectInfo.projectName}" опублікував свіжу новину`,
+                            myId: userData.user.id
+                        }
+                        const notifications = await axios.post("/notifications/add-multiple", notification_payload)
+                        dispatch(addAllNotifications(notifications.data))
+                    }
+
+                    setreqLoading(false)
+                    setDesc()
+                    setselectedFiles()
+                    setLocation()
+                    setLocationString()
+                    setSuccessMessage("Ви успішно опублікували новину")
+                    setLastNewsId(publishRes.data._id)
+                    setTimeout(() => {
+                        close()
+                        setSuccessMessage()
+                    }, 1500);
+                }
+            }
         } catch (error) {
             console.log(error)
             setreqLoading(false)
-            if (error.response.data) setError(error.response.data.msg)
+            if (error?.response?.data) setError(error.response.data.msg)
         }
     }
 
@@ -552,6 +628,28 @@ export default function AdminPanel({ projectInfo, setProjectFnc }) {
                                                 <div className="img-preview mb-4 flex">
                                                     {renderPhotos(htmlImages)}
                                                 </div>
+
+                                                {linkDetails && (
+                                                    linkDetails.siteName ? (
+                                                        <div className="mt-4 lg:w-8/12 xl:w-7/12 lg:m-auto lg:mt-4 rounded-xl bg-gray-200">
+                                                            <a href={linkDetails.url} target="_blank" rel="noopener noreferrer">
+                                                                <div className="responsive-image-bgImgUrl-cover cursor-pointer relative rounded-t-xl h-80 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${linkDetails.images[0]})` }}></div>
+                                                            </a>
+                                                            <div className="p-2">
+                                                                <p className="text-xl text-gray-600">{linkDetails.siteName && (linkDetails.siteName)}</p>
+                                                                <p className="font-medium text-xl ">{linkDetails.title && (linkDetails.title)}</p>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="mt-4 lg:w-8/12 xl:w-7/12 lg:m-auto lg:mt-4 rounded-xl bg-gray-200">
+                                                            <div className="p-2">
+                                                                <a href={linkDetails.url} target="_blank" rel="noopener noreferrer">
+                                                                    <p className="text-xl text-gray-600">{linkDetails.url && (linkDetails.url)}</p>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                )}
                                             </div>
                                         </div>
 

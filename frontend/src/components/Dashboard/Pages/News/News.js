@@ -487,7 +487,22 @@ export default function News() {
                                                     </textarea>
                                                 </div>
 
-                                                <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} />
+                                                <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} />                                                
+
+                                                <div className="relative mt-4">
+                                                    <label htmlFor="upload-photo" className="cursor-pointer font-medium text-lg">
+                                                        <div className='bg-yellow-350 hover:bg-yellow-400 transition-all rounded-lg inline-flex px-6 py-2'>
+                                                            <p className="mr-auto">Завантажити відео чи фото</p>
+                                                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/upload.png" alt="upload" className="w-6 self-start inline-block ml-2 mr-auto" />
+                                                        </div>
+                                                    </label>
+                                                    <input className=" opacity-0 absolute -z-10" id="upload-photo" multiple type="file" accept=".png, .jpg, .jpeg, .mov, .mp4, .m4v" onChange={(event) => { multipleFileChangedHandler(event); ProcessFiles(event) }} />
+                                                    <p className="text-gray-500">*Максимальна кількість завантаженого відео і фото матеріалів - 4*</p>
+                                                </div>
+                                                {/* img-preview */}
+                                                <div className="img-preview mb-4 flex">
+                                                    {renderPhotos(htmlImages)}
+                                                </div>
 
                                                 {linkDetails && (
                                                     linkDetails.siteName ? (
@@ -510,21 +525,6 @@ export default function News() {
                                                         </div>
                                                     )
                                                 )}
-
-                                                <div className="relative mt-4">
-                                                    <label htmlFor="upload-photo" className="cursor-pointer font-medium text-lg">
-                                                        <div className='bg-yellow-350 hover:bg-yellow-400 transition-all rounded-lg inline-flex px-6 py-2'>
-                                                            <p className="mr-auto">Завантажити відео чи фото</p>
-                                                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/upload.png" alt="upload" className="w-6 self-start inline-block ml-2 mr-auto" />
-                                                        </div>
-                                                    </label>
-                                                    <input className=" opacity-0 absolute -z-10" id="upload-photo" multiple type="file" accept=".png, .jpg, .jpeg, .mov, .mp4, .m4v" onChange={(event) => { multipleFileChangedHandler(event); ProcessFiles(event) }} />
-                                                    <p className="text-gray-500">*Максимальна кількість завантаженого відео і фото матеріалів - 4*</p>
-                                                </div>
-                                                {/* img-preview */}
-                                                <div className="img-preview mb-4 flex">
-                                                    {renderPhotos(htmlImages)}
-                                                </div>
                                             </div>
                                         </div>
 

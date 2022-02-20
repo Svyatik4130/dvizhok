@@ -7,6 +7,12 @@ import SuccessNotice from '../../../misc/SuccessNotice'
 import { getSignature } from '../../../helpers/browser-key'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
+import SearchBar from '../Projects/SearchBar';
+import {
+    useLoadScript
+} from "@react-google-maps/api";
+import "@reach/combobox/styles.css";
+import SimpleLoader from '../../../Loaders/SimpleLoader'
 
 export default function Personal_Info() {
     const userData = useSelector(state => state.userData)
@@ -18,11 +24,12 @@ export default function Personal_Info() {
     const [surname, setSurname] = useState(userData.user.surname)
     const [country, setCountry] = useState(userData.user.country)
     const [birthDate, setbirthDate] = useState(userData.user.birthDate)
-    const [occupation, setOccupation] = useState(userData.user.occupationTown)
     const defaultNumbers = userData.user.phoneNumber.map((number, index) => { return { id: index, phone: number } })
     const [phoneNumbers, setPhoneNumbers] = useState(userData.user.phoneNumber.map((number, index) => { return { id: index, phone: number } }))
     const [email, setEmail] = useState(userData.user.email)
-
+    const [Location, setLocation] = useState(userData.user.occupationTownCoords)
+    const [locationString, setLocationString] = useState(userData.user.occupationTown)
+console.log(userData.user.occupationTown)
     const [error, setError] = useState()
     const [addNumberBtn, setAddNumberBtn] = useState(<p onClick={() => { setPhoneNumbers([...phoneNumbers, { id: Math.max(...phoneNumbers.map(number => { return (number.id) })) + 1, phone: "" }]) }} className=" font-medium text-lg text-purple-950 cursor-pointer hover:text-purple-900 transition-all">+ Додати інший номер телефону</p>)
     const [successMessage, setSuccessMessage] = useState()
@@ -31,6 +38,11 @@ export default function Personal_Info() {
     const [expanded, setExpanded] = useState(false);
     const [selections, setSelections] = useState(userData.user.sex);
     const PLATFORMS = ["Чоловік", "Жінка"];
+    const [libraries] = useState(['places']);
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+        libraries,
+    });
 
     const toggleExpanded = () => {
         if (!expanded) {
@@ -75,13 +87,12 @@ export default function Personal_Info() {
                 return
             }
 
-            if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || occupation !== userData.user.occupationTown || !equals(phoneNumbers, defaultNumbers) || selections !== userData.user.sex) {
+            if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || locationString !== userData.user.occupationTown || !equals(phoneNumbers, defaultNumbers) || selections !== userData.user.sex) {
 
                 const userID = userData.user.id
-                const payload = { name, isValidPhoneNumber, email, surname, country, birthDate, occupation, phoneNumber: PhoneNumbersArray, sex: selections, whoI: userData.user.whoI, workAs: userData.user.workAs, workPlace: userData.user.workPlace, myGoals: userData.user.myGoals, whatICan: userData.user.whatICan, whatILike: userData.user.whatILike, whatIWant: userData.user.whatIWant, mySocialDream: userData.user.mySocialDream, selfPresentation: userData.user.selfPresentation, myProjects: userData.user.myProjects, userID, signature }
+                const payload = { name, isValidPhoneNumber, email, surname, country, birthDate, locationString, Location, phoneNumber: PhoneNumbersArray, sex: selections, whoI: userData.user.whoI, workAs: userData.user.workAs, workPlace: userData.user.workPlace, myGoals: userData.user.myGoals, whatICan: userData.user.whatICan, whatILike: userData.user.whatILike, whatIWant: userData.user.whatIWant, mySocialDream: userData.user.mySocialDream, selfPresentation: userData.user.selfPresentation, myProjects: userData.user.myProjects, userID, signature }
                 let token = localStorage.getItem("auth-token")
                 const changeRes = await axios.post("/users/info_change", payload, { headers: { "x-auth-token": token, "secret": signature }, })
-                console.log(changeRes)
                 dispatch(loggedUser({
                     token: changeRes.data.token,
                     user: changeRes.data.user
@@ -101,14 +112,14 @@ export default function Personal_Info() {
     }
 
     useEffect(() => {
-        if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || occupation !== userData.user.occupationTown || !equals(phoneNumbers, defaultNumbers) || selections !== userData.user.sex) {
+        if (name !== userData.user.name || email !== userData.user.email || surname !== userData.user.surname || country !== userData.user.country || birthDate !== userData.user.birthDate || locationString !== userData.user.occupationTown || !equals(phoneNumbers, defaultNumbers) || selections !== userData.user.sex) {
             setBtnColor("bg-purple-950 cursor-pointer")
             setBtnType("submit")
         } else {
             setBtnColor("bg-gray-700 cursor-default")
             setBtnType("button")
         }
-    }, [name, email, surname, country, birthDate, occupation, phoneNumbers, selections])
+    }, [name, email, surname, country, birthDate, phoneNumbers, selections, Location])
 
     const ChangeNumberInState = (value, index) => {
         let ChangableNumbers = [...phoneNumbers]
@@ -130,6 +141,13 @@ export default function Personal_Info() {
             setAddNumberBtn(<p onClick={() => { setPhoneNumbers([...phoneNumbers, { id: Math.max(...phoneNumbers.map(number => { return (number.id) })) + 1, phone: "" }]) }} className=" font-medium text-lg text-purple-950 cursor-pointer hover:text-purple-900 transition-all">+ Додати інший номер телефону</p>)
         }
     }, [phoneNumbers])
+
+    if (loadError) return "MapError";
+    if (!isLoaded) return (
+        <div className="pt-16">
+            <SimpleLoader />
+        </div>
+    )
 
     return (
         <div>
@@ -196,7 +214,9 @@ export default function Personal_Info() {
                         </div>
                         <div>
                             <p className=" font-semibold text-lg">Місто проживання</p>
-                            <input value={occupation} onChange={e => setOccupation(e.target.value)} placeholder={userData.user.occupation} type="text" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" />
+                            <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} defaultValue={userData.user.occupationTown}/>
+                            {/* <input value={occupation} onChange={e => setOccupation(e.target.value)} placeholder={userData.user.occupation} type="text" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" /> */}
+                            <p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>
                         </div>
                         <div>
                             <p className=" font-semibold text-lg">E-mail</p>
