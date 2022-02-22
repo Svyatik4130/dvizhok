@@ -63,7 +63,8 @@ export default function Projects() {
                         )}
                     </div>
                     <div style={{ height: window.innerHeight - 160 }} className="w-full lg:overflow-y-scroll rounded-xl lg:p-4 p-2">
-                        <MyProjects />
+                        <Route path="/dashboard/projects/myprojects/:id" children={<MyProjects />} />
+                        <Route exact path="/dashboard/projects/myprojects" children={<MyProjects />} />
                     </div>
                 </Route>
                 <Route path="/dashboard/projects/projectslist">

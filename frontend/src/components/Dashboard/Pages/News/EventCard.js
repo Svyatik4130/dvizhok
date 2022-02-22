@@ -43,7 +43,7 @@ export default function EventCard({ story }) {
     const [likedIds, setlikedIds] = useState(story.likedIds)
     const [reqLoading, setreqLoading] = useState(false)
     const [amount, setAmount] = useState(0)
-const [classnameLinkShare, setclassnameLinkShare] = useState("")
+    const [classnameLinkShare, setclassnameLinkShare] = useState("")
 
     const setting = {
         width: '600',
@@ -194,7 +194,7 @@ const [classnameLinkShare, setclassnameLinkShare] = useState("")
                         </VKShareButton>
                         <div
                             className={`cursor-pointer ${classnameLinkShare}`}
-                            onClick={() => { navigator.clipboard.writeText(`http://31.131.24.170/dashboard/projects/${story.projectId}`); setclassnameLinkShare("animate-jump"); setTimeout(() => { setclassnameLinkShare("") }, 1000); }}
+                            onClick={() => { navigator.clipboard.writeText(`http://31.131.24.170/guest/projects/${story.projectId}`); setclassnameLinkShare("animate-jump"); setTimeout(() => { setclassnameLinkShare("") }, 700); }}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                         </div>

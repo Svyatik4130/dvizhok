@@ -29,6 +29,7 @@ export default function ProjectPage() {
     const [isLoading, setisLoading] = useState(true)
     const [StyleForFundDiv, setStyleForFundDiv] = useState({})
     const history = useHistory()
+    if(!userData.user){history.push(`/guest/projects/${id}`)}
     const [startDate, setStartDate] = useState()
     const [dateDifference, setDateDifference] = useState()
     const [reqLoading, setreqLoading] = useState(false)
@@ -47,7 +48,6 @@ export default function ProjectPage() {
 
     const signature = getSignature()
     const dispatch = useDispatch()
-    console.log(Project.photosNvideos);
 
     useEffect(() => {
         const receivingExactProject = async () => {

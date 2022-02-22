@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from "react-router-dom";
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Fuse from 'fuse.js'
@@ -6,6 +7,7 @@ import { Doughnut, defaults } from 'react-chartjs-2'
 defaults.animation = false;
 
 export default function MyProjects() {
+    let { id } = useParams()
     const myProjects = useSelector(state => state.myProjects).sort((a, b) => {
         const aDate = new Date(a.createdAt)
         const bDate = new Date(b.createdAt)
@@ -15,6 +17,7 @@ export default function MyProjects() {
     const [searchText, setSearchText] = useState('')
     const [inputStyle, setInputStyle] = useState("rounded-3xl bg-gray-100")
     const [findedProjects, setFindedProjects] = useState(null)
+    const [classnameLinkShare, setclassnameLinkShare] = useState("")
 
     useEffect(() => {
         const options = {
@@ -41,6 +44,25 @@ export default function MyProjects() {
     return (
         <div className="w-full h-full flex lg:flex-row flex-col">
             <div className="lg:w-9/12 w-full order-2 lg:order-1 flex flex-wrap lg:overflow-y-scroll h-full lg:border-2 border-purple-200 rounded-xl">
+
+                {myProjects.filter(proj => proj._id === id).length > 0 && (
+                    <>
+                        <div onClick={() => history.push("/dashboard/projects/myprojects")} className="fixed top-0 left-0 w-full z-50 h-screen bg-black bg-opacity-50"></div>
+                        <div className="absolute w-11/12 lg:w-auto z-100 left-2/4 top-1/3">
+                            <div className='inline-flex relative -left-2/4'>
+                                <div className="modal bg-white m-auto rounded-xl max-h-screen">
+                                    <div className="w-full bg-gray-100 px-4 py-2 text-black text-2xl font-bold rounded-t-xl">
+                                        Вітаємо, ви опублікували проект
+                                    </div>
+                                    <div className="px-8 pt-3 z-40">
+                                        <button onClick={() => { navigator.clipboard.writeText(`http://31.131.24.170/guest/projects/${id}`); setclassnameLinkShare("animate-jump"); setTimeout(() => { setclassnameLinkShare("") }, 700); }} className={`px-4 py-3 flex gap-2 items-center rounded-3xl m-4 text-purple-950 bg-yellow-350 font-medium ${classnameLinkShare}`}><svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 4.2v10.3" /></svg>Поділіться посиланням на свій проект з друзями, щоб зібрати підтримку</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
+
                 {
                     myProjects[0] === undefined ? (
                         <div className="w-full h-full relative opacity-50">

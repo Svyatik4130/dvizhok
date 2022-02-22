@@ -29,7 +29,6 @@ export default function Personal_Info() {
     const [email, setEmail] = useState(userData.user.email)
     const [Location, setLocation] = useState(userData.user.occupationTownCoords)
     const [locationString, setLocationString] = useState(userData.user.occupationTown)
-console.log(userData.user.occupationTown)
     const [error, setError] = useState()
     const [addNumberBtn, setAddNumberBtn] = useState(<p onClick={() => { setPhoneNumbers([...phoneNumbers, { id: Math.max(...phoneNumbers.map(number => { return (number.id) })) + 1, phone: "" }]) }} className=" font-medium text-lg text-purple-950 cursor-pointer hover:text-purple-900 transition-all">+ Додати інший номер телефону</p>)
     const [successMessage, setSuccessMessage] = useState()
@@ -214,7 +213,7 @@ console.log(userData.user.occupationTown)
                         </div>
                         <div>
                             <p className=" font-semibold text-lg">Місто проживання</p>
-                            <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} defaultValue={userData.user.occupationTown}/>
+                            <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} defaultValue={userData.user.occupationTown} />
                             {/* <input value={occupation} onChange={e => setOccupation(e.target.value)} placeholder={userData.user.occupation} type="text" className="w-full h-8 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" /> */}
                             <p className="text-gray-500">*Введіть будь-яку адресу, яка існує на картах Google, і виберіть її зі спадного списку*</p>
                         </div>

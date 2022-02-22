@@ -57,6 +57,7 @@ export default function CreateProject() {
     const [expanded, setExpanded] = useState(false);
     const [selections, setSelections] = useState("");
     const PLATFORMS = ["Культура", "Екологія"];
+    const [popupInfo, setpopupInfo] = useState({ id: "", visible: false })
 
     const [libraries] = useState(['places']);
     const { isLoaded, loadError } = useLoadScript({
@@ -277,7 +278,7 @@ export default function CreateProject() {
                         dispatch(addAllProjects(allProjects))
 
                         setTimeout(() => {
-                            history.push("/dashboard/projects/myprojects")
+                            history.push(`/dashboard/projects/myprojects/${publishRes.data._id}`)
                         }, 1000);
                     }
                     setreqLoading(false)
@@ -675,6 +676,7 @@ export default function CreateProject() {
                         }
                     } else {
                         // Success with images and videos
+                        setpopupInfo({ id: publishRes.data._id, visible: true })
                         setSuccessMessage('Чернетка збережена')
                         setTimeout(() => {
                             history.push("/dashboard/projects/myprojects")

@@ -379,7 +379,7 @@ export default function CreateProject() {
 
             // setProjectFnc(publishRes.data)
             setTimeout(() => {
-                history.push('/dashboard/projects/projectslist')
+                history.push(`/dashboard/projects/myprojects/${newCreatedProject.data[0]._id}`)
             }, 1000);
 
         } catch (err) {
