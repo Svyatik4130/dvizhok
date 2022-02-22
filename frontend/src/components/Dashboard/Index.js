@@ -26,7 +26,7 @@ export default function Index() {
     const history = useHistory()
 
     useEffect(() => {
-        if (window.location.href.split("/")[window.location.href.split("/").length - 2] == "projects" && window.location.href.split("/")[window.location.href.split("/").length - 3] == "dashboard") {
+        if (window.location.href.split("/")[window.location.href.split("/").length - 2] == "projects" && window.location.href.split("/")[window.location.href.split("/").length - 3] == "dashboard" && !userData.user) {
             console.log(window.location.href.split("/")[window.location.href.split("/").length - 2] == "projects" && window.location.href.split("/")[window.location.href.split("/").length - 3] == "dashboard")
             history.push(`/guest/projects/${window.location.href.split("/")[window.location.href.split("/").length - 1]}`)
         } else if (!userData.user) {
