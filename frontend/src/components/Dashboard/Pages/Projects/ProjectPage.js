@@ -386,7 +386,6 @@ export default function ProjectPage() {
                     </div>
                     <p className="hidden lg:block text-lg mt-3 w-full whitespace-normal break-words">
                         <div className="float-right w-6/12 h-64 mb-9 -mt-28">
-
                             {carouselClasses.item_expanded && (
                                 <div onClick={() => closeCarousel()} className="fixed top-0 right-0 m-4 mr-14 rounded-full bg-gray-700 bg-opacity-80 hover:bg-opacity-100 hover:bg-gray-900 transition-all p-1 cursor-pointer" style={{ zIndex: 60 }} >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -499,7 +498,6 @@ export default function ProjectPage() {
                                 })}
                             </Carousel>
                         </div>
-
                         <div className="break-words">
                             <Linkify componentDecorator={componentDecorator}>
                                 <strong className=" font-semibold text-xl whitespace-pre-line">Короткий опис</strong><br />

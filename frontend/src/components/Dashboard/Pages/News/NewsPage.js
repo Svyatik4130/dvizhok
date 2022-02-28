@@ -1,4 +1,4 @@
-import React, { useState } from 'react' 
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -29,20 +29,39 @@ import {
 } from "react-share";
 import ComntSection from './ComntSection';
 import Linkify from 'react-linkify';
+import { useParams } from "react-router-dom";
+import SimpleLoader from '../../../Loaders/SimpleLoader';
 
-export default function EventCard({ story }) {
+export default function NewsPage({ allNews }) {
+    console.log(allNews)
+    let { id } = useParams()
+    const story = allNews.filter((story) => story._id === id)[0]
+    console.log(story)
     const userData = useSelector(state => state.userData)
+    // const [isLoading, setisLoading] = useState(true)
     const history = useHistory()
     const [successMessage, setSuccessMessage] = useState()
     const [error, setError] = useState()
     const signature = getSignature()
     const dispatch = useDispatch()
-    const createdAt = new Date(story.createdAt)
+    let createdAt = new Date(story.createdAt)
 
     const [likedIds, setlikedIds] = useState(story.likedIds)
     const [reqLoading, setreqLoading] = useState(false)
     const [amount, setAmount] = useState(0)
     const [classnameLinkShare, setclassnameLinkShare] = useState("")
+
+    // useEffect(() => {
+    //     const preloadOpps = async () => {
+    //         const res = await axios.get(`/story/get-story/${id}`)
+    //         setStory(res.data[0])
+    //         setlikedIds(res.data[0].likedIds)
+    //         createdAt = new Date(res.data[0].createdAt)
+
+    //         setisLoading(false)
+    //     }
+    //     preloadOpps()
+    // }, [id])
 
     const setting = {
         width: '600',
@@ -131,6 +150,12 @@ export default function EventCard({ story }) {
             {text}
         </a>
     )
+
+    // if (isLoading) {
+    //     return (
+    //         <SimpleLoader />
+    //     )
+    // }
 
     return (
         <div className="bg-white transition-all rounded-3xl p-3 mb-2">

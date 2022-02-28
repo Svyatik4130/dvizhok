@@ -19,6 +19,7 @@ import { addAllNotifications } from '../../../../actions/AddNotifications'
 import { Carousel } from 'react-responsive-carousel';
 import AnnouncementsNearMe from './AnnouncementsNearMe';
 import TopPeaceOfNews from './TopPeaceOfNews';
+import NewsPage from './NewsPage';
 
 export default function News() {
     const userData = useSelector(state => state.userData)
@@ -31,6 +32,7 @@ export default function News() {
     const [desc, setDesc] = useState("")
     const [detectedLink, setDetectedLink] = useState()
     const [linkDetails, setlinkDetails] = useState()
+    const [allNews, setallNews] = useState()
 
     const [news, setNews] = useState()
     const [followedNews, setfollowedNews] = useState()
@@ -245,6 +247,7 @@ export default function News() {
             setisLodaing(true)
             try {
                 const res = await axios.get("/story/get-all-stories")
+                setallNews(res.data)
                 const sortedNews = res.data.filter(story => story.storyType === "news").sort((a, b) => {
                     const aDate = new Date(a.createdAt)
                     const bDate = new Date(b.createdAt)
@@ -414,9 +417,6 @@ export default function News() {
                     <Route path="/dashboard/news/gps">
                         <AnnouncementsNearMe announcements={allAdvrts} />
                     </Route>
-                    <Route path="/dashboard/news/">
-                        <Redirect to="/dashboard/news/all" />
-                    </Route>
                 </Switch>
 
                 <div className="lg:w-6/12 w-full order-3 lg:order-2 p-1 lg:pl-2">
@@ -487,7 +487,7 @@ export default function News() {
                                                     </textarea>
                                                 </div>
 
-                                                <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} />                                                
+                                                <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} />
 
                                                 <div className="relative mt-4">
                                                     <label htmlFor="upload-photo" className="cursor-pointer font-medium text-lg">
@@ -569,6 +569,7 @@ export default function News() {
                         <Route path="/dashboard/news/gps">
                             <NewsNearMe news={news} />
                         </Route>
+                        <Route path="/dashboard/news/:id" children={<NewsPage allNews={allNews} />} />
                         <Route path="/dashboard/news/">
                             <Redirect to="/dashboard/news/all" />
                         </Route>

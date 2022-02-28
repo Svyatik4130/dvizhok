@@ -6,7 +6,11 @@ import { Doughnut, defaults } from 'react-chartjs-2'
 import ErrorNotice from '../../misc/ErrorNotice'
 
 export default function ProjectsForGuests() {
-    const allProjects = useSelector(state => state.allProjects)
+    const allProjects = useSelector(state => state.allProjects).sort((a, b) => {
+        const aDate = new Date(a.createdAt)
+        const bDate = new Date(b.createdAt)
+        return bDate.getTime() - aDate.getTime()
+    })
     const [error, setError] = useState()
     const history = useHistory()
     const [searchText, setSearchText] = useState('')

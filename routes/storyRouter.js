@@ -139,6 +139,10 @@ router.get("/get-stories/:id", async (req, res) => {
     const Stories = await Story.find({ projectId: req.params.id })
     res.json(Stories)
 })
+router.get("/get-story/:id", async (req, res) => {
+    const FindedStory = await Story.find({ _id: req.params.id })
+    res.json(FindedStory)
+})
 router.post("/like-event", async (req, res) => {
     const { idsWhoLiked, userId, eventId } = req.body
     if (idsWhoLiked.includes(userId)) {
