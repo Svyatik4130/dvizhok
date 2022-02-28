@@ -4,7 +4,8 @@ import { useSelector } from 'react-redux';
 import SimpleLoader from '../../../Loaders/SimpleLoader';
 import EventCard from './EventCard';
 
-export default function NewsNearMe({ news }) {
+export default function NewsNearMe({ news, setOrder }) {
+    setOrder(3)
     const [curPosition, setCurPosition] = useState();
     const userData = useSelector(state => state.userData)
     const [newsNear, setnewsNear] = useState()

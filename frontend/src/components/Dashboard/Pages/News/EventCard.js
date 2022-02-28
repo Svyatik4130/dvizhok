@@ -135,9 +135,9 @@ export default function EventCard({ story }) {
     return (
         <div className="bg-white transition-all rounded-3xl p-3 mb-2">
             <div className="flex items-center mb-2">
-                <div className="lg:w-16 lg:h-16 h-14 w-14 relative rounded-full overflow-hidden flex-shrink-0 responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${story.projectLogo})` }}></div>
+                <div onClick={() => history.push(`/dashboard/news/${story._id}`)} className="lg:w-16 lg:h-16 h-14 w-14 cursor-pointer relative rounded-full overflow-hidden flex-shrink-0 responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${story.projectLogo})` }}></div>
                 <div>
-                    <p className="font-medium text-xl pl-3"><strong onClick={() => history.push(`/dashboard/projects/${story.projectId}`)} className="text-purple-950 hover:text-purple-850 transition-all cursor-pointer">{story.projectName}</strong> {story.photosNvideos.length > 0 ? (`додав(-ла) ${story.photosNvideos.length} фото`) : ("поділився новиною")} </p>
+                    <p className="font-medium text-xl pl-3"><strong onClick={() => history.push(`/dashboard/news/${story._id}`)} className="text-purple-950 hover:text-purple-850 transition-all cursor-pointer">{story.projectName}</strong> {story.photosNvideos.length > 0 ? (`додав(-ла) ${story.photosNvideos.length} фото`) : ("поділився новиною")} </p>
                     <p className="text-lg pl-3">{`${createdAt.toLocaleString()}`}</p>
                 </div>
             </div>
@@ -157,43 +157,43 @@ export default function EventCard({ story }) {
                     <div onClick={() => createTooltip(story._id)} className="absolute -top-2.5 -right-2 bg-white rounded-full hover:bg-opacity-90 transition-all"><svg className="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
                     <div className="max-h-96 flex gap-3 pt-2 items-center overflow-y-scroll">
                         <FacebookShareButton
-                            url={`http://31.131.24.170/guest/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/news/${story._id}`}
                         >
                             <FacebookIcon size={32} round />
                         </FacebookShareButton>
                         <EmailShareButton
-                            url={`http://31.131.24.170/guest/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/news/${story._id}`}
                         >
                             <EmailIcon size={32} round />
                         </EmailShareButton>
                         <LinkedinShareButton
-                            url={`http://31.131.24.170/guest/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/news/${story._id}`}
                         >
                             <LinkedinIcon size={32} round />
                         </LinkedinShareButton>
                         <OKShareButton
-                            url={`http://31.131.24.170/guest/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/news/${story._id}`}
                         >
                             <OKIcon size={32} round />
                         </OKShareButton>
                         <TelegramShareButton
-                            url={`http://31.131.24.170/guest/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashboard/news/${story._id}`}
                         >
                             <TelegramIcon size={32} round />
                         </TelegramShareButton>
                         <TwitterShareButton
-                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashdashboard/news/${story._id}`}
                         >
                             <TwitterIcon size={32} round />
                         </TwitterShareButton>
                         <VKShareButton
-                            url={`http://31.131.24.170/dashboard/projects/${story.projectId}`}
+                            url={`http://31.131.24.170/dashdashboard/news/${story._id}`}
                         >
                             <VKIcon size={32} round />
                         </VKShareButton>
                         <div
                             className={`cursor-pointer ${classnameLinkShare}`}
-                            onClick={() => { navigator.clipboard.writeText(`http://31.131.24.170/guest/projects/${story.projectId}`); setclassnameLinkShare("animate-jump"); setTimeout(() => { setclassnameLinkShare("") }, 700); }}
+                            onClick={() => { navigator.clipboard.writeText(`http://31.131.24.170/dashboard/news/${story._id}`); setclassnameLinkShare("animate-jump"); setTimeout(() => { setclassnameLinkShare("") }, 700); }}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                         </div>

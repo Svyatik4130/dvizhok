@@ -20,6 +20,7 @@ import { Carousel } from 'react-responsive-carousel';
 import AnnouncementsNearMe from './AnnouncementsNearMe';
 import TopPeaceOfNews from './TopPeaceOfNews';
 import NewsPage from './NewsPage';
+import AllNews from './AllNews';
 
 export default function News() {
     const userData = useSelector(state => state.userData)
@@ -53,6 +54,8 @@ export default function News() {
 
     const signature = getSignature()
     const dispatch = useDispatch()
+    const [order, setOrder] = useState(3)
+    console.log(order)
 
     const [selectedProject, setselectedProject] = useState(myProjects[0])
     const [isListExpanded, setisListExpanded] = useState(false)
@@ -358,9 +361,62 @@ export default function News() {
                 </NavLink>
             </div>
             <div className="flex lg:flex-row flex-col">
-                {/* тут сделать карусель */}
                 <Switch>
                     <Route path="/dashboard/news/all">
+                        <div className="w-2/12 hidden lg:block order-1 p-0.5">
+                            <div className=" border rounded-3xl border-purple-950">
+                                {advrts.length > 0 ? (
+                                    advrts.map(date => {
+                                        return (
+                                            <div className="px-1">
+                                                <p className="font-semibold text-lg text-purple-950 text-center pt-2">{date.dateString}</p>
+                                                {date.events.map(announcement => {
+                                                    return (
+                                                        <SidebarEventAlert announcement={announcement} />
+                                                    )
+                                                })}
+                                            </div>
+                                        )
+                                    })
+                                ) : (
+                                    <div className="w-full opacity-50">
+                                        <div className="">
+                                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="h-64 block m-auto" />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="block lg:hidden w-full order-2 p-0.5">
+                            <Carousel autoPlay={false} showThumbs={false} showStatus={false} className="prpl-btns">
+                                {advrtForMob.length > 0 ? (
+                                    advrtForMob.map(announcements3 => {
+                                        return (
+                                            <div className="flex justify-evenly pb-9">
+                                                {announcements3.map(advrt => {
+                                                    return (
+                                                        <div>
+                                                            <div className="px-1">
+                                                                <p className="font-semibold text-lg text-purple-950 text-center pt-2">{advrt.date}</p>
+                                                                <SidebarEventAlert announcement={advrt.announcement} />
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })}
+                                            </div>
+                                        )
+                                    })
+                                ) : (
+                                    <div className="w-full opacity-50">
+                                        <div className=" pb-4">
+                                            <div className="responsive-image-bgImgUrl-cover cursor-pointer relative rounded-t-xl h-36 opacity-100 transition-all" style={{ backgroundImage: `url(https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png)` }}></div>
+                                        </div>
+                                    </div>
+                                )}
+                            </Carousel>
+                        </div>
+                    </Route>
+                    <Route path="/dashboard/news/:id">
                         <div className="w-2/12 hidden lg:block order-1 p-0.5">
                             <div className=" border rounded-3xl border-purple-950">
                                 {advrts.length > 0 ? (
@@ -419,7 +475,7 @@ export default function News() {
                     </Route>
                 </Switch>
 
-                <div className="lg:w-6/12 w-full order-3 lg:order-2 p-1 lg:pl-2">
+                <div className={`lg:w-6/12 w-full order-${order} lg:order-2 p-1 lg:pl-2`}>
                     {myProjects.length > 0 ? (
                         <div className="w-full bg-white rounded-3xl custom-shadow p-4 mb-4">
                             <Popup
@@ -553,23 +609,12 @@ export default function News() {
                     ) : (null)}
                     <Switch>
                         <Route path="/dashboard/news/all">
-                            {followedNews.length > 0 ? (
-                                followedNews.map(story => {
-                                    return <EventCard story={story} />
-                                })
-                            ) : (
-                                <div className="w-full opacity-50">
-                                    <div className="">
-                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/empty-folder.png" alt="empty-folder" className="lg:h-72 h-56 block m-auto" />
-                                        <p className="font-medium text-center lg:text-4xl text-2xl text-purple-950">Ви ще не стежите за жодним проектом або проект не опублікував жодної новини. Підписуйтесь та підтримуйте проекти, і ви будете бачити їхні новини</p>
-                                    </div>
-                                </div>
-                            )}
+                            <AllNews followedNews={followedNews} setOrder={(numb) => setOrder(numb)} />
                         </Route>
                         <Route path="/dashboard/news/gps">
-                            <NewsNearMe news={news} />
+                            <NewsNearMe setOrder={(numb) => setOrder(numb)} news={news} />
                         </Route>
-                        <Route path="/dashboard/news/:id" children={<NewsPage allNews={allNews} />} />
+                        <Route path="/dashboard/news/:id" children={<NewsPage setOrder={(numb) => setOrder(numb)} allNews={allNews} />} />
                         <Route path="/dashboard/news/">
                             <Redirect to="/dashboard/news/all" />
                         </Route>

@@ -32,13 +32,11 @@ import Linkify from 'react-linkify';
 import { useParams } from "react-router-dom";
 import SimpleLoader from '../../../Loaders/SimpleLoader';
 
-export default function NewsPage({ allNews }) {
-    console.log(allNews)
+export default function NewsPage({ allNews, setOrder }) {
     let { id } = useParams()
+    setOrder(1)
     const story = allNews.filter((story) => story._id === id)[0]
-    console.log(story)
     const userData = useSelector(state => state.userData)
-    // const [isLoading, setisLoading] = useState(true)
     const history = useHistory()
     const [successMessage, setSuccessMessage] = useState()
     const [error, setError] = useState()
@@ -50,18 +48,6 @@ export default function NewsPage({ allNews }) {
     const [reqLoading, setreqLoading] = useState(false)
     const [amount, setAmount] = useState(0)
     const [classnameLinkShare, setclassnameLinkShare] = useState("")
-
-    // useEffect(() => {
-    //     const preloadOpps = async () => {
-    //         const res = await axios.get(`/story/get-story/${id}`)
-    //         setStory(res.data[0])
-    //         setlikedIds(res.data[0].likedIds)
-    //         createdAt = new Date(res.data[0].createdAt)
-
-    //         setisLoading(false)
-    //     }
-    //     preloadOpps()
-    // }, [id])
 
     const setting = {
         width: '600',
@@ -151,16 +137,10 @@ export default function NewsPage({ allNews }) {
         </a>
     )
 
-    // if (isLoading) {
-    //     return (
-    //         <SimpleLoader />
-    //     )
-    // }
-
     return (
         <div className="bg-white transition-all rounded-3xl p-3 mb-2">
             <div className="flex items-center mb-2">
-                <div className="lg:w-16 lg:h-16 h-14 w-14 relative rounded-full overflow-hidden flex-shrink-0 responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${story.projectLogo})` }}></div>
+                <div onClick={() => history.push(`/dashboard/projects/${story.projectId}`)} className="lg:w-16 lg:h-16 h-14 w-14 cursor-pointer relative rounded-full overflow-hidden flex-shrink-0 responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${story.projectLogo})` }}></div>
                 <div>
                     <p className="font-medium text-xl pl-3"><strong onClick={() => history.push(`/dashboard/projects/${story.projectId}`)} className="text-purple-950 hover:text-purple-850 transition-all cursor-pointer">{story.projectName}</strong> {story.photosNvideos.length > 0 ? (`додав(-ла) ${story.photosNvideos.length} фото`) : ("поділився новиною")} </p>
                     <p className="text-lg pl-3">{`${createdAt.toLocaleString()}`}</p>
