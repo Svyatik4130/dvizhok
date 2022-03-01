@@ -476,142 +476,273 @@ export default function News() {
                 </Switch>
 
                 <div className={`lg:w-6/12 w-full order-${order} lg:order-2 p-1 lg:pl-2`}>
-                    {myProjects.length > 0 ? (
-                        <div className="w-full bg-white rounded-3xl custom-shadow p-4 mb-4">
-                            <Popup
-                                trigger={
-                                    <div className="flex items-center">
-                                        <div className=" cursor-pointer lg:w-14 lg:h-14 h-12 w-12 hover:opacity-80 transition-all mr-2 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
-                                        <div className=" cursor-pointer w-full bg-gray-200 hover:bg-gray-300 transition-all py-2 px-3 outline-none rounded-full font-medium text-xl">
-                                            <p className="text-gray-400">Що нового у вашого проекту</p>
-                                        </div>
-                                    </div>
-                                }
-                                modal
-                                nested
-                            >
-                                {close => (
-                                    <div className="modal bg-white rounded-xl overflow-y-scroll max-h-screen">
-                                        <button className="close" onClick={close}>
-                                            &times;
-                                        </button>
-                                        <div className="w-full bg-gray-100 px-4 py-2 text-black text-2xl font-bold rounded-t-xl">
-                                            Cтворити новину
-                                        </div>
-
-                                        <div className="px-8 z-40">
-                                            <div className="w-10/12 mt-3 m-auto">
-                                                <div className="px-2 m-auto">
-                                                    {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
-                                                    {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
-                                                </div>
-                                            </div>
-                                            <div className="lg:px-8">
-                                                {myProjects.length > 1 ? (
-                                                    <div className="relative">
-                                                        <div onClick={() => toggleMyProjectsList()} className="flex cursor-pointer hover:bg-gray-50 transition-all relative z-30 items-center justify-between custom-shadow bg-white rounded-3xl p-2 mb-5">
-                                                            <div className="flex w-9/12 items-center">
-                                                                <div className="lg:w-16 lg:h-16 h-14 flex-shrink-0 w-14 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${selectedProject.logoUrl[0]})` }}></div>
-                                                                <p className="font-semibold text-xl pl-3 projectName-text text-purple-950 break-words">{selectedProject.projectName}</p>
-                                                            </div>
-                                                            <svg className={`transition-all transform rotate-${listIconDegree}`} xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
-                                                        </div>
-                                                        <div className="absolute z-20 h-auto bg-gray-100 rounded-3xl left-0 top-0 w-full">
-                                                            {isListExpanded ? (
-                                                                <div className="pt-24 px-4 max-h-80 overflow-y-scroll">
-                                                                    {myProjects.map(project => {
-                                                                        return (
-                                                                            <div onClick={() => { setselectedProject(project); setisListExpanded(false); setlistIconDegree("0") }} className="flex items-center hover:bg-gray-200 bg-white cursor-pointer transition-all hover:shadow-xl custom-shadow rounded-3xl p-2 mb-2">
-                                                                                <div className="lg:w-16 lg:h-16 h-14 w-3/12 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}></div>
-                                                                                <p className="font-semibold w-9/12 text-xl pl-3 text-purple-950">{project.projectName}</p>
-                                                                            </div>
-                                                                        )
-                                                                    })}
-                                                                </div>
-                                                            ) : (null)}
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <div className="flex items-center custom-shadow rounded-3xl p-2 mb-5">
-                                                        <div className="lg:w-16 lg:h-16 h-14 w-14 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${selectedProject.logoUrl[0]})` }}></div>
-                                                        <p className="font-semibold text-xl pl-3 text-purple-950">{selectedProject.projectName}</p>
-                                                    </div>
-                                                )}
-
-                                                <div className="w-full mt-1">
-                                                    <textarea value={desc} onChange={e => setDesc(e.target.value)} placeholder="Що у вас нового?" className="focus:outline-none focus:border-pink-450 w-full resize-none text-xl px-2 py-1 rounded-lg border-2 border-purple-950" rows='3' >
-                                                    </textarea>
-                                                </div>
-
-                                                <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} />
-
-                                                <div className="relative mt-4">
-                                                    <label htmlFor="upload-photo" className="cursor-pointer font-medium text-lg">
-                                                        <div className='bg-yellow-350 hover:bg-yellow-400 transition-all rounded-lg inline-flex px-6 py-2'>
-                                                            <p className="mr-auto">Завантажити відео чи фото</p>
-                                                            <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/upload.png" alt="upload" className="w-6 self-start inline-block ml-2 mr-auto" />
-                                                        </div>
-                                                    </label>
-                                                    <input className=" opacity-0 absolute -z-10" id="upload-photo" multiple type="file" accept=".png, .jpg, .jpeg, .mov, .mp4, .m4v" onChange={(event) => { multipleFileChangedHandler(event); ProcessFiles(event) }} />
-                                                    <p className="text-gray-500">*Максимальна кількість завантаженого відео і фото матеріалів - 4*</p>
-                                                </div>
-                                                {/* img-preview */}
-                                                <div className="img-preview mb-4 flex">
-                                                    {renderPhotos(htmlImages)}
-                                                </div>
-
-                                                {linkDetails && (
-                                                    linkDetails.siteName ? (
-                                                        <div className="mt-4 lg:w-8/12 xl:w-7/12 lg:m-auto lg:mt-4 rounded-xl bg-gray-200">
-                                                            <a href={linkDetails.url} target="_blank" rel="noopener noreferrer">
-                                                                <div className="responsive-image-bgImgUrl-cover cursor-pointer relative rounded-t-xl h-80 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${linkDetails.images[0]})` }}></div>
-                                                            </a>
-                                                            <div className="p-2">
-                                                                <p className="text-xl text-gray-600">{linkDetails.siteName && (linkDetails.siteName)}</p>
-                                                                <p className="font-medium text-xl ">{linkDetails.title && (linkDetails.title)}</p>
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="mt-4 lg:w-8/12 xl:w-7/12 lg:m-auto lg:mt-4 rounded-xl bg-gray-200">
-                                                            <div className="p-2">
-                                                                <a href={linkDetails.url} target="_blank" rel="noopener noreferrer">
-                                                                    <p className="text-xl text-gray-600">{linkDetails.url && (linkDetails.url)}</p>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                )}
-                                            </div>
-                                        </div>
-
-
-                                        <div className="w-full rounded-b-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
-                                            {reqLoading ? (
-                                                <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
-                                            ) : (
-                                                null
-                                            )}
-                                            <button onClick={() => saveStory(close)} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-white text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Опублікувати</button>
-                                            <button
-                                                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                                onClick={() => {
-                                                    close();
-                                                }}
-                                            >
-                                                Закрити
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </Popup>
-
-                        </div>
-                    ) : (null)}
                     <Switch>
                         <Route path="/dashboard/news/all">
+                            {myProjects.length > 0 ? (
+                                <div className="w-full bg-white rounded-3xl custom-shadow p-4 mb-4">
+                                    <Popup
+                                        trigger={
+                                            <div className="flex items-center">
+                                                <div className=" cursor-pointer lg:w-14 lg:h-14 h-12 w-12 hover:opacity-80 transition-all mr-2 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
+                                                <div className=" cursor-pointer w-full bg-gray-200 hover:bg-gray-300 transition-all py-2 px-3 outline-none rounded-full font-medium text-xl">
+                                                    <p className="text-gray-400">Що нового у вашого проекту</p>
+                                                </div>
+                                            </div>
+                                        }
+                                        modal
+                                        nested
+                                    >
+                                        {close => (
+                                            <div className="modal bg-white rounded-xl overflow-y-scroll max-h-screen">
+                                                <button className="close" onClick={close}>
+                                                    &times;
+                                                </button>
+                                                <div className="w-full bg-gray-100 px-4 py-2 text-black text-2xl font-bold rounded-t-xl">
+                                                    Cтворити новину
+                                                </div>
+
+                                                <div className="px-8 z-40">
+                                                    <div className="w-10/12 mt-3 m-auto">
+                                                        <div className="px-2 m-auto">
+                                                            {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
+                                                            {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
+                                                        </div>
+                                                    </div>
+                                                    <div className="lg:px-8">
+                                                        {myProjects.length > 1 ? (
+                                                            <div className="relative">
+                                                                <div onClick={() => toggleMyProjectsList()} className="flex cursor-pointer hover:bg-gray-50 transition-all relative z-30 items-center justify-between custom-shadow bg-white rounded-3xl p-2 mb-5">
+                                                                    <div className="flex w-9/12 items-center">
+                                                                        <div className="lg:w-16 lg:h-16 h-14 flex-shrink-0 w-14 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${selectedProject.logoUrl[0]})` }}></div>
+                                                                        <p className="font-semibold text-xl pl-3 projectName-text text-purple-950 break-words">{selectedProject.projectName}</p>
+                                                                    </div>
+                                                                    <svg className={`transition-all transform rotate-${listIconDegree}`} xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+                                                                </div>
+                                                                <div className="absolute z-20 h-auto bg-gray-100 rounded-3xl left-0 top-0 w-full">
+                                                                    {isListExpanded ? (
+                                                                        <div className="pt-24 px-4 max-h-80 overflow-y-scroll">
+                                                                            {myProjects.map(project => {
+                                                                                return (
+                                                                                    <div onClick={() => { setselectedProject(project); setisListExpanded(false); setlistIconDegree("0") }} className="flex items-center hover:bg-gray-200 bg-white cursor-pointer transition-all hover:shadow-xl custom-shadow rounded-3xl p-2 mb-2">
+                                                                                        <div className="lg:w-16 lg:h-16 h-14 w-3/12 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}></div>
+                                                                                        <p className="font-semibold w-9/12 text-xl pl-3 text-purple-950">{project.projectName}</p>
+                                                                                    </div>
+                                                                                )
+                                                                            })}
+                                                                        </div>
+                                                                    ) : (null)}
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex items-center custom-shadow rounded-3xl p-2 mb-5">
+                                                                <div className="lg:w-16 lg:h-16 h-14 w-14 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${selectedProject.logoUrl[0]})` }}></div>
+                                                                <p className="font-semibold text-xl pl-3 text-purple-950">{selectedProject.projectName}</p>
+                                                            </div>
+                                                        )}
+
+                                                        <div className="w-full mt-1">
+                                                            <textarea value={desc} onChange={e => setDesc(e.target.value)} placeholder="Що у вас нового?" className="focus:outline-none focus:border-pink-450 w-full resize-none text-xl px-2 py-1 rounded-lg border-2 border-purple-950" rows='3' >
+                                                            </textarea>
+                                                        </div>
+
+                                                        <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} />
+
+                                                        <div className="relative mt-4">
+                                                            <label htmlFor="upload-photo" className="cursor-pointer font-medium text-lg">
+                                                                <div className='bg-yellow-350 hover:bg-yellow-400 transition-all rounded-lg inline-flex px-6 py-2'>
+                                                                    <p className="mr-auto">Завантажити відео чи фото</p>
+                                                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/upload.png" alt="upload" className="w-6 self-start inline-block ml-2 mr-auto" />
+                                                                </div>
+                                                            </label>
+                                                            <input className=" opacity-0 absolute -z-10" id="upload-photo" multiple type="file" accept=".png, .jpg, .jpeg, .mov, .mp4, .m4v" onChange={(event) => { multipleFileChangedHandler(event); ProcessFiles(event) }} />
+                                                            <p className="text-gray-500">*Максимальна кількість завантаженого відео і фото матеріалів - 4*</p>
+                                                        </div>
+                                                        {/* img-preview */}
+                                                        <div className="img-preview mb-4 flex">
+                                                            {renderPhotos(htmlImages)}
+                                                        </div>
+
+                                                        {linkDetails && (
+                                                            linkDetails.siteName ? (
+                                                                <div className="mt-4 lg:w-8/12 xl:w-7/12 lg:m-auto lg:mt-4 rounded-xl bg-gray-200">
+                                                                    <a href={linkDetails.url} target="_blank" rel="noopener noreferrer">
+                                                                        <div className="responsive-image-bgImgUrl-cover cursor-pointer relative rounded-t-xl h-80 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${linkDetails.images[0]})` }}></div>
+                                                                    </a>
+                                                                    <div className="p-2">
+                                                                        <p className="text-xl text-gray-600">{linkDetails.siteName && (linkDetails.siteName)}</p>
+                                                                        <p className="font-medium text-xl ">{linkDetails.title && (linkDetails.title)}</p>
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="mt-4 lg:w-8/12 xl:w-7/12 lg:m-auto lg:mt-4 rounded-xl bg-gray-200">
+                                                                    <div className="p-2">
+                                                                        <a href={linkDetails.url} target="_blank" rel="noopener noreferrer">
+                                                                            <p className="text-xl text-gray-600">{linkDetails.url && (linkDetails.url)}</p>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                </div>
+
+
+                                                <div className="w-full rounded-b-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
+                                                    {reqLoading ? (
+                                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
+                                                    ) : (
+                                                        null
+                                                    )}
+                                                    <button onClick={() => saveStory(close)} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-white text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Опублікувати</button>
+                                                    <button
+                                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                                        onClick={() => {
+                                                            close();
+                                                        }}
+                                                    >
+                                                        Закрити
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </Popup>
+
+                                </div>
+                            ) : (null)}
                             <AllNews followedNews={followedNews} setOrder={(numb) => setOrder(numb)} />
                         </Route>
                         <Route path="/dashboard/news/gps">
+                            {myProjects.length > 0 ? (
+                                <div className="w-full bg-white rounded-3xl custom-shadow p-4 mb-4">
+                                    <Popup
+                                        trigger={
+                                            <div className="flex items-center">
+                                                <div className=" cursor-pointer lg:w-14 lg:h-14 h-12 w-12 hover:opacity-80 transition-all mr-2 relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${userData.user.avaUrl})` }}></div>
+                                                <div className=" cursor-pointer w-full bg-gray-200 hover:bg-gray-300 transition-all py-2 px-3 outline-none rounded-full font-medium text-xl">
+                                                    <p className="text-gray-400">Що нового у вашого проекту</p>
+                                                </div>
+                                            </div>
+                                        }
+                                        modal
+                                        nested
+                                    >
+                                        {close => (
+                                            <div className="modal bg-white rounded-xl overflow-y-scroll max-h-screen">
+                                                <button className="close" onClick={close}>
+                                                    &times;
+                                                </button>
+                                                <div className="w-full bg-gray-100 px-4 py-2 text-black text-2xl font-bold rounded-t-xl">
+                                                    Cтворити новину
+                                                </div>
+
+                                                <div className="px-8 z-40">
+                                                    <div className="w-10/12 mt-3 m-auto">
+                                                        <div className="px-2 m-auto">
+                                                            {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
+                                                            {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
+                                                        </div>
+                                                    </div>
+                                                    <div className="lg:px-8">
+                                                        {myProjects.length > 1 ? (
+                                                            <div className="relative">
+                                                                <div onClick={() => toggleMyProjectsList()} className="flex cursor-pointer hover:bg-gray-50 transition-all relative z-30 items-center justify-between custom-shadow bg-white rounded-3xl p-2 mb-5">
+                                                                    <div className="flex w-9/12 items-center">
+                                                                        <div className="lg:w-16 lg:h-16 h-14 flex-shrink-0 w-14 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${selectedProject.logoUrl[0]})` }}></div>
+                                                                        <p className="font-semibold text-xl pl-3 projectName-text text-purple-950 break-words">{selectedProject.projectName}</p>
+                                                                    </div>
+                                                                    <svg className={`transition-all transform rotate-${listIconDegree}`} xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+                                                                </div>
+                                                                <div className="absolute z-20 h-auto bg-gray-100 rounded-3xl left-0 top-0 w-full">
+                                                                    {isListExpanded ? (
+                                                                        <div className="pt-24 px-4 max-h-80 overflow-y-scroll">
+                                                                            {myProjects.map(project => {
+                                                                                return (
+                                                                                    <div onClick={() => { setselectedProject(project); setisListExpanded(false); setlistIconDegree("0") }} className="flex items-center hover:bg-gray-200 bg-white cursor-pointer transition-all hover:shadow-xl custom-shadow rounded-3xl p-2 mb-2">
+                                                                                        <div className="lg:w-16 lg:h-16 h-14 w-3/12 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${project.logoUrl[0]})` }}></div>
+                                                                                        <p className="font-semibold w-9/12 text-xl pl-3 text-purple-950">{project.projectName}</p>
+                                                                                    </div>
+                                                                                )
+                                                                            })}
+                                                                        </div>
+                                                                    ) : (null)}
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex items-center custom-shadow rounded-3xl p-2 mb-5">
+                                                                <div className="lg:w-16 lg:h-16 h-14 w-14 custom-shadow relative rounded-full overflow-hidden responsive-image-bgImgUrl-cover" style={{ backgroundImage: `url(${selectedProject.logoUrl[0]})` }}></div>
+                                                                <p className="font-semibold text-xl pl-3 text-purple-950">{selectedProject.projectName}</p>
+                                                            </div>
+                                                        )}
+
+                                                        <div className="w-full mt-1">
+                                                            <textarea value={desc} onChange={e => setDesc(e.target.value)} placeholder="Що у вас нового?" className="focus:outline-none focus:border-pink-450 w-full resize-none text-xl px-2 py-1 rounded-lg border-2 border-purple-950" rows='3' >
+                                                            </textarea>
+                                                        </div>
+
+                                                        <SearchBar setLocationText={(str) => setLocationString(str)} setLocation={(text) => setLocation(text)} />
+
+                                                        <div className="relative mt-4">
+                                                            <label htmlFor="upload-photo" className="cursor-pointer font-medium text-lg">
+                                                                <div className='bg-yellow-350 hover:bg-yellow-400 transition-all rounded-lg inline-flex px-6 py-2'>
+                                                                    <p className="mr-auto">Завантажити відео чи фото</p>
+                                                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/upload.png" alt="upload" className="w-6 self-start inline-block ml-2 mr-auto" />
+                                                                </div>
+                                                            </label>
+                                                            <input className=" opacity-0 absolute -z-10" id="upload-photo" multiple type="file" accept=".png, .jpg, .jpeg, .mov, .mp4, .m4v" onChange={(event) => { multipleFileChangedHandler(event); ProcessFiles(event) }} />
+                                                            <p className="text-gray-500">*Максимальна кількість завантаженого відео і фото матеріалів - 4*</p>
+                                                        </div>
+                                                        {/* img-preview */}
+                                                        <div className="img-preview mb-4 flex">
+                                                            {renderPhotos(htmlImages)}
+                                                        </div>
+
+                                                        {linkDetails && (
+                                                            linkDetails.siteName ? (
+                                                                <div className="mt-4 lg:w-8/12 xl:w-7/12 lg:m-auto lg:mt-4 rounded-xl bg-gray-200">
+                                                                    <a href={linkDetails.url} target="_blank" rel="noopener noreferrer">
+                                                                        <div className="responsive-image-bgImgUrl-cover cursor-pointer relative rounded-t-xl h-80 hover:opacity-80 opacity-100 transition-all" style={{ backgroundImage: `url(${linkDetails.images[0]})` }}></div>
+                                                                    </a>
+                                                                    <div className="p-2">
+                                                                        <p className="text-xl text-gray-600">{linkDetails.siteName && (linkDetails.siteName)}</p>
+                                                                        <p className="font-medium text-xl ">{linkDetails.title && (linkDetails.title)}</p>
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="mt-4 lg:w-8/12 xl:w-7/12 lg:m-auto lg:mt-4 rounded-xl bg-gray-200">
+                                                                    <div className="p-2">
+                                                                        <a href={linkDetails.url} target="_blank" rel="noopener noreferrer">
+                                                                            <p className="text-xl text-gray-600">{linkDetails.url && (linkDetails.url)}</p>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                </div>
+
+
+                                                <div className="w-full rounded-b-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
+                                                    {reqLoading ? (
+                                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
+                                                    ) : (
+                                                        null
+                                                    )}
+                                                    <button onClick={() => saveStory(close)} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-white text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Опублікувати</button>
+                                                    <button
+                                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                                        onClick={() => {
+                                                            close();
+                                                        }}
+                                                    >
+                                                        Закрити
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </Popup>
+
+                                </div>
+                            ) : (null)}
                             <NewsNearMe setOrder={(numb) => setOrder(numb)} news={news} />
                         </Route>
                         <Route path="/dashboard/news/:id" children={<NewsPage setOrder={(numb) => setOrder(numb)} allNews={allNews} />} />
