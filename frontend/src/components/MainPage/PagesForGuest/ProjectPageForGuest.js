@@ -93,7 +93,7 @@ export default function ProjectPageForGuest() {
         )
     }
     return (
-        <div className="lg:w-4/5 overflow-y-scroll flex lg:p-10 px-4 pt-20 flex-col lg:pr-8 w-full">
+        <div className="lg:w-4/5 lg:pt-20 overflow-y-scroll flex lg:px-10 lg:pb-10 px-4 flex-col lg:pr-8 w-full">
             <div style={StyleForFundDiv} className="p-4 bg-white lg:fixed rounded-3xl mt-3 lg:mt-0 lg:rounded-r-3xl rounded-l-3xl overflow-y-scroll top-0 right-0 w-full lg:w-1/5">
                 <p className="text-2xl font-bold text-purple-950 text-center">Зібрано, грн</p>
                 <p className="text-2xl font-semibold mt-1">{Project.raised}</p>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -30,11 +30,12 @@ import {
 import ComntSection from './ComntSection';
 import Linkify from 'react-linkify';
 import { useParams } from "react-router-dom";
-import SimpleLoader from '../../../Loaders/SimpleLoader';
 
 export default function NewsPage({ allNews, setOrder }) {
     let { id } = useParams()
-    setOrder(1)
+    if (setOrder) {
+        setOrder(1)
+    }
     const story = allNews.filter((story) => story._id === id)[0]
     const userData = useSelector(state => state.userData)
     const history = useHistory()
@@ -155,7 +156,7 @@ export default function NewsPage({ allNews, setOrder }) {
                 ) : (null)}
             </div>
             <div className="flex relative items-center">
-                <svg onClick={() => likeEvent()} className={`hover:text-purple-850 hover:text-opacity-80 transition-all fill-current cursor-pointer ${likedIds.includes(userData.user.id) ? ("text-purple-950") : ("text-white")} transition-all cursor-pointer" xmlns="http://www.w3.org/2000/svg`} width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                <svg onClick={() => likeEvent()} className={`hover:text-purple-850 hover:text-opacity-80 transition-all fill-current cursor-pointer ${likedIds.includes(userData?.user?.id) ? ("text-purple-950") : ("text-white")} transition-all cursor-pointer" xmlns="http://www.w3.org/2000/svg`} width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#48004B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                 {likedIds.length === 0 ? (null) : (<p className="font-medium pl-1 text-lg">{likedIds.length}</p>)}
                 <svg onClick={() => createTooltip(story._id)} className={`ml-4 btn-${story._id} cursor-pointer`} xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
                 <div className={`tooltip-${story._id} z-40 w-40 lg:w-96 transition-all tooltip bg-gray-50 border custom-shadow rounded-2xl border-purple-950 p-4 pt-2`}>
@@ -205,56 +206,60 @@ export default function NewsPage({ allNews, setOrder }) {
                     </div>
                 </div>
 
-                <Popup
-                    trigger={
-                        <button className="bg-yellow-350 ml-4 text-center py-2 px-4 rounded-2xl inline-flex text-lg font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-7 ml-2" alt="support" /> </button>
-                    }
-                    modal
-                    nested
-                >
-                    {close => (
-                        <div className="modal bg-white rounded-xl">
-                            <button className="close" onClick={close}>
-                                &times;
-                            </button>
-                            <div className="w-full bg-purple-850 px-4 py-2 text-white text-2xl font-bold rounded-t-xl">
-                                Вікно підтримки проекту
-                            </div>
+                {userData.user && (
+                    <Popup
+                        trigger={
+                            <button className="bg-yellow-350 ml-4 text-center py-2 px-4 rounded-2xl inline-flex text-lg font-medium text-purple-950 items-center justify-center">Підтримати <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/pay.png" className="h-7 ml-2" alt="support" /> </button>
+                        }
+                        modal
+                        nested
+                    >
+                        {close => (
+                            <div className="modal bg-white rounded-xl">
+                                <button className="close" onClick={close}>
+                                    &times;
+                                </button>
+                                <div className="w-full bg-purple-850 px-4 py-2 text-white text-2xl font-bold rounded-t-xl">
+                                    Вікно підтримки проекту
+                                </div>
 
-                            <div className="w-10/12 mt-3 m-auto">
-                                <div className="px-2 m-auto">
-                                    {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
-                                    {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
+                                <div className="w-10/12 mt-3 m-auto">
+                                    <div className="px-2 m-auto">
+                                        {error && <ErrorNotice message={error} clearError={() => { setError(undefined) }} />}
+                                        {successMessage && <SuccessNotice message={successMessage} clearError={() => { setSuccessMessage(undefined) }} />}
+                                    </div>
+                                </div>
+
+                                <p className="font-medium text-lg px-5 mt-4 text-gray-600">Будь ласка, виберіть суму оплати</p>
+                                <div className="w-full m-auto flex items-center p-6">
+                                    <input value={amount} onChange={(e) => handleAmountInputChange(e.target.value)} type="number" min="0" max={userData?.user?.balance} className="h-8 w-6/12 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" /><br />
+                                    <p className=" pl-2 font-medium text-xl">грн</p>
+                                </div>
+                                <div className="w-full rounded-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
+                                    {reqLoading ? (
+                                        <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
+                                    ) : (
+                                        null
+                                    )}
+                                    <button onClick={() => Support(close)} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-yellow-350 text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Підтримати</button>
+                                    <button
+                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                        onClick={() => {
+                                            close();
+                                        }}
+                                    >
+                                        Закрити
+                                    </button>
                                 </div>
                             </div>
-
-                            <p className="font-medium text-lg px-5 mt-4 text-gray-600">Будь ласка, виберіть суму оплати</p>
-                            <div className="w-full m-auto flex items-center p-6">
-                                <input value={amount} onChange={(e) => handleAmountInputChange(e.target.value)} type="number" min="0" max={userData.user.balance} className="h-8 w-6/12 mb-3 text-xl px-4 py-5 rounded-lg border-2 border-purple-950 focus:outline-none focus:border-pink-450" /><br />
-                                <p className=" pl-2 font-medium text-xl">грн</p>
-                            </div>
-                            <div className="w-full rounded-xl bg-gray-50 py-3 px-6 flex items-center flex-col-reverse lg:flex-row-reverse">
-                                {reqLoading ? (
-                                    <img src="https://dvizhok-hosted-content.s3.us-east-2.amazonaws.com/images/dashboard/help_icons/reload.png" alt="reload" className="animate-spin ml-4 w-9" />
-                                ) : (
-                                    null
-                                )}
-                                <button onClick={() => Support(close)} className={`mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-purple-950 text-yellow-350 text-xl font-semibold hover:bg-purple-850 focus:outline-none focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm`}>Підтримати</button>
-                                <button
-                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                    onClick={() => {
-                                        close();
-                                    }}
-                                >
-                                    Закрити
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </Popup>
+                        )}
+                    </Popup>
+                )}
             </div>
 
-            <ComntSection advtInfo={story} />
+            {userData.user && (
+                <ComntSection advtInfo={story} />
+            )}
         </div>
     )
 }

@@ -55,7 +55,6 @@ export default function News() {
     const signature = getSignature()
     const dispatch = useDispatch()
     const [order, setOrder] = useState(3)
-    console.log(order)
 
     const [selectedProject, setselectedProject] = useState(myProjects[0])
     const [isListExpanded, setisListExpanded] = useState(false)
