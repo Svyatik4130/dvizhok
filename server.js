@@ -12,16 +12,21 @@ app.use(express.urlencoded({
     extended: true
 }))
 
-const PORT = process.env.PORT || 5040
+const PORT = process.env.PORT || 5040;
 
-mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
-}, (err) => {
-    if (err) throw err;
-    console.log("MONGODB CONNECTED")
-})
+// 👇 THIS semicolon is critical
+;(async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("MongoDB connected");
+    } catch (error) {
+        console.error("MongoDB connection error:", error);
+    }
+})();
+
 
 app.use("/users", require("./routes/userRouter"))
 app.use("/landing", require("./routes/landingRouter"))
